@@ -11,7 +11,7 @@
         -600
       ],
       "parameters": {
-        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n6 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets (esta como placeholder)\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s",
+        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n6 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets - IMPORTANTE: apos importar, abra CADA no do Google Sheets e re-selecione a credencial no dropdown (mesmo que ja apareca preenchida) - o n8n so salva de verdade quando voce interage com o campo, senao o publish falha com 'credencial ausente' apesar do preview mostrar uma credencial\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s",
         "height": 320,
         "width": 420,
         "color": 7
@@ -118,7 +118,7 @@
         -300
       ],
       "parameters": {
-        "content": "2/6 - GERENCIAR VENDEDORES\nPOST /vendedores\nBody: {action:'add'|'remove', name, pin}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).",
+        "content": "2/6 - GERENCIAR VENDEDORES\nPOST /vendedores\nBody: {action:'add'|'remove', name, pin}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).\n\nremove: o No \"Calcular linha do vendedor a remover\" usa match.row_number DIRETO (sem subtracao) como startIndex do delete - testado e confirmado.",
         "height": 140,
         "width": 300,
         "color": 4
@@ -441,7 +441,7 @@
         420
       ],
       "parameters": {
-        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts}\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.",
+        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts}\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.\n\nundo: \"Achar linha para desfazer\" usa match.row_number DIRETO (sem subtracao) como startIndex - testado e confirmado em producao.",
         "height": 110,
         "width": 280,
         "color": 3
@@ -655,7 +655,7 @@
         720
       ],
       "parameters": {
-        "content": "5/6 - FECHAR/REABRIR DIA\nPOST /fechar\nBody fechar: {action:'fechar', Vendedor, Data, Atendidas, 'Caixa Postal', Total, 'Fechado em'}\nBody reabrir: {action:'reabrir', Vendedor, Data}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).",
+        "content": "5/6 - FECHAR/REABRIR DIA\nPOST /fechar\nBody fechar: {action:'fechar', Vendedor, Data, Atendidas, 'Caixa Postal', Total, 'Fechado em'}\nBody reabrir: {action:'reabrir', Vendedor, Data}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).\n\nreabrir: \"Calcular linha do fechamento a remover\" usa match.row_number DIRETO (sem subtracao) como startIndex - testado e confirmado.",
         "height": 110,
         "width": 300,
         "color": 6
