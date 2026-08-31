@@ -78,7 +78,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "f9b74b31-5153-4ef0-9fed-16d3f4eb983d",
@@ -260,7 +261,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "9c020024-b324-4c0d-b85e-a2b75f1944f4",
@@ -368,7 +370,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "38c27b01-8457-44fd-bfc9-186dd26686af",
@@ -398,7 +401,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "46edf506-39dd-433b-b490-e1069ff319f1",
@@ -546,7 +550,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "c1a00001-0000-4000-8000-000000000004",
@@ -793,7 +798,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "8e826d41-9a6c-438a-807b-c5c219b0990a",
@@ -901,7 +907,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "e1a00001-0000-4000-8000-000000000001",
@@ -931,7 +938,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "e1a00001-0000-4000-8000-000000000002",
@@ -961,7 +969,8 @@
           "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
           "name": "Google Sheets - FBS Prime"
         }
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "928ee313-e601-4d76-8470-7fc4175a3220",
