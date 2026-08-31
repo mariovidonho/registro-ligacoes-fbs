@@ -1116,11 +1116,6 @@
             "node": "Ler aba Ligacoes",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Ler aba Fechamentos",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -1129,7 +1124,7 @@
       "main": [
         [
           {
-            "node": "Filtrar por vendedor + hoje",
+            "node": "Ler aba Fechamentos",
             "type": "main",
             "index": 0
           }
@@ -1344,16 +1339,6 @@
             "node": "Ler aba Ligacoes (admin)",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Ler aba Vendedores (admin)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Ler aba Fechamentos (admin)",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -1362,7 +1347,7 @@
       "main": [
         [
           {
-            "node": "Agregar por vendedor e periodo",
+            "node": "Ler aba Vendedores (admin)",
             "type": "main",
             "index": 0
           }
@@ -1373,7 +1358,7 @@
       "main": [
         [
           {
-            "node": "Agregar por vendedor e periodo",
+            "node": "Ler aba Fechamentos (admin)",
             "type": "main",
             "index": 0
           }
