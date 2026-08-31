@@ -11,7 +11,7 @@
         -600
       ],
       "parameters": {
-        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n6 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets (esta como placeholder)\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Nos nos 'Achar linha ... a remover' (remover vendedor, reabrir dia, desfazer ligacao): confirmar como a versao instalada do node Google Sheets expoe o numero da linha (row_number ou equivalente) e ajustar o filtro/startIndex - isso ficou como TODO manual, depende da versao do node\n4. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s",
+        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n6 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets (esta como placeholder)\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s",
         "height": 320,
         "width": 420,
         "color": 7
@@ -118,7 +118,7 @@
         -300
       ],
       "parameters": {
-        "content": "2/6 - GERENCIAR VENDEDORES\nPOST /vendedores\nBody: {action:'add'|'remove', name, pin}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).\n\nremove: precisa achar a linha certa antes de apagar - ajustar o No 'Achar linha' com o filtro certo da versao do node instalada",
+        "content": "2/6 - GERENCIAR VENDEDORES\nPOST /vendedores\nBody: {action:'add'|'remove', name, pin}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).",
         "height": 140,
         "width": 300,
         "color": 4
@@ -441,7 +441,7 @@
         420
       ],
       "parameters": {
-        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts}\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.\n\nundo: mesma ressalva do item 2/6 sobre achar a linha certa antes de apagar.",
+        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts}\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.",
         "height": 110,
         "width": 280,
         "color": 3
@@ -563,7 +563,7 @@
         460
       ],
       "parameters": {
-        "jsCode": "\nconst body = $('Webhook: POST ligacoes').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst rowIndex = rows.findIndex(r => r.Vendedor === body.vendedor && r['Data/Hora'] === body.ts);\nreturn [{ json: { rowIndex } }];\n"
+        "jsCode": "\nconst body = $('Webhook: POST ligacoes').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.vendedor && r['Data/Hora'] === body.ts);\nconst rowIndex = match ? match.row_number - 1 : -1;\nreturn [{ json: { rowIndex } }];\n"
       }
     },
     {
@@ -655,7 +655,7 @@
         720
       ],
       "parameters": {
-        "content": "5/6 - FECHAR/REABRIR DIA\nPOST /fechar\nBody fechar: {action:'fechar', Vendedor, Data, Atendidas, 'Caixa Postal', Total, 'Fechado em'}\nBody reabrir: {action:'reabrir', Vendedor, Data}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).\n\nreabrir: mesma ressalva do item 2/6 sobre achar a linha certa antes de apagar.",
+        "content": "5/6 - FECHAR/REABRIR DIA\nPOST /fechar\nBody fechar: {action:'fechar', Vendedor, Data, Atendidas, 'Caixa Postal', Total, 'Fechado em'}\nBody reabrir: {action:'reabrir', Vendedor, Data}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).",
         "height": 110,
         "width": 300,
         "color": 6
@@ -998,6 +998,32 @@
         "respondWith": "allIncomingItems",
         "options": {}
       }
+    },
+    {
+      "id": "f1c00001-0000-4000-8000-000000000001",
+      "name": "Calcular linha do vendedor a remover",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -60
+      ],
+      "parameters": {
+        "jsCode": "\nconst body = $('Webhook: POST vendedores').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Nome === body.name);\nconst rowIndex = match ? match.row_number - 1 : -1;\nreturn [{ json: { rowIndex } }];\n"
+      }
+    },
+    {
+      "id": "f1c00001-0000-4000-8000-000000000002",
+      "name": "Calcular linha do fechamento a remover",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        950
+      ],
+      "parameters": {
+        "jsCode": "\nconst body = $('Webhook: POST fechar').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.Vendedor && r.Data === body.Data);\nconst rowIndex = match ? match.row_number - 1 : -1;\nreturn [{ json: { rowIndex } }];\n"
+      }
     }
   ],
   "connections": {
@@ -1100,7 +1126,7 @@
       "main": [
         [
           {
-            "node": "Remover linha do vendedor",
+            "node": "Calcular linha do vendedor a remover",
             "type": "main",
             "index": 0
           }
@@ -1323,7 +1349,7 @@
       "main": [
         [
           {
-            "node": "Remover linha de Fechamentos",
+            "node": "Calcular linha do fechamento a remover",
             "type": "main",
             "index": 0
           }
@@ -1390,6 +1416,28 @@
         [
           {
             "node": "Responder GET admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular linha do vendedor a remover": {
+      "main": [
+        [
+          {
+            "node": "Remover linha do vendedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular linha do fechamento a remover": {
+      "main": [
+        [
+          {
+            "node": "Remover linha de Fechamentos",
             "type": "main",
             "index": 0
           }
