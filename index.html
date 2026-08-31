@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FBS Prime · Registro de Ligações</title>
+<style>
+  :root{
+    --bg:#0D1B2A;
+    --panel:#132A3E;
+    --panel-2:#1B3A54;
+    --gold:#C9A84C;
+    --atendeu:#2F9E64;
+    --atendeu-dim:#1F6E46;
+    --caixa:#C9793D;
+    --caixa-dim:#8F5426;
+    --fechar:#8B3A3A;
+    --fechar-dim:#652929;
+    --text:#F1EDE2;
+    --text-dim:#93A2B5;
+    --border:#22415C;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:0;
+  }
+  #app{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:20px 20px 32px;
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+    margin:0 0 2px;
+  }
+  h1{
+    font-size:22px;
+    font-weight:600;
+    margin:0 0 18px;
+    color:var(--text);
+  }
+  .vendor-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:16px;
+  }
+  .vendor-name{font-size:16px;font-weight:600;}
+  .vendor-date{font-size:13px;color:var(--text-dim);margin-top:2px;}
+  .trocar-btn{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-size:13px;
+    padding:8px 12px;
+    border-radius:10px;
+    cursor:pointer;
+  }
+  .trocar-btn:active{background:var(--panel-2);}
+  .trocar-btn.active{background:var(--panel-2);color:var(--text);border-color:var(--gold);}
+
+  .tally{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .tally-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px 12px;
+    text-align:center;
+  }
+  .tally-label{
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .tally-num{
+    font-family:ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace;
+    font-size:40px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    line-height:1;
+    transition:transform .18s ease;
+  }
+  .tally-num.pulse{transform:scale(1.18);}
+  .tally-atendeu{color:var(--atendeu);}
+  .tally-caixa{color:var(--caixa);}
+  .tally-total{
+    text-align:center;
+    font-size:13px;
+    color:var(--text-dim);
+    margin:-6px 0 20px;
+  }
+  .tally-total b{color:var(--text);font-family:ui-monospace,monospace;}
+
+  .call-btn{
+    width:100%;
+    border:none;
+    border-radius:18px;
+    padding:26px 20px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:14px;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform .08s ease, filter .08s ease;
+  }
+  .call-btn:active{transform:scale(.97);filter:brightness(.92);}
+  .btn-atendeu{background:var(--atendeu);}
+  .btn-caixa{background:var(--caixa);}
+  .call-btn:disabled{background:var(--panel-2);color:var(--text-dim);cursor:not-allowed;}
+  .call-btn .icon{font-size:22px;line-height:1;}
+
+  .undo-row{
+    text-align:center;
+    margin:2px 0 22px;
+    min-height:20px;
+  }
+  .undo-btn{
+    background:none;
+    border:none;
+    color:var(--text-dim);
+    font-size:13px;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:4px;
+  }
+
+  .fechar-btn{
+    width:100%;
+    border:1px solid var(--fechar);
+    background:transparent;
+    color:#E8B4B4;
+    border-radius:14px;
+    padding:15px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:18px;
+  }
+  .fechar-btn:active{background:var(--fechar-dim);}
+  .fechar-btn:disabled{
+    border-color:var(--border);
+    color:var(--text-dim);
+    cursor:not-allowed;
+  }
+
+  .fechado-banner{
+    background:var(--panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .fechado-banner .t{font-weight:600;color:var(--gold);margin-bottom:4px;}
+  .fechado-banner .s{font-size:13px;color:var(--text-dim);}
+
+  .history{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .history-head{
+    padding:14px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+  }
+  .history-head .chev{color:var(--text-dim);transition:transform .15s ease;font-size:12px;}
+  .history-list{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .2s ease;
+  }
+  .history-list.open{max-height:340px;overflow-y:auto;}
+  .history-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    padding:10px 16px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+  }
+  .history-item .tag{
+    padding:2px 8px;
+    border-radius:6px;
+    font-size:11px;
+    font-weight:600;
+  }
+  .tag-atendeu{background:var(--atendeu-dim);color:#B9EFCF;}
+  .tag-caixa{background:var(--caixa-dim);color:#F6D3B3;}
+  .history-item .time{color:var(--text-dim);}
+  .empty-hint{padding:16px;text-align:center;color:var(--text-dim);font-size:13px;}
+
+  .picker-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px;
+  }
+  select,input{
+    width:100%;
+    padding:14px;
+    font-size:16px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--panel-2);
+    color:var(--text);
+    margin:12px 0 16px;
+  }
+  .confirm-btn{
+    width:100%;
+    background:var(--gold);
+    color:#26200E;
+    border:none;
+    border-radius:12px;
+    padding:14px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/*
+  Backend: planilha Google Sheets acessada via webhooks do n8n
+  (fluxo n8n_workflow_registro_ligacoes.json). Cada ligação é uma
+  linha (INSERT) na aba "Ligações" — nada de reescrever array inteiro.
+  "Apagar" item avulso do histórico foi removido de propósito: só
+  "desfazer última ligação" tem suporte no backend (ver função undoLast).
+*/
+const DEFAULT_VENDOR_LIST = [
+  {name:"Arthur Lima", pin:"1098"}, {name:"Wellington Augusto", pin:"1111"},
+  {name:"Rayane Castro", pin:"1095"}, {name:"Raissa Gabrielly", pin:"1097"},
+  {name:"Nayara Lima", pin:"1096"}, {name:"Diane Ruiz", pin:"1094"},
+  {name:"Erick Fernandes", pin:"1099"}, {name:"Camila Abreu", pin:"1264"},
+  {name:"Javam Trajano", pin:"1265"}, {name:"Cley Silva", pin:"1268"}
+];
+const ADMIN_PIN_HASH = "c342fde8dbf5b6617f87b3a8e74fd4ab3d47c54d74c37a8a261a25cfc65fb7a8";
+
+// Cole aqui a "Production URL" de cada nó Webhook do fluxo n8n
+// (n8n_workflow_registro_ligacoes.json) depois de importar e ativar o workflow.
+const N8N_WEBHOOKS = {
+  getVendedores: "https://SEU-N8N.dominio.com/webhook/vendedores",
+  postVendedores: "https://SEU-N8N.dominio.com/webhook/vendedores",
+  getLigacoes: "https://SEU-N8N.dominio.com/webhook/ligacoes",
+  postLigacoes: "https://SEU-N8N.dominio.com/webhook/ligacoes",
+  postFechar: "https://SEU-N8N.dominio.com/webhook/fechar",
+  getAdmin: "https://SEU-N8N.dominio.com/webhook/admin"
+};
+
+let VENDORES = [];
+let VENDOR_PINS = {};
+
+// O n8n responde com respondToWebhook "allIncomingItems", que vem como um
+// array com 1 item ([{...}]). Isso normaliza tanto esse formato quanto um
+// objeto simples, caso o modo de resposta mude no futuro.
+async function callWebhook(url, options){
+  const res = await fetch(url, options);
+  if(!res.ok) throw new Error(`Erro ao comunicar com o servidor (HTTP ${res.status})`);
+  const data = await res.json().catch(()=>({}));
+  return Array.isArray(data) ? (data[0] || {}) : (data || {});
+}
+
+async function sha256(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function todayKey(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function thisMonthKey(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+function thisYearKey(){
+  return String(new Date().getFullYear());
+}
+function todayLabel(){
+  return new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+}
+function timeLabel(iso){
+  return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+function applyVendorList(list){
+  VENDORES = list.map(v=>v.name);
+  VENDOR_PINS = {};
+  list.forEach(v=>{ VENDOR_PINS[v.name] = v.pin; });
+}
+
+// Webhook: GET vendedores - le a lista de vendedores/PINs da planilha
+async function loadVendorList(){
+  try{
+    const data = await callWebhook(N8N_WEBHOOKS.getVendedores);
+    const list = data.vendedores;
+    if(list && list.length){ applyVendorList(list); return; }
+    applyVendorList(DEFAULT_VENDOR_LIST);
+  }catch(e){
+    console.error('Falha ao carregar vendedores', e);
+    alert('Não foi possível carregar a lista de vendedores. Verifica sua conexão e tenta de novo.');
+    applyVendorList(DEFAULT_VENDOR_LIST);
+  }
+}
+
+// Webhook: POST vendedores - adiciona/remove 1 vendedor por vez na planilha (nao reescreve a lista inteira)
+async function addVendor(){
+  const nameInput = document.getElementById('newVendorName');
+  const pinInput = document.getElementById('newVendorPin');
+  const name = nameInput.value.trim();
+  const pin = pinInput.value.trim();
+  if(!name || !pin){ alert('Preenche o nome e o PIN antes de adicionar.'); return; }
+  if(VENDORES.includes(name)){ alert('Já existe um vendedor com esse nome.'); return; }
+  try{
+    await callWebhook(N8N_WEBHOOKS.postVendedores, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'add', name, pin})
+    });
+  }catch(e){
+    console.error('Falha ao adicionar vendedor', e);
+    alert('Não foi possível adicionar o vendedor. Tenta de novo.');
+    return;
+  }
+  await loadVendorList();
+  if(state.adminRows) await loadAdminData();
+  else render();
+}
+
+async function removeVendor(name){
+  if(!confirm(`Remover ${name} da lista? Os dados já registrados por ele continuam salvos, só não aparece mais no seletor.`)) return;
+  try{
+    await callWebhook(N8N_WEBHOOKS.postVendedores, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'remove', name})
+    });
+  }catch(e){
+    console.error('Falha ao remover vendedor', e);
+    alert('Não foi possível remover o vendedor. Tenta de novo.');
+    return;
+  }
+  await loadVendorList();
+  await loadAdminData();
+}
+
+let state = {
+  view: 'loading',
+  vendor: null,
+  pendingVendor: null,
+  vendorPinError: false,
+  calls: [],
+  allCalls: [],
+  closed: null,
+  historyOpen: false,
+  loading: false,
+  periodType: 'dia',
+  periodValue: todayKey(),
+  adminRows: null,
+  pinError: false
+};
+
+// Webhook: GET ligacoes - le historico do vendedor + status "fechado" do dia
+async function loadVendorData(vendor){
+  state.loading = true; render();
+  try{
+    const data = await callWebhook(N8N_WEBHOOKS.getLigacoes + '?vendedor=' + encodeURIComponent(vendor));
+    const all = (data.ligacoes || []).map(r=>({type:r.Tipo, ts:r['Data/Hora']}));
+    state.allCalls = all;
+    state.calls = all.filter(c=>c.ts.slice(0,10)===todayKey());
+    const f = data.fechado;
+    state.closed = f ? {
+      closedAt: f['Fechado em'],
+      atendidas: f.Atendidas,
+      caixaPostal: f['Caixa Postal'],
+      total: f.Total
+    } : null;
+  }catch(e){
+    console.error('Falha ao carregar histórico', e);
+    alert('Não foi possível carregar o histórico de ligações. Verifica sua conexão e tenta de novo.');
+    state.allCalls = []; state.calls = []; state.closed = null;
+  }
+  state.loading = false;
+  render();
+}
+
+// Webhook: POST ligacoes - adiciona 1 linha na planilha (INSERT), sem reescrever nada
+async function addCall(type){
+  if(state.closed) return;
+  const entry = {type, ts:new Date().toISOString()};
+  state.allCalls.push(entry);
+  state.calls.push(entry);
+  render(type==='atendeu' ? 'atendeu' : 'caixa');
+  try{
+    await callWebhook(N8N_WEBHOOKS.postLigacoes, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'add', vendedor: state.vendor, tipo: type, ts: entry.ts})
+    });
+  }catch(e){
+    console.error('Falha ao salvar ligação', e);
+    // desfaz localmente pra nao mostrar uma contagem que nao foi salva no servidor
+    const idx = state.allCalls.indexOf(entry);
+    if(idx>-1) state.allCalls.splice(idx,1);
+    const idx2 = state.calls.indexOf(entry);
+    if(idx2>-1) state.calls.splice(idx2,1);
+    alert('Não foi possível salvar essa ligação. Verifica sua conexão e tenta de novo.');
+    render();
+  }
+}
+
+// Webhook: POST ligacoes com action:'undo' - remove a ultima linha desse vendedor (por vendedor+timestamp)
+async function undoLast(){
+  if(state.closed || state.calls.length===0) return;
+  const removed = state.calls[state.calls.length-1];
+  state.calls.pop();
+  const idx = state.allCalls.lastIndexOf(removed);
+  if(idx>-1) state.allCalls.splice(idx,1);
+  render();
+  try{
+    await callWebhook(N8N_WEBHOOKS.postLigacoes, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'undo', vendedor: state.vendor, ts: removed.ts})
+    });
+  }catch(e){
+    console.error('Falha ao desfazer ligação', e);
+    // restaura, ja que o servidor nao confirmou a remocao
+    state.allCalls.splice(idx>-1?idx:state.allCalls.length, 0, removed);
+    state.calls.push(removed);
+    alert('Não foi possível desfazer a última ligação no servidor. Tenta de novo.');
+    render();
+  }
+}
+
+// Webhook: POST fechar - marca o dia como fechado na planilha (aba Fechamentos)
+async function fecharRelatorio(){
+  const atendidas = state.calls.filter(c=>c.type==='atendeu').length;
+  const caixa = state.calls.filter(c=>c.type==='caixa_postal').length;
+  if(state.calls.length===0){
+    alert('Registra pelo menos uma ligação antes de fechar o relatório do dia.');
+    return;
+  }
+  if(!confirm(`Fechar o relatório de hoje?\n\nAtendidas: ${atendidas}\nCaixa postal: ${caixa}\nTotal: ${state.calls.length}\n\nDepois de fechado, não dá pra registrar mais ligações hoje (mas dá pra reabrir se precisar).`)) return;
+  const closedAt = new Date().toISOString();
+  const summary = {closedAt, atendidas, caixaPostal:caixa, total:state.calls.length};
+  try{
+    await callWebhook(N8N_WEBHOOKS.postFechar, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action:'fechar',
+        Vendedor: state.vendor,
+        Data: todayKey(),
+        Atendidas: atendidas,
+        'Caixa Postal': caixa,
+        Total: state.calls.length,
+        'Fechado em': closedAt
+      })
+    });
+  }catch(e){
+    console.error('Falha ao fechar relatorio', e);
+    alert('Não foi possível fechar o relatório no servidor. Tenta de novo.');
+    return;
+  }
+  state.closed = summary;
+  render();
+}
+
+// usa o mesmo webhook postFechar, so muda o "action" enviado no body (fechar -> reabrir)
+async function reopenDay(){
+  if(!confirm('Reabrir o relatório de hoje? Você vai poder registrar e editar ligações de novo.')) return;
+  try{
+    await callWebhook(N8N_WEBHOOKS.postFechar, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'reabrir', Vendedor: state.vendor, Data: todayKey()})
+    });
+  }catch(e){
+    console.error('Falha ao reabrir', e);
+    alert('Não foi possível reabrir o relatório no servidor. Tenta de novo.');
+    return;
+  }
+  state.closed = null;
+  render();
+}
+
+// Webhook: GET admin - retorna dados JA AGREGADOS por vendedor pro periodo selecionado (dia/mes/ano)
+async function loadAdminData(){
+  state.loading = true; render();
+  try{
+    const url = N8N_WEBHOOKS.getAdmin + '?tipo=' + encodeURIComponent(state.periodType) + '&valor=' + encodeURIComponent(state.periodValue);
+    const data = await callWebhook(url);
+    const rows = (data.ranking || []).map(r=>({
+      vendor: r.vendedor,
+      atendeu: r.atendeu || 0,
+      caixa: r.caixa || 0,
+      total: r.total || 0,
+      lastTs: r.lastTs || null,
+      closed: r.closed ? {
+        closedAt: r.closed.closedAt,
+        atendidas: r.closed.atendidas,
+        caixaPostal: r.closed.caixaPostal,
+        total: r.closed.total
+      } : null
+    }));
+    rows.sort((a,b)=>b.total-a.total);
+    state.adminRows = rows;
+  }catch(e){
+    console.error('Falha ao carregar dados do painel', e);
+    alert('Não foi possível carregar os dados do painel administrativo. Verifica sua conexão e tenta de novo.');
+    state.adminRows = [];
+  }
+  state.loading = false;
+  render();
+}
+
+function setPeriodType(type){
+  state.periodType = type;
+  if(type==='dia') state.periodValue = todayKey();
+  if(type==='mes') state.periodValue = thisMonthKey();
+  if(type==='ano') state.periodValue = thisYearKey();
+  loadAdminData();
+}
+
+function openAdminGate(){
+  state.view = 'adminGate';
+  state.pinError = false;
+  render();
+}
+
+async function checkPin(){
+  const val = document.getElementById('pinInput').value;
+  const hash = await sha256(val);
+  if(hash === ADMIN_PIN_HASH){
+    state.view = 'admin';
+    loadAdminData();
+  }else{
+    state.pinError = true;
+    render();
+  }
+}
+
+function exitAdmin(){
+  state.view = 'picker';
+  state.adminRows = null;
+  render();
+}
+
+function exportCsv(){
+  const rows = state.adminRows || [];
+  let csv = 'Vendedor,Atendidas,Caixa Postal,Total,Status,Ultima Ligacao\n';
+  rows.forEach(r=>{
+    const status = state.periodType==='dia' ? (r.closed ? 'Fechado' : (r.total>0 ? 'Em aberto' : 'Sem registro')) : '-';
+    const last = r.lastTs ? new Date(r.lastTs).toLocaleString('pt-BR') : '-';
+    csv += `"${r.vendor}",${r.atendeu},${r.caixa},${r.total},${status},${last}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ligacoes_fbs_${state.periodType}_${state.periodValue}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function goToVendorGate(name){
+  state.pendingVendor = name;
+  state.vendorPinError = false;
+  state.view = 'vendorGate';
+  render();
+}
+
+function checkVendorPin(){
+  const val = document.getElementById('vendorPinInput').value;
+  if(VENDOR_PINS[state.pendingVendor] === val){
+    selectVendor(state.pendingVendor);
+  }else{
+    state.vendorPinError = true;
+    render();
+  }
+}
+
+function selectVendor(name){
+  state.vendor = name;
+  state.pendingVendor = null;
+  state.vendorPinError = false;
+  state.view = 'app';
+  loadVendorData(name);
+}
+
+function trocarVendedor(){
+  state.vendor = null;
+  state.calls = [];
+  state.closed = null;
+  state.view = 'picker';
+  render();
+}
+
+function periodInputHtml(){
+  if(state.periodType==='dia'){
+    return `<input type="date" id="periodValueInput" value="${state.periodValue}">`;
+  }
+  if(state.periodType==='mes'){
+    return `<input type="month" id="periodValueInput" value="${state.periodValue}">`;
+  }
+  return `<input type="number" id="periodValueInput" min="2024" max="2100" value="${state.periodValue}">`;
+}
+
+function periodLabel(){
+  if(state.periodType==='dia') return new Date(state.periodValue+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  if(state.periodType==='mes') return new Date(state.periodValue+'-01T12:00:00').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  return `Ano de ${state.periodValue}`;
+}
+
+function render(pulse){
+  const app = document.getElementById('app');
+
+  if(state.view === 'loading'){
+    app.innerHTML = `<p class="eyebrow">FBS Prime</p><h1>Carregando...</h1>`;
+    return;
+  }
+
+  if(state.view === 'picker'){
+    app.innerHTML = `
+      <p class="eyebrow">FBS Prime</p>
+      <h1>Registro de ligações</h1>
+      <div class="picker-card">
+        <p class="tally-label" style="margin-bottom:0;">Quem está ligando agora?</p>
+        <select id="vendorSelect">
+          <option value="" disabled selected>Escolha seu nome</option>
+          ${VENDORES.map(v=>`<option value="${v}">${v}</option>`).join('')}
+        </select>
+        <button class="confirm-btn" id="confirmBtn">Começar</button>
+      </div>
+      <div style="text-align:center;margin-top:22px;">
+        <button class="undo-btn" id="adminLink">painel administrativo</button>
+      </div>
+    `;
+    document.getElementById('confirmBtn').onclick = ()=>{
+      const v = document.getElementById('vendorSelect').value;
+      if(!v){ alert('Escolhe seu nome na lista primeiro.'); return; }
+      goToVendorGate(v);
+    };
+    document.getElementById('adminLink').onclick = openAdminGate;
+    return;
+  }
+
+  if(state.view === 'vendorGate'){
+    app.innerHTML = `
+      <p class="eyebrow">FBS Prime</p>
+      <h1>Registro de ligações</h1>
+      <div class="picker-card">
+        <p class="tally-label" style="margin-bottom:0;">PIN de ${state.pendingVendor}</p>
+        <input type="password" inputmode="numeric" id="vendorPinInput" placeholder="Digite seu PIN">
+        ${state.vendorPinError ? '<p style="color:#F09595;font-size:13px;margin:-8px 0 12px;">PIN incorreto. Tenta de novo.</p>' : ''}
+        <button class="confirm-btn" id="vendorPinBtn">Entrar</button>
+      </div>
+      <div style="text-align:center;margin-top:22px;">
+        <button class="undo-btn" id="vendorBackLink">voltar</button>
+      </div>
+    `;
+    document.getElementById('vendorPinBtn').onclick = checkVendorPin;
+    document.getElementById('vendorPinInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkVendorPin(); });
+    document.getElementById('vendorBackLink').onclick = ()=>{ state.view='picker'; render(); };
+    return;
+  }
+
+  if(state.view === 'adminGate'){
+    app.innerHTML = `
+      <p class="eyebrow">FBS Prime</p>
+      <h1>Painel administrativo</h1>
+      <div class="picker-card">
+        <p class="tally-label" style="margin-bottom:0;">Senha de acesso</p>
+        <input type="password" id="pinInput" placeholder="Digite a senha">
+        ${state.pinError ? '<p style="color:#F09595;font-size:13px;margin:-8px 0 12px;">Senha incorreta. Tenta de novo.</p>' : ''}
+        <button class="confirm-btn" id="pinBtn">Entrar</button>
+      </div>
+      <div style="text-align:center;margin-top:22px;">
+        <button class="undo-btn" id="backLink">voltar</button>
+      </div>
+    `;
+    document.getElementById('pinBtn').onclick = checkPin;
+    document.getElementById('pinInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPin(); });
+    document.getElementById('backLink').onclick = ()=>{ state.view='picker'; render(); };
+    return;
+  }
+
+  if(state.view === 'admin'){
+    const rows = state.adminRows || [];
+    const totalAtendeu = rows.reduce((s,r)=>s+r.atendeu,0);
+    const totalCaixa = rows.reduce((s,r)=>s+r.caixa,0);
+    const totalGeral = totalAtendeu + totalCaixa;
+    const semRegistro = rows.filter(r=>r.total===0);
+    const maxTotal = Math.max(1, ...rows.map(r=>r.total));
+
+    app.innerHTML = `
+      <p class="eyebrow">FBS Prime</p>
+      <h1>Painel administrativo</h1>
+
+      <div class="vendor-row">
+        <div>
+          <div class="vendor-name">Ranking de ligações</div>
+          <div class="vendor-date">${periodLabel()}</div>
+        </div>
+        <button class="trocar-btn" id="exitAdminBtn">sair</button>
+      </div>
+
+      <div class="picker-card" style="padding:14px 16px;margin-bottom:16px;">
+        <p class="tally-label" style="margin-bottom:8px;">Período</p>
+        <div style="display:flex;gap:8px;margin-bottom:4px;">
+          <button class="trocar-btn ${state.periodType==='dia'?'active':''}" id="periodDia" style="flex:1;">Dia</button>
+          <button class="trocar-btn ${state.periodType==='mes'?'active':''}" id="periodMes" style="flex:1;">Mês</button>
+          <button class="trocar-btn ${state.periodType==='ano'?'active':''}" id="periodAno" style="flex:1;">Ano</button>
+        </div>
+        ${periodInputHtml()}
+      </div>
+
+      <div class="tally" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="tally-card">
+          <div class="tally-label">Total</div>
+          <div class="tally-num" style="font-size:28px;color:var(--text);">${totalGeral}</div>
+        </div>
+        <div class="tally-card">
+          <div class="tally-label">Atendidas</div>
+          <div class="tally-num tally-atendeu" style="font-size:28px;">${totalAtendeu}</div>
+        </div>
+        <div class="tally-card">
+          <div class="tally-label">Caixa postal</div>
+          <div class="tally-num tally-caixa" style="font-size:28px;">${totalCaixa}</div>
+        </div>
+      </div>
+
+      ${(state.periodType==='dia' && semRegistro.length) ? `
+        <div class="fechado-banner" style="border-color:var(--fechar);">
+          <div class="t" style="color:#E8B4B4;">${semRegistro.length} sem nenhum registro hoje</div>
+          <div class="s">${semRegistro.map(r=>r.vendor).join(', ')}</div>
+        </div>
+      ` : ''}
+
+      <div class="history" style="margin-bottom:16px;">
+        <div class="history-head" style="cursor:default;">
+          <span>Ranking por vendedor</span>
+        </div>
+        ${rows.map(r=>{
+          const pctAtendeu = maxTotal ? (r.atendeu/maxTotal*100) : 0;
+          const pctCaixa = maxTotal ? (r.caixa/maxTotal*100) : 0;
+          const status = state.periodType==='dia' ? (r.closed ? 'Fechado' : (r.total>0 ? 'Em aberto' : 'Sem registro')) : '';
+          const statusColor = r.closed ? 'var(--gold)' : (r.total>0 ? 'var(--text-dim)' : '#E8B4B4');
+          return `
+            <div style="padding:12px 16px;border-top:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+                <span style="font-weight:600;">${r.vendor}</span>
+                <span style="color:var(--text-dim);">${r.total}${status?` · <span style="color:${statusColor};">${status}</span>`:''}</span>
+              </div>
+              <div style="height:10px;border-radius:6px;background:var(--panel-2);overflow:hidden;display:flex;">
+                <div style="width:${pctAtendeu}%;background:var(--atendeu);"></div>
+                <div style="width:${pctCaixa}%;background:var(--caixa);"></div>
+              </div>
+              ${r.lastTs ? `<div style="font-size:12px;color:var(--text-dim);margin-top:4px;">última ligação: ${new Date(r.lastTs).toLocaleString('pt-BR')}</div>` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <button class="fechar-btn" id="exportBtn" style="border-color:var(--gold);color:var(--gold);">Baixar CSV do período</button>
+
+      <div class="history" style="margin-top:20px;">
+        <div class="history-head" style="cursor:default;">
+          <span>Gerenciar vendedores (${VENDORES.length})</span>
+        </div>
+        ${VENDORES.map(v=>`
+          <div class="history-item">
+            <span>${v} <span style="color:var(--text-dim);">· PIN ${VENDOR_PINS[v]}</span></span>
+            <button class="undo-btn" data-remove="${v}">remover</button>
+          </div>
+        `).join('')}
+        <div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--border);">
+          <input id="newVendorName" placeholder="Nome" style="flex:2;margin:0;padding:10px;font-size:14px;">
+          <input id="newVendorPin" placeholder="PIN" style="flex:1;margin:0;padding:10px;font-size:14px;">
+        </div>
+        <div style="padding:0 16px 14px;">
+          <button class="confirm-btn" id="addVendorBtn" style="margin:0;">Adicionar vendedor</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('exitAdminBtn').onclick = exitAdmin;
+    document.getElementById('exportBtn').onclick = exportCsv;
+    document.getElementById('periodDia').onclick = ()=>setPeriodType('dia');
+    document.getElementById('periodMes').onclick = ()=>setPeriodType('mes');
+    document.getElementById('periodAno').onclick = ()=>setPeriodType('ano');
+    document.getElementById('periodValueInput').onchange = (e)=>{
+      state.periodValue = e.target.value;
+      loadAdminData();
+    };
+    document.getElementById('addVendorBtn').onclick = addVendor;
+    app.querySelectorAll('[data-remove]').forEach(btn=>{
+      btn.onclick = ()=>removeVendor(btn.getAttribute('data-remove'));
+    });
+    return;
+  }
+
+  const atendidas = state.calls.filter(c=>c.type==='atendeu').length;
+  const caixa = state.calls.filter(c=>c.type==='caixa_postal').length;
+  const total = state.calls.length;
+  const disabled = !!state.closed;
+
+  app.innerHTML = `
+    <h2 class="sr-only">Registro de ligações do dia para ${state.vendor}</h2>
+    <p class="eyebrow">FBS Prime</p>
+    <h1>Registro de ligações</h1>
+
+    <div class="vendor-row">
+      <div>
+        <div class="vendor-name">${state.vendor}</div>
+        <div class="vendor-date">${todayLabel()}</div>
+      </div>
+      <button class="trocar-btn" id="trocarBtn">trocar</button>
+    </div>
+
+    <div class="tally">
+      <div class="tally-card">
+        <div class="tally-label">Atendidas</div>
+        <div class="tally-num tally-atendeu ${pulse==='atendeu'?'pulse':''}">${atendidas}</div>
+      </div>
+      <div class="tally-card">
+        <div class="tally-label">Caixa postal</div>
+        <div class="tally-num tally-caixa ${pulse==='caixa'?'pulse':''}">${caixa}</div>
+      </div>
+    </div>
+    <div class="tally-total">Total de ligações hoje: <b>${total}</b></div>
+
+    ${state.closed ? `
+      <div class="fechado-banner">
+        <div class="t">Relatório de hoje fechado</div>
+        <div class="s">${state.closed.atendidas} atendidas · ${state.closed.caixaPostal} caixa postal · fechado às ${timeLabel(state.closed.closedAt)}</div>
+        <button class="undo-btn" id="reopenBtn" style="margin-top:8px;">reabrir relatório</button>
+      </div>
+    ` : ''}
+
+    <button class="call-btn btn-atendeu" id="btnAtendeu" ${disabled?'disabled':''}>
+      <span class="icon">&#9679;</span> Cliente atendeu
+    </button>
+    <button class="call-btn btn-caixa" id="btnCaixa" ${disabled?'disabled':''}>
+      <span class="icon">&#9724;</span> Caixa postal
+    </button>
+
+    <div class="undo-row">
+      ${(!disabled && total>0) ? '<button class="undo-btn" id="undoBtn">desfazer última ligação</button>' : ''}
+    </div>
+
+    <button class="fechar-btn" id="fecharBtn" ${disabled?'disabled':''}>
+      ${disabled ? 'Relatório já fechado' : 'Fechar relatório do dia'}
+    </button>
+
+    <div class="history">
+      <div class="history-head" id="historyHead">
+        <span>Histórico de hoje (${total})</span>
+        <span class="chev">${state.historyOpen?'&#9650;':'&#9660;'}</span>
+      </div>
+      <div class="history-list ${state.historyOpen?'open':''}">
+        ${total===0 ? '<div class="empty-hint">Nenhuma ligação registrada ainda.</div>' :
+          [...state.calls].reverse().map((c,i)=>`
+            <div class="history-item">
+              <span class="tag ${c.type==='atendeu'?'tag-atendeu':'tag-caixa'}">${c.type==='atendeu'?'Atendeu':'Caixa postal'}</span>
+              <span class="time">${timeLabel(c.ts)}</span>
+            </div>
+          `).join('')
+        }
+      </div>
+    </div>
+  `;
+
+  document.getElementById('trocarBtn').onclick = trocarVendedor;
+  document.getElementById('historyHead').onclick = ()=>{ state.historyOpen = !state.historyOpen; render(); };
+  if(!disabled){
+    document.getElementById('btnAtendeu').onclick = ()=>addCall('atendeu');
+    document.getElementById('btnCaixa').onclick = ()=>addCall('caixa_postal');
+    const undo = document.getElementById('undoBtn');
+    if(undo) undo.onclick = undoLast;
+  }
+  document.getElementById('fecharBtn').onclick = ()=>{ if(!disabled) fecharRelatorio(); };
+  const reopenBtn = document.getElementById('reopenBtn');
+  if(reopenBtn) reopenBtn.onclick = reopenDay;
+}
+
+async function init(){
+  await loadVendorList();
+  state.view = 'picker';
+  render();
+}
+init();
+</script>
+</body>
+</html>

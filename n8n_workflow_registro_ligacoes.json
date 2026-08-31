@@ -1,0 +1,1414 @@
+{
+  "name": "FBS Prime - Registro de Ligacoes (webhooks)",
+  "nodes": [
+    {
+      "id": "2bf1143b-923e-4750-895a-c110f44547b2",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -600
+      ],
+      "parameters": {
+        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n6 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets (esta como placeholder)\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Nos nos 'Achar linha ... a remover' (remover vendedor, reabrir dia, desfazer ligacao): confirmar como a versao instalada do node Google Sheets expoe o numero da linha (row_number ou equivalente) e ajustar o filtro/startIndex - isso ficou como TODO manual, depende da versao do node\n4. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s",
+        "height": 320,
+        "width": 420,
+        "color": 7
+      }
+    },
+    {
+      "id": "506b655d-8c7e-4bbe-b33f-7af08aaead89",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -600
+      ],
+      "parameters": {
+        "content": "1/6 - LER VENDEDORES\nGET /vendedores\nRetorna lista {name, pin} da aba Vendedores",
+        "height": 100,
+        "width": 260,
+        "color": 4
+      }
+    },
+    {
+      "id": "e2fed38e-6550-46b0-9f2a-75f7d0401215",
+      "name": "Webhook: GET vendedores",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -450
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "vendedores",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "d9428981-7667-4961-8df0-35ebd9b76b9c"
+    },
+    {
+      "id": "8584371c-0ff0-4d19-abee-c7c1a903f151",
+      "name": "Ler aba Vendedores",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        260,
+        -450
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "f9b74b31-5153-4ef0-9fed-16d3f4eb983d",
+      "name": "Formatar lista vendedores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        -450
+      ],
+      "parameters": {
+        "jsCode": "\nconst items = $input.all();\nconst list = items.map(i => ({ name: i.json.Nome, pin: String(i.json.PIN) }));\nreturn [{ json: { vendedores: list } }];\n"
+      }
+    },
+    {
+      "id": "01d1a226-69f9-4b9f-a29f-ad1cc7bab883",
+      "name": "Responder GET vendedores",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        740,
+        -450
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    },
+    {
+      "id": "ed2a8291-0eb4-4b95-906d-e1042e556000",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -300
+      ],
+      "parameters": {
+        "content": "2/6 - GERENCIAR VENDEDORES\nPOST /vendedores\nBody: {action:'add'|'remove', name, pin}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).\n\nremove: precisa achar a linha certa antes de apagar - ajustar o No 'Achar linha' com o filtro certo da versao do node instalada",
+        "height": 140,
+        "width": 300,
+        "color": 4
+      }
+    },
+    {
+      "id": "aea6f4f7-be15-4f2a-be26-91503e134de3",
+      "name": "Webhook: POST vendedores",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -140
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vendedores",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "5ee2888c-d32c-4de7-98dc-c0286fdfff57"
+    },
+    {
+      "id": "d864c8bd-0852-421a-9484-6a3ad8ac0de4",
+      "name": "Roteador add/remove",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        -140
+      ],
+      "parameters": {
+        "jsCode": "\nconst action = $json.body.action;\nreturn [{ json: { ...$json.body, action } }];\n"
+      }
+    },
+    {
+      "id": "b1a00001-0000-4000-8000-000000000001",
+      "name": "Vendedores: acao e add?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        -140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "b1a00001-cond-1",
+              "leftValue": "={{$json.action}}",
+              "rightValue": "add",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "b1a00001-0000-4000-8000-000000000002",
+      "name": "Remover campo action (vendedor)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        -220
+      ],
+      "parameters": {
+        "jsCode": "\n// mapeia os campos do body (name/pin, em ingles) pros cabecalhos reais da aba Vendedores (Nome/PIN)\nreturn [{ json: { Nome: $json.name, PIN: $json.pin } }];\n"
+      }
+    },
+    {
+      "id": "72882942-1664-42fd-8769-353dd52186e4",
+      "name": "Adicionar vendedor (aba Vendedores)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        980,
+        -220
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "bff6bbce-9ad6-49cc-85ca-764eea77c0fa",
+      "name": "Achar linha do vendedor a remover",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        520,
+        -60
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "9c020024-b324-4c0d-b85e-a2b75f1944f4",
+      "name": "Remover linha do vendedor",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        760,
+        -60
+      ],
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "startIndex": "={{$json.rowIndex}}",
+        "numberToDelete": 1
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "12980489-c935-46a2-bc93-c39ffc34a414",
+      "name": "Responder POST vendedores",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        -140
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    },
+    {
+      "id": "587a3aa2-ee99-4a9d-a598-f844e1d217b0",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        40
+      ],
+      "parameters": {
+        "content": "3/6 - HISTORICO DO VENDEDOR\nGET /ligacoes?vendedor=Nome\nRetorna ligacoes de hoje + status fechado/aberto",
+        "height": 120,
+        "width": 300,
+        "color": 3
+      }
+    },
+    {
+      "id": "74d23415-94a9-439e-b55c-9485bce82cd9",
+      "name": "Webhook: GET ligacoes",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        190
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "ligacoes",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "b502a794-17f7-41ea-aaa5-27102b7e0f58"
+    },
+    {
+      "id": "191fa18f-6cfa-4d5e-83c5-0229362defe9",
+      "name": "Ler aba Ligacoes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        130
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "38c27b01-8457-44fd-bfc9-186dd26686af",
+      "name": "Ler aba Fechamentos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        280
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "46edf506-39dd-433b-b490-e1069ff319f1",
+      "name": "Filtrar por vendedor + hoje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        190
+      ],
+      "parameters": {
+        "jsCode": "\nconst vendedor = $('Webhook: GET ligacoes').first().json.query.vendedor;\nconst hoje = new Date().toISOString().slice(0,10);\nconst ligacoes = $('Ler aba Ligacoes').all()\n  .map(i => i.json)\n  .filter(r => r.Vendedor === vendedor);\nconst fechamentoHoje = $('Ler aba Fechamentos').all()\n  .map(i => i.json)\n  .find(r => r.Vendedor === vendedor && r.Data === hoje) || null;\nreturn [{ json: { ligacoes, fechado: fechamentoHoje } }];\n"
+      }
+    },
+    {
+      "id": "70576088-0606-4419-901a-fca1ea12044d",
+      "name": "Responder GET ligacoes",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        190
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    },
+    {
+      "id": "43814761-3333-4e91-9939-71d814334620",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        420
+      ],
+      "parameters": {
+        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts}\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.\n\nundo: mesma ressalva do item 2/6 sobre achar a linha certa antes de apagar.",
+        "height": 110,
+        "width": 280,
+        "color": 3
+      }
+    },
+    {
+      "id": "46d9b3d8-0e55-4d87-808d-e15f99aef193",
+      "name": "Webhook: POST ligacoes",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        560
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ligacoes",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "8ede663a-9fbf-4ab9-9633-52a2386e20f5"
+    },
+    {
+      "id": "c1a00001-0000-4000-8000-000000000001",
+      "name": "Roteador add/undo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        180,
+        560
+      ],
+      "parameters": {
+        "jsCode": "\nconst action = $json.body.action || 'add';\nreturn [{ json: { ...$json.body, action } }];\n"
+      }
+    },
+    {
+      "id": "c1a00001-0000-4000-8000-000000000002",
+      "name": "Ligacoes: acao e undo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        380,
+        560
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c1a00001-cond-1",
+              "leftValue": "={{$json.action}}",
+              "rightValue": "undo",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f1a3062b-93e1-4c88-b1d1-bb59385a7e05",
+      "name": "Montar linha da ligacao",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        640
+      ],
+      "parameters": {
+        "jsCode": "\nreturn [{ json: {\n  Vendedor: $json.vendedor,\n  Tipo: $json.tipo,\n  'Data/Hora': $json.ts\n}}];\n"
+      }
+    },
+    {
+      "id": "c1a00001-0000-4000-8000-000000000003",
+      "name": "Ler aba Ligacoes (para desfazer)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        620,
+        460
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "c1a00001-0000-4000-8000-000000000004",
+      "name": "Achar linha para desfazer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        460
+      ],
+      "parameters": {
+        "jsCode": "\nconst body = $('Webhook: POST ligacoes').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst rowIndex = rows.findIndex(r => r.Vendedor === body.vendedor && r['Data/Hora'] === body.ts);\nreturn [{ json: { rowIndex } }];\n"
+      }
+    },
+    {
+      "id": "c1a00001-0000-4000-8000-000000000005",
+      "name": "Remover linha da ligacao",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1100,
+        460
+      ],
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "startIndex": "={{$json.rowIndex}}",
+        "numberToDelete": 1
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "8ab82dd7-2f05-4892-b50d-38b90ef0d9c6",
+      "name": "Adicionar linha em Ligacoes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        860,
+        640
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "2ab30a30-ec9c-468e-89fc-e0ef3445b13d",
+      "name": "Responder POST ligacoes",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        780,
+        560
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    },
+    {
+      "id": "5122168a-4604-403e-b172-a5de4b337317",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        720
+      ],
+      "parameters": {
+        "content": "5/6 - FECHAR/REABRIR DIA\nPOST /fechar\nBody fechar: {action:'fechar', Vendedor, Data, Atendidas, 'Caixa Postal', Total, 'Fechado em'}\nBody reabrir: {action:'reabrir', Vendedor, Data}\n\nAgora roteado por um No IF (antes os dois ramos rodavam sempre, era bug).\n\nreabrir: mesma ressalva do item 2/6 sobre achar a linha certa antes de apagar.",
+        "height": 110,
+        "width": 300,
+        "color": 6
+      }
+    },
+    {
+      "id": "a5011f7b-1dba-40b0-b65d-469952286b51",
+      "name": "Webhook: POST fechar",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        870
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fechar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "481d283e-4290-4ae8-ad12-02e376f38a81"
+    },
+    {
+      "id": "3e7d22ef-8eb2-4aaf-a1b0-84ed430430e0",
+      "name": "Roteador fechar/reabrir",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        870
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: $json.body }];"
+      }
+    },
+    {
+      "id": "d1a00001-0000-4000-8000-000000000001",
+      "name": "Fechar: acao e fechar?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        870
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "d1a00001-cond-1",
+              "leftValue": "={{$json.action}}",
+              "rightValue": "fechar",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d1a00001-0000-4000-8000-000000000002",
+      "name": "Remover campo action (fechar)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        800
+      ],
+      "parameters": {
+        "jsCode": "\nconst { action, ...linha } = $json;\nreturn [{ json: linha }];\n"
+      }
+    },
+    {
+      "id": "a288a4d5-9c12-4613-a7a4-aef8db8d9acc",
+      "name": "Adicionar linha em Fechamentos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        940,
+        800
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "f697a45f-ee4c-4ad3-b104-19f630fab91a",
+      "name": "Achar linha do fechamento a remover",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        520,
+        950
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "8e826d41-9a6c-438a-807b-c5c219b0990a",
+      "name": "Remover linha de Fechamentos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        760,
+        950
+      ],
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "startIndex": "={{$json.rowIndex}}",
+        "numberToDelete": 1
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "f002bde9-cb70-4765-9a39-5dd65b613433",
+      "name": "Responder POST fechar",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        870
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    },
+    {
+      "id": "22381d50-be32-40a4-844b-b16a3b6bf14c",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1100
+      ],
+      "parameters": {
+        "content": "6/6 - PAINEL ADMIN (RANKING)\nGET /admin?tipo=dia|mes|ano&valor=X\nLe Ligacoes + Vendedores + Fechamentos e retorna ja agregado por vendedor (inclui vendedor com 0 ligacoes e status fechado/aberto do dia)",
+        "height": 120,
+        "width": 300,
+        "color": 5
+      }
+    },
+    {
+      "id": "0e9dfaae-eecf-4f93-ada6-326dd74d6659",
+      "name": "Webhook: GET admin",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1250
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "admin",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "e79c0e64-7656-419f-a8fa-6df9dd2f8e69"
+    },
+    {
+      "id": "e26a1536-dac9-4483-a875-b78a3cbdec55",
+      "name": "Ler aba Ligacoes (admin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        1250
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "e1a00001-0000-4000-8000-000000000001",
+      "name": "Ler aba Vendedores (admin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        1400
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "e1a00001-0000-4000-8000-000000000002",
+      "name": "Ler aba Fechamentos (admin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        1550
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "928ee313-e601-4d76-8470-7fc4175a3220",
+      "name": "Agregar por vendedor e periodo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        1250
+      ],
+      "parameters": {
+        "jsCode": "\nconst q = $('Webhook: GET admin').first().json.query;\nconst tipo = q.tipo;\nconst valor = q.valor;\n\nconst vendedores = $('Ler aba Vendedores (admin)').all().map(i => i.json.Nome);\nconst rows = $('Ler aba Ligacoes (admin)').all().map(i => i.json);\n\nfunction matchPeriodo(dataIso){\n  if(!dataIso) return false;\n  if(tipo === 'dia') return dataIso.slice(0,10) === valor;\n  if(tipo === 'mes') return dataIso.slice(0,7) === valor;\n  if(tipo === 'ano') return dataIso.slice(0,4) === valor;\n  return true;\n}\nconst filtradas = rows.filter(r => matchPeriodo(r['Data/Hora']));\n\nconst porVendedor = {};\nfor(const v of vendedores){ porVendedor[v] = { vendedor: v, atendeu: 0, caixa: 0, lastTs: null }; }\nfor(const r of filtradas){\n  const v = r.Vendedor;\n  if(!porVendedor[v]) porVendedor[v] = { vendedor: v, atendeu: 0, caixa: 0, lastTs: null };\n  if(r.Tipo === 'atendeu') porVendedor[v].atendeu++;\n  else porVendedor[v].caixa++;\n  if(!porVendedor[v].lastTs || r['Data/Hora'] > porVendedor[v].lastTs) porVendedor[v].lastTs = r['Data/Hora'];\n}\n\nlet fechamentos = [];\nif(tipo === 'dia'){\n  fechamentos = $('Ler aba Fechamentos (admin)').all().map(i => i.json).filter(f => f.Data === valor);\n}\n\nconst ranking = Object.values(porVendedor).map(r => {\n  const fech = fechamentos.find(f => f.Vendedor === r.vendedor) || null;\n  return {\n    ...r,\n    total: r.atendeu + r.caixa,\n    closed: fech ? {\n      closedAt: fech['Fechado em'],\n      atendidas: fech.Atendidas,\n      caixaPostal: fech['Caixa Postal'],\n      total: fech.Total\n    } : null\n  };\n});\nranking.sort((a,b) => b.total - a.total);\nreturn [{ json: { ranking } }];\n"
+      }
+    },
+    {
+      "id": "2cabd308-69dd-4bd8-ae1c-1275469b8771",
+      "name": "Responder GET admin",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        1250
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook: GET vendedores": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Vendedores": {
+      "main": [
+        [
+          {
+            "node": "Formatar lista vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar lista vendedores": {
+      "main": [
+        [
+          {
+            "node": "Responder GET vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: POST vendedores": {
+      "main": [
+        [
+          {
+            "node": "Roteador add/remove",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Roteador add/remove": {
+      "main": [
+        [
+          {
+            "node": "Vendedores: acao e add?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vendedores: acao e add?": {
+      "main": [
+        [
+          {
+            "node": "Remover campo action (vendedor)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Achar linha do vendedor a remover",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remover campo action (vendedor)": {
+      "main": [
+        [
+          {
+            "node": "Adicionar vendedor (aba Vendedores)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adicionar vendedor (aba Vendedores)": {
+      "main": [
+        [
+          {
+            "node": "Responder POST vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Achar linha do vendedor a remover": {
+      "main": [
+        [
+          {
+            "node": "Remover linha do vendedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remover linha do vendedor": {
+      "main": [
+        [
+          {
+            "node": "Responder POST vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: GET ligacoes": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Ligacoes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ler aba Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Ligacoes": {
+      "main": [
+        [
+          {
+            "node": "Filtrar por vendedor + hoje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Fechamentos": {
+      "main": [
+        [
+          {
+            "node": "Filtrar por vendedor + hoje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar por vendedor + hoje": {
+      "main": [
+        [
+          {
+            "node": "Responder GET ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: POST ligacoes": {
+      "main": [
+        [
+          {
+            "node": "Roteador add/undo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Roteador add/undo": {
+      "main": [
+        [
+          {
+            "node": "Ligacoes: acao e undo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ligacoes: acao e undo?": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Ligacoes (para desfazer)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Montar linha da ligacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Ligacoes (para desfazer)": {
+      "main": [
+        [
+          {
+            "node": "Achar linha para desfazer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Achar linha para desfazer": {
+      "main": [
+        [
+          {
+            "node": "Remover linha da ligacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remover linha da ligacao": {
+      "main": [
+        [
+          {
+            "node": "Responder POST ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Montar linha da ligacao": {
+      "main": [
+        [
+          {
+            "node": "Adicionar linha em Ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adicionar linha em Ligacoes": {
+      "main": [
+        [
+          {
+            "node": "Responder POST ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: POST fechar": {
+      "main": [
+        [
+          {
+            "node": "Roteador fechar/reabrir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Roteador fechar/reabrir": {
+      "main": [
+        [
+          {
+            "node": "Fechar: acao e fechar?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fechar: acao e fechar?": {
+      "main": [
+        [
+          {
+            "node": "Remover campo action (fechar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Achar linha do fechamento a remover",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remover campo action (fechar)": {
+      "main": [
+        [
+          {
+            "node": "Adicionar linha em Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adicionar linha em Fechamentos": {
+      "main": [
+        [
+          {
+            "node": "Responder POST fechar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Achar linha do fechamento a remover": {
+      "main": [
+        [
+          {
+            "node": "Remover linha de Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remover linha de Fechamentos": {
+      "main": [
+        [
+          {
+            "node": "Responder POST fechar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: GET admin": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Ligacoes (admin)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ler aba Vendedores (admin)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ler aba Fechamentos (admin)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Ligacoes (admin)": {
+      "main": [
+        [
+          {
+            "node": "Agregar por vendedor e periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Vendedores (admin)": {
+      "main": [
+        [
+          {
+            "node": "Agregar por vendedor e periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Fechamentos (admin)": {
+      "main": [
+        [
+          {
+            "node": "Agregar por vendedor e periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar por vendedor e periodo": {
+      "main": [
+        [
+          {
+            "node": "Responder GET admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "instanceId": "fbs-prime-registro-ligacoes"
+  }
+}
