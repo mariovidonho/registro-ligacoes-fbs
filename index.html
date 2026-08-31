@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>FBS Prime · Registro de Ligações</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root{
     --bg:#0D1B2A;
@@ -40,12 +44,20 @@
     padding:20px 20px 32px;
   }
   .eyebrow{
+    display:flex;
+    align-items:center;
+    gap:7px;
     font-size:12px;
     letter-spacing:.14em;
     text-transform:uppercase;
     color:var(--gold);
     font-weight:600;
     margin:0 0 2px;
+  }
+  .eyebrow img{
+    height:18px;
+    width:auto;
+    display:block;
   }
   h1{
     font-size:22px;
@@ -658,13 +670,13 @@ function render(pulse){
   const app = document.getElementById('app');
 
   if(state.view === 'loading'){
-    app.innerHTML = `<p class="eyebrow">FBS Prime</p><h1>Carregando...</h1>`;
+    app.innerHTML = `<p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p><h1>Carregando...</h1>`;
     return;
   }
 
   if(state.view === 'picker'){
     app.innerHTML = `
-      <p class="eyebrow">FBS Prime</p>
+      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
       <h1>Registro de ligações</h1>
       <div class="picker-card">
         <p class="tally-label" style="margin-bottom:0;">Quem está ligando agora?</p>
@@ -689,7 +701,7 @@ function render(pulse){
 
   if(state.view === 'vendorGate'){
     app.innerHTML = `
-      <p class="eyebrow">FBS Prime</p>
+      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
       <h1>Registro de ligações</h1>
       <div class="picker-card">
         <p class="tally-label" style="margin-bottom:0;">PIN de ${state.pendingVendor}</p>
@@ -709,7 +721,7 @@ function render(pulse){
 
   if(state.view === 'adminGate'){
     app.innerHTML = `
-      <p class="eyebrow">FBS Prime</p>
+      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
       <h1>Painel administrativo</h1>
       <div class="picker-card">
         <p class="tally-label" style="margin-bottom:0;">Senha de acesso</p>
@@ -736,7 +748,7 @@ function render(pulse){
     const maxTotal = Math.max(1, ...rows.map(r=>r.total));
 
     app.innerHTML = `
-      <p class="eyebrow">FBS Prime</p>
+      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
       <h1>Painel administrativo</h1>
 
       <div class="vendor-row">
@@ -848,7 +860,7 @@ function render(pulse){
 
   app.innerHTML = `
     <h2 class="sr-only">Registro de ligações do dia para ${state.vendor}</h2>
-    <p class="eyebrow">FBS Prime</p>
+    <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
     <h1>Registro de ligações</h1>
 
     <div class="vendor-row">
