@@ -563,7 +563,7 @@
         460
       ],
       "parameters": {
-        "jsCode": "\nconst body = $('Webhook: POST ligacoes').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.vendedor && r['Data/Hora'] === body.ts);\nconst rowIndex = match ? match.row_number - 2 : -1;\nreturn [{ json: { rowIndex } }];\n"
+        "jsCode": "\nconst body = $('Webhook: POST ligacoes').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.vendedor && r['Data/Hora'] === body.ts);\nconst rowIndex = match ? match.row_number : -1;\nreturn [{ json: { rowIndex } }];\n"
       }
     },
     {
@@ -1009,7 +1009,7 @@
         -60
       ],
       "parameters": {
-        "jsCode": "\nconst body = $('Webhook: POST vendedores').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Nome === body.name);\nconst rowIndex = match ? match.row_number - 2 : -1;\nreturn [{ json: { rowIndex } }];\n"
+        "jsCode": "\nconst body = $('Webhook: POST vendedores').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Nome === body.name);\nconst rowIndex = match ? match.row_number : -1;\nreturn [{ json: { rowIndex } }];\n"
       }
     },
     {
@@ -1022,7 +1022,7 @@
         950
       ],
       "parameters": {
-        "jsCode": "\nconst body = $('Webhook: POST fechar').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.Vendedor && r.Data === body.Data);\nconst rowIndex = match ? match.row_number - 2 : -1;\nreturn [{ json: { rowIndex } }];\n"
+        "jsCode": "\nconst body = $('Webhook: POST fechar').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.Vendedor && r.Data === body.Data);\nconst rowIndex = match ? match.row_number : -1;\nreturn [{ json: { rowIndex } }];\n"
       }
     }
   ],
