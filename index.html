@@ -313,6 +313,17 @@ async function callWebhook(url, options){
   return Array.isArray(data) ? (data[0] || {}) : (data || {});
 }
 
+const SESSION_KEY = 'fbs_session';
+function saveSession(session){
+  try{ localStorage.setItem(SESSION_KEY, JSON.stringify(session)); }catch(e){}
+}
+function loadSession(){
+  try{ return JSON.parse(localStorage.getItem(SESSION_KEY)); }catch(e){ return null; }
+}
+function clearSession(){
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
+}
+
 async function sha256(text){
   const enc = new TextEncoder().encode(text);
   const buf = await crypto.subtle.digest('SHA-256', enc);
@@ -405,6 +416,7 @@ let state = {
   calls: [],
   allCalls: [],
   closed: null,
+  pendentes: [],
   historyOpen: false,
   loading: false,
   periodType: 'dia',
@@ -417,7 +429,7 @@ let state = {
 async function loadVendorData(vendor){
   state.loading = true; render();
   try{
-    const data = await callWebhook(N8N_WEBHOOKS.getLigacoes + '?vendedor=' + encodeURIComponent(vendor));
+    const data = await callWebhook(N8N_WEBHOOKS.getLigacoes + '?vendedor=' + encodeURIComponent(vendor) + '&hoje=' + todayKey());
     const all = (data.ligacoes || []).map(r=>({type:r.Tipo, ts:r['Data/Hora']}));
     state.allCalls = all;
     state.calls = all.filter(c=>c.ts.slice(0,10)===todayKey());
@@ -428,10 +440,11 @@ async function loadVendorData(vendor){
       caixaPostal: f['Caixa Postal'],
       total: f.Total
     } : null;
+    state.pendentes = data.pendentes || [];
   }catch(e){
     console.error('Falha ao carregar histórico', e);
     alert('Não foi possível carregar o histórico de ligações. Verifica sua conexão e tenta de novo.');
-    state.allCalls = []; state.calls = []; state.closed = null;
+    state.allCalls = []; state.calls = []; state.closed = null; state.pendentes = [];
   }
   state.loading = false;
   render();
@@ -520,6 +533,36 @@ async function fecharRelatorio(){
   render();
 }
 
+// Fecha um relatório de um dia anterior que ficou pendente (banner de lembrete)
+async function fecharPendente(data){
+  const p = state.pendentes.find(x=>x.data===data);
+  if(!p) return;
+  const dataLabel = new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR');
+  if(!confirm(`Fechar o relatório de ${dataLabel}?\n\nAtendidas: ${p.atendeu}\nCaixa postal: ${p.caixa}\nTotal: ${p.total}`)) return;
+  const closedAt = new Date().toISOString();
+  try{
+    await callWebhook(N8N_WEBHOOKS.postFechar, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action:'fechar',
+        Vendedor: state.vendor,
+        Data: p.data,
+        Atendidas: p.atendeu,
+        'Caixa Postal': p.caixa,
+        Total: p.total,
+        'Fechado em': closedAt
+      })
+    });
+  }catch(e){
+    console.error('Falha ao fechar relatorio pendente', e);
+    alert('Não foi possível fechar esse relatório pendente. Tenta de novo.');
+    return;
+  }
+  state.pendentes = state.pendentes.filter(x=>x.data!==data);
+  render();
+}
+
 // usa o mesmo webhook postFechar, so muda o "action" enviado no body (fechar -> reabrir)
 async function reopenDay(){
   if(!confirm('Reabrir o relatório de hoje? Você vai poder registrar e editar ligações de novo.')) return;
@@ -582,12 +625,25 @@ function openAdminGate(){
   render();
 }
 
+let adminPollTimer = null;
+function startAdminPolling(){
+  stopAdminPolling();
+  adminPollTimer = setInterval(()=>{
+    if(state.view==='admin' && !state.loading) loadAdminData();
+  }, 45000);
+}
+function stopAdminPolling(){
+  if(adminPollTimer){ clearInterval(adminPollTimer); adminPollTimer = null; }
+}
+
 async function checkPin(){
   const val = document.getElementById('pinInput').value;
   const hash = await sha256(val);
   if(hash === ADMIN_PIN_HASH){
     state.view = 'admin';
+    saveSession({type:'admin'});
     loadAdminData();
+    startAdminPolling();
   }else{
     state.pinError = true;
     render();
@@ -595,6 +651,8 @@ async function checkPin(){
 }
 
 function exitAdmin(){
+  stopAdminPolling();
+  clearSession();
   state.view = 'picker';
   state.adminRows = null;
   render();
@@ -639,6 +697,7 @@ function selectVendor(name){
   state.pendingVendor = null;
   state.vendorPinError = false;
   state.view = 'app';
+  saveSession({type:'vendor', name});
   loadVendorData(name);
 }
 
@@ -647,6 +706,7 @@ function trocarVendedor(){
   state.calls = [];
   state.closed = null;
   state.view = 'picker';
+  clearSession();
   render();
 }
 
@@ -871,6 +931,14 @@ function render(pulse){
       <button class="trocar-btn" id="trocarBtn">trocar</button>
     </div>
 
+    ${state.pendentes.length ? state.pendentes.map(p=>`
+      <div class="fechado-banner" style="border-color:var(--caixa);text-align:left;">
+        <div class="t" style="color:var(--caixa);">Relatório de ${new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR')} pendente</div>
+        <div class="s">${p.atendeu} atendidas · ${p.caixa} caixa postal · ${p.total} no total — esqueceu de fechar esse dia</div>
+        <button class="undo-btn" data-fechar-pendente="${p.data}" style="margin-top:8px;color:var(--caixa);">fechar agora</button>
+      </div>
+    `).join('') : ''}
+
     <div class="tally">
       <div class="tally-card">
         <div class="tally-label">Atendidas</div>
@@ -935,10 +1003,25 @@ function render(pulse){
   document.getElementById('fecharBtn').onclick = ()=>{ if(!disabled) fecharRelatorio(); };
   const reopenBtn = document.getElementById('reopenBtn');
   if(reopenBtn) reopenBtn.onclick = reopenDay;
+  app.querySelectorAll('[data-fechar-pendente]').forEach(btn=>{
+    btn.onclick = ()=>fecharPendente(btn.getAttribute('data-fechar-pendente'));
+  });
 }
 
 async function init(){
   await loadVendorList();
+  const session = loadSession();
+  if(session && session.type === 'admin'){
+    state.view = 'admin';
+    loadAdminData();
+    startAdminPolling();
+    return;
+  }
+  if(session && session.type === 'vendor' && VENDORES.includes(session.name)){
+    selectVendor(session.name);
+    return;
+  }
+  clearSession();
   state.view = 'picker';
   render();
 }
