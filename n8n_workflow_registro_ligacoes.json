@@ -11,7 +11,7 @@
         -600
       ],
       "parameters": {
-        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n6 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets - IMPORTANTE: apos importar, abra CADA no do Google Sheets e re-selecione a credencial no dropdown (mesmo que ja apareca preenchida) - o n8n so salva de verdade quando voce interage com o campo, senao o publish falha com 'credencial ausente' apesar do preview mostrar uma credencial\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s",
+        "content": "## Fluxo: Registro de Ligacoes FBS Prime\n\n8 webhooks, um para cada acao do app HTML (ja migrado pra usar fetch() nesses webhooks).\n\nANTES DE USAR:\n1. Trocar a credencial Google Sheets em TODOS os nos do Google Sheets - IMPORTANTE: apos importar, abra CADA no do Google Sheets e re-selecione a credencial no dropdown (mesmo que ja apareca preenchida) - o n8n so salva de verdade quando voce interage com o campo, senao o publish falha com 'credencial ausente' apesar do preview mostrar uma credencial\n2. Copiar a URL de cada Webhook (clique no no) e colar no objeto N8N_WEBHOOKS do HTML\n3. Ativar o workflow (toggle no canto superior direito)\n\nO app so suporta 'desfazer a ultima ligacao' (nao apagar uma linha qualquer do meio do historico) - por isso so existe uma acao 'undo' no webhook de ligacoes, nao uma exclusao por indice arbitrario.\n\nPlanilha usada: Central de Ligacoes FBS Prime\nID: 1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s\n\nAbas: Vendedores | Ligacoes (5 colunas, ver nota 4/8) | Fechamentos | Metas (nova, ver notas 7/8 e 8/8)",
         "height": 320,
         "width": 420,
         "color": 7
@@ -441,7 +441,7 @@
         420
       ],
       "parameters": {
-        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts}\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.\n\nundo: \"Achar linha para desfazer\" usa match.row_number DIRETO (sem subtracao) como startIndex - testado e confirmado em producao.",
+        "content": "4/6 - REGISTRAR LIGACAO / DESFAZER\nPOST /ligacoes\nBody add: {action:'add', vendedor, tipo, ts, agendou?, whatsapp?}\n  agendou ('sim'/'nao') so quando tipo='atendeu'\n  whatsapp ('sim'/'nao') so quando tipo='caixa_postal'\nBody undo: {action:'undo', vendedor, ts}\n\n'ts' e gerado no navegador (ISO) e usado como identificador da linha - por isso o insert usa o ts do cliente em vez de gerar um novo no servidor, senao o undo nunca acha a linha certa.\n\nundo: \"Achar linha para desfazer\" usa match.row_number DIRETO (sem subtracao) como startIndex - testado e confirmado em producao.\n\nAba Ligacoes agora tem 5 colunas: Vendedor | Tipo | Data/Hora | Agendou | Chamou WhatsApp",
         "height": 110,
         "width": 280,
         "color": 3
@@ -519,7 +519,7 @@
         640
       ],
       "parameters": {
-        "jsCode": "\nreturn [{ json: {\n  Vendedor: $json.vendedor,\n  Tipo: $json.tipo,\n  'Data/Hora': $json.ts\n}}];\n"
+        "jsCode": "\nconst agendou = $json.tipo === 'atendeu' ? ($json.agendou || '') : '';\nconst whatsapp = $json.tipo === 'caixa_postal' ? ($json.whatsapp || '') : '';\nreturn [{ json: {\n  Vendedor: $json.vendedor,\n  Tipo: $json.tipo,\n  'Data/Hora': $json.ts,\n  Agendou: agendou,\n  'Chamou WhatsApp': whatsapp\n}}];\n"
       }
     },
     {
@@ -1024,6 +1024,453 @@
       "parameters": {
         "jsCode": "\nconst body = $('Webhook: POST fechar').first().json.body;\nconst rows = $input.all().map(i => i.json);\nconst match = rows.find(r => r.Vendedor === body.Vendedor && r.Data === body.Data);\nconst rowIndex = match ? match.row_number : -1;\nreturn [{ json: { rowIndex } }];\n"
       }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000001",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        1780
+      ],
+      "parameters": {
+        "content": "7/8 - METAS DA SEMANA (LER)\nGET /metas?vendedor=Nome\n\nAgendamentos e Ligacoes: progresso sempre calculado ao vivo a partir da aba Ligacoes (semana atual = segunda a domingo).\n\nSe nao existe linha da semana atual na aba Metas, cria uma nova automaticamente: meta de cada indicador = resultado REAL da semana anterior (minimo 1) - e assim o vendedor sempre tem que se superar. Comparecimentos/Vendas usam o 'Progresso' final da semana anterior como nova meta; Agendamentos/Ligacoes usam a contagem real da semana anterior na aba Ligacoes.",
+        "height": 220,
+        "width": 340,
+        "color": 2
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000002",
+      "name": "Webhook: GET metas",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        2020
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "metas",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "m0a00001-webhook-get-metas"
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000003",
+      "name": "Ler aba Ligacoes (metas)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        280,
+        1940
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 6000
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000004",
+      "name": "Ler aba Metas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        280,
+        2100
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Metas"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 6000
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000005",
+      "name": "Calcular semana e metas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        2020
+      ],
+      "parameters": {
+        "jsCode": "\nfunction mondayOf(dateStr){\n  const d = new Date(dateStr+'T12:00:00');\n  const day = d.getDay();\n  const diff = day===0 ? -6 : 1-day;\n  d.setDate(d.getDate()+diff);\n  return d.toISOString().slice(0,10);\n}\nfunction addDays(dateStr, n){\n  const d = new Date(dateStr+'T12:00:00');\n  d.setDate(d.getDate()+n);\n  return d.toISOString().slice(0,10);\n}\n\nconst vendedor = $('Webhook: GET metas').first().json.query.vendedor;\nconst hoje = new Date().toISOString().slice(0,10);\nconst semanaAtual = mondayOf(hoje);\nconst domingoAtual = addDays(semanaAtual, 6);\nconst semanaAnterior = addDays(semanaAtual, -7);\nconst domingoAnterior = addDays(semanaAnterior, 6);\n\nconst ligacoes = $('Ler aba Ligacoes (metas)').all().map(i=>i.json).filter(r=>r.Vendedor===vendedor);\nconst metasRows = $('Ler aba Metas').all().map(i=>i.json).filter(r=>r.Vendedor===vendedor);\n\nfunction contarSemana(inicio, fim){\n  const doPeriodo = ligacoes.filter(r=>{\n    const d = String(r['Data/Hora']).slice(0,10);\n    return d>=inicio && d<=fim;\n  });\n  const total = doPeriodo.length;\n  const agendados = doPeriodo.filter(r=>String(r.Agendou).toLowerCase()==='sim').length;\n  return { total, agendados };\n}\n\nconst atual = contarSemana(semanaAtual, domingoAtual);\nconst rowAtual = metasRows.find(r=>r.Semana===semanaAtual);\n\nlet resposta, rowExists;\nif(rowAtual){\n  rowExists = true;\n  resposta = {\n    metas: {\n      semana: semanaAtual,\n      agendamentos: { meta: Number(rowAtual['Meta Agendamentos'])||1, progresso: atual.agendados },\n      comparecimentos: { meta: Number(rowAtual['Meta Comparecimentos'])||1, progresso: Number(rowAtual['Progresso Comparecimentos'])||0 },\n      vendas: { meta: Number(rowAtual['Meta Vendas'])||1, progresso: Number(rowAtual['Progresso Vendas'])||0 },\n      ligacoes: { meta: Number(rowAtual['Meta Ligacoes'])||1, progresso: atual.total }\n    }\n  };\n} else {\n  rowExists = false;\n  const anterior = contarSemana(semanaAnterior, domingoAnterior);\n  const rowAnterior = metasRows.find(r=>r.Semana===semanaAnterior);\n  const metaAgendamentos = Math.max(1, anterior.agendados);\n  const metaLigacoes = Math.max(1, anterior.total);\n  const metaComparecimentos = Math.max(1, rowAnterior ? (Number(rowAnterior['Progresso Comparecimentos'])||0) : 1);\n  const metaVendas = Math.max(1, rowAnterior ? (Number(rowAnterior['Progresso Vendas'])||0) : 1);\n  resposta = {\n    metas: {\n      semana: semanaAtual,\n      agendamentos: { meta: metaAgendamentos, progresso: atual.agendados },\n      comparecimentos: { meta: metaComparecimentos, progresso: 0 },\n      vendas: { meta: metaVendas, progresso: 0 },\n      ligacoes: { meta: metaLigacoes, progresso: atual.total }\n    }\n  };\n}\n\nreturn [{ json: { rowExists, vendedor, semanaAtual, resposta, novaLinha: {\n  Vendedor: vendedor,\n  Semana: semanaAtual,\n  'Meta Agendamentos': resposta.metas.agendamentos.meta,\n  'Meta Comparecimentos': resposta.metas.comparecimentos.meta,\n  'Progresso Comparecimentos': 0,\n  'Meta Vendas': resposta.metas.vendas.meta,\n  'Progresso Vendas': 0,\n  'Meta Ligacoes': resposta.metas.ligacoes.meta\n} } }];\n"
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000006",
+      "name": "Metas: semana ja existe?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        780,
+        2020
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "m0a00001-cond-1",
+              "leftValue": "={{$json.rowExists}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000007",
+      "name": "Resposta (semana existente)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        1940
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: $('Calcular semana e metas').first().json.resposta }];"
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000008",
+      "name": "Preparar linha nova (metas)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        2100
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: $('Calcular semana e metas').first().json.novaLinha }];"
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000009",
+      "name": "Adicionar linha em Metas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1260,
+        2100
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Metas"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000010",
+      "name": "Resposta (semana nova)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        2100
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: $('Calcular semana e metas').first().json.resposta }];"
+      }
+    },
+    {
+      "id": "m0a00001-0000-4000-8000-000000000011",
+      "name": "Responder GET metas",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1500,
+        1940
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000001",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        2360
+      ],
+      "parameters": {
+        "content": "8/8 - METAS DA SEMANA (EDITAR)\nPOST /metas\nBody: {action:'set', vendedor, campo, valor}\n\ncampo e um de:\n  progressoComparecimentos (admin)\n  progressoVendas (admin OU o proprio vendedor)\n  metaAgendamentos / metaComparecimentos / metaVendas / metaLigacoes (admin, sobrescreve a meta calculada automaticamente)\n\nSo atualiza a linha da SEMANA ATUAL do vendedor na aba Metas. Se a linha da semana ainda nao existe (ninguem abriu GET /metas essa semana pra esse vendedor), retorna ok:false - a tela do vendedor sempre chama GET /metas primeiro, entao isso e raro.",
+        "height": 240,
+        "width": 340,
+        "color": 2
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000002",
+      "name": "Webhook: POST metas",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        2600
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "metas",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "m1a00002-webhook-post-metas"
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000003",
+      "name": "Semana atual (post metas)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        2600
+      ],
+      "parameters": {
+        "jsCode": "\nfunction mondayOf(dateStr){\n  const d = new Date(dateStr+'T12:00:00');\n  const day = d.getDay();\n  const diff = day===0 ? -6 : 1-day;\n  d.setDate(d.getDate()+diff);\n  return d.toISOString().slice(0,10);\n}\nconst body = $json.body;\nconst hoje = new Date().toISOString().slice(0,10);\nreturn [{ json: { vendedor: body.vendedor, campo: body.campo, valor: body.valor, semanaAtual: mondayOf(hoje) } }];\n"
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000004",
+      "name": "Ler aba Metas (para editar)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        520,
+        2600
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Metas"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000005",
+      "name": "Achar linha de metas para editar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        2600
+      ],
+      "parameters": {
+        "jsCode": "\nconst ctx = $('Semana atual (post metas)').first().json;\nconst rows = $input.all().map(i=>i.json);\nconst match = rows.find(r=>r.Vendedor===ctx.vendedor && r.Semana===ctx.semanaAtual);\nconst rowIndex = match ? match.row_number : -1;\nconst campoParaColuna = {\n  progressoComparecimentos: 'Progresso Comparecimentos',\n  progressoVendas: 'Progresso Vendas',\n  metaAgendamentos: 'Meta Agendamentos',\n  metaComparecimentos: 'Meta Comparecimentos',\n  metaVendas: 'Meta Vendas',\n  metaLigacoes: 'Meta Ligacoes'\n};\nconst coluna = campoParaColuna[ctx.campo];\nreturn [{ json: { rowIndex, coluna, valor: ctx.valor, encontrado: !!match && !!coluna } }];\n"
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000006",
+      "name": "Metas: linha encontrada?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        2600
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "m1a00002-cond-1",
+              "leftValue": "={{$json.encontrado}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000007",
+      "name": "Montar linha para update (metas)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        2520
+      ],
+      "parameters": {
+        "jsCode": "\nconst j = $json;\nconst linha = { row_number: j.rowIndex };\nlinha[j.coluna] = j.valor;\nreturn [{ json: linha }];\n"
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000008",
+      "name": "Atualizar linha em Metas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1480,
+        2520
+      ],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Metas"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "row_number"
+          ],
+          "value": {}
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000009",
+      "name": "Resposta OK (metas)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1720,
+        2520
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { ok: true } }];"
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000010",
+      "name": "Resposta erro (metas)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        2680
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { ok: false, error: 'Semana ainda nao inicializada para esse vendedor. Abra a tela dele (ou o painel admin) uma vez pra criar a semana automaticamente.' } }];"
+      }
+    },
+    {
+      "id": "m1a00002-0000-4000-8000-000000000011",
+      "name": "Responder POST metas",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1720,
+        2600
+      ],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
     }
   ],
   "connections": {
@@ -1438,6 +1885,218 @@
         [
           {
             "node": "Remover linha de Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: GET metas": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Ligacoes (metas)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Ligacoes (metas)": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Metas": {
+      "main": [
+        [
+          {
+            "node": "Calcular semana e metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular semana e metas": {
+      "main": [
+        [
+          {
+            "node": "Metas: semana ja existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Metas: semana ja existe?": {
+      "main": [
+        [
+          {
+            "node": "Resposta (semana existente)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar linha nova (metas)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resposta (semana existente)": {
+      "main": [
+        [
+          {
+            "node": "Responder GET metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar linha nova (metas)": {
+      "main": [
+        [
+          {
+            "node": "Adicionar linha em Metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adicionar linha em Metas": {
+      "main": [
+        [
+          {
+            "node": "Resposta (semana nova)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resposta (semana nova)": {
+      "main": [
+        [
+          {
+            "node": "Responder GET metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: POST metas": {
+      "main": [
+        [
+          {
+            "node": "Semana atual (post metas)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Semana atual (post metas)": {
+      "main": [
+        [
+          {
+            "node": "Ler aba Metas (para editar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler aba Metas (para editar)": {
+      "main": [
+        [
+          {
+            "node": "Achar linha de metas para editar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Achar linha de metas para editar": {
+      "main": [
+        [
+          {
+            "node": "Metas: linha encontrada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Metas: linha encontrada?": {
+      "main": [
+        [
+          {
+            "node": "Montar linha para update (metas)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resposta erro (metas)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Montar linha para update (metas)": {
+      "main": [
+        [
+          {
+            "node": "Atualizar linha em Metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizar linha em Metas": {
+      "main": [
+        [
+          {
+            "node": "Resposta OK (metas)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resposta OK (metas)": {
+      "main": [
+        [
+          {
+            "node": "Responder POST metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resposta erro (metas)": {
+      "main": [
+        [
+          {
+            "node": "Responder POST metas",
             "type": "main",
             "index": 0
           }

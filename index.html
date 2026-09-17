@@ -267,6 +267,151 @@
   }
 
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+  /* ---- Metas da semana ---- */
+  .metas-card{
+    background:var(--panel);
+    border:1px solid var(--gold);
+    border-radius:16px;
+    padding:16px 16px 6px;
+    margin-bottom:18px;
+  }
+  .metas-title{
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:12px;
+  }
+  .meta-row{margin-bottom:14px;position:relative;}
+  .meta-row-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:13px;
+    margin-bottom:6px;
+  }
+  .meta-row-label{display:flex;align-items:center;gap:6px;color:var(--text);font-weight:600;}
+  .meta-row-value{color:var(--text-dim);font-variant-numeric:tabular-nums;}
+  .meta-row-value b{color:var(--text);}
+  .meta-bar{
+    height:10px;
+    border-radius:6px;
+    background:var(--panel-2);
+    overflow:hidden;
+  }
+  .meta-bar-fill{
+    height:100%;
+    border-radius:6px;
+    transition:width .4s ease;
+    background:var(--text-dim);
+  }
+  .meta-bar-fill.ok{background:var(--atendeu);}
+  .meta-bar-fill.mid{background:var(--gold);}
+  .meta-bar-fill.low{background:var(--caixa-dim);}
+  .meta-icon-btn{
+    background:none;
+    border:none;
+    color:var(--text-dim);
+    font-size:14px;
+    cursor:pointer;
+    padding:2px 4px;
+    line-height:1;
+  }
+  .meta-icon-btn:active{color:var(--gold);}
+  .meta-tooltip{
+    position:absolute;
+    right:0;
+    top:22px;
+    z-index:5;
+    background:#0A1622;
+    border:1px solid var(--border);
+    color:var(--text);
+    font-size:12px;
+    line-height:1.4;
+    padding:8px 10px;
+    border-radius:8px;
+    width:200px;
+    box-shadow:0 6px 18px rgba(0,0,0,.4);
+  }
+  .meta-edit-row{
+    display:flex;
+    gap:6px;
+    margin:6px 0 4px;
+  }
+  .meta-edit-row input{
+    margin:0;
+    padding:8px 10px;
+    font-size:14px;
+    flex:1;
+  }
+  .meta-edit-row button{
+    background:var(--gold);
+    color:#26200E;
+    border:none;
+    border-radius:10px;
+    padding:0 14px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  /* ---- Popup Agendou / WhatsApp ---- */
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(4,10,18,.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-card{
+    background:var(--panel);
+    border:1px solid var(--gold);
+    border-radius:18px;
+    padding:26px 22px;
+    width:100%;
+    max-width:360px;
+    text-align:center;
+  }
+  .modal-card h3{margin:0 0 18px;font-size:18px;color:var(--text);}
+  .modal-actions{display:flex;gap:10px;}
+  .modal-actions button{
+    flex:1;
+    border:none;
+    border-radius:12px;
+    padding:16px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .modal-btn-sim{background:var(--atendeu);color:#fff;}
+  .modal-btn-nao{background:var(--panel-2);color:var(--text);border:1px solid var(--border) !important;}
+
+  /* ---- Celebracao ---- */
+  .confetti-layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:60;
+  }
+  .confetti-piece{
+    position:absolute;
+    top:-20px;
+    width:8px;
+    height:14px;
+    opacity:.9;
+    animation:confetti-fall linear forwards;
+    border-radius:2px;
+  }
+  @keyframes confetti-fall{
+    to{ transform:translateY(115vh) rotate(540deg); opacity:.3; }
+  }
+  .meta-row.celebrating .meta-bar{ box-shadow:0 0 0 2px var(--gold); }
 </style>
 </head>
 <body>
@@ -297,7 +442,9 @@ const N8N_WEBHOOKS = {
   getLigacoes: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/ligacoes",
   postLigacoes: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/ligacoes",
   postFechar: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/fechar",
-  getAdmin: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/admin"
+  getAdmin: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/admin",
+  getMetas: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/metas",
+  postMetas: "https://n8n-jasu.srv1479430.hstgr.cloud/webhook/metas"
 };
 
 let VENDORES = [];
@@ -422,7 +569,15 @@ let state = {
   periodType: 'dia',
   periodValue: todayKey(),
   adminRows: null,
-  pinError: false
+  pinError: false,
+  metas: null,
+  metasLoading: false,
+  callModal: null,       // 'agendou' | 'whatsapp' | null
+  pendingCallType: null,
+  vendasEditOpen: false,
+  celebrated: new Set(), // chaves "vendedor|semana|metrica" ja celebradas nesta sessao
+  adminMetas: null,      // { [vendedor]: metasObj } no painel admin
+  adminMetasEdit: {}     // { [vendedor]: {campo:valor} } rascunho dos inputs do admin
 };
 
 // Webhook: GET ligacoes - le historico do vendedor + status "fechado" do dia
@@ -430,7 +585,7 @@ async function loadVendorData(vendor){
   state.loading = true; render();
   try{
     const data = await callWebhook(N8N_WEBHOOKS.getLigacoes + '?vendedor=' + encodeURIComponent(vendor) + '&hoje=' + todayKey());
-    const all = (data.ligacoes || []).map(r=>({type:r.Tipo, ts:r['Data/Hora']}));
+    const all = (data.ligacoes || []).map(r=>({type:r.Tipo, ts:r['Data/Hora'], agendou:r.Agendou}));
     state.allCalls = all;
     state.calls = all.filter(c=>c.ts.slice(0,10)===todayKey());
     const f = data.fechado;
@@ -451,9 +606,9 @@ async function loadVendorData(vendor){
 }
 
 // Webhook: POST ligacoes - adiciona 1 linha na planilha (INSERT), sem reescrever nada
-async function addCall(type){
+async function addCall(type, extra){
   if(state.closed) return;
-  const entry = {type, ts:new Date().toISOString()};
+  const entry = {type, ts:new Date().toISOString(), agendou: extra && extra.agendou};
   state.allCalls.push(entry);
   state.calls.push(entry);
   render(type==='atendeu' ? 'atendeu' : 'caixa');
@@ -461,7 +616,7 @@ async function addCall(type){
     await callWebhook(N8N_WEBHOOKS.postLigacoes, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({action:'add', vendedor: state.vendor, tipo: type, ts: entry.ts})
+      body: JSON.stringify({action:'add', vendedor: state.vendor, tipo: type, ts: entry.ts, ...(extra||{})})
     });
   }catch(e){
     console.error('Falha ao salvar ligação', e);
@@ -472,7 +627,140 @@ async function addCall(type){
     if(idx2>-1) state.calls.splice(idx2,1);
     alert('Não foi possível salvar essa ligação. Verifica sua conexão e tenta de novo.');
     render();
+    return;
   }
+  // Agendamentos/Ligacoes sao recalculados aqui no cliente (dados ja carregados em
+  // state.allCalls), em vez de chamar GET /metas de novo a cada ligacao - isso evitava
+  // reler a aba Ligacoes inteira (2500+ linhas) a cada clique e estourava a cota da
+  // API do Google Sheets com o uso real de varios vendedores ao mesmo tempo.
+  recomputeAutoProgress();
+  render();
+}
+
+function currentWeekRangeKeys(){
+  const now = new Date();
+  const day = now.getDay();
+  const diff = day===0 ? -6 : 1-day;
+  const monday = new Date(now);
+  monday.setDate(monday.getDate()+diff);
+  const sunday = new Date(monday);
+  sunday.setDate(sunday.getDate()+6);
+  const fmt = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return { inicio: fmt(monday), fim: fmt(sunday) };
+}
+
+function recomputeAutoProgress(){
+  if(!state.metas) return;
+  const { inicio, fim } = currentWeekRangeKeys();
+  const daSemana = state.allCalls.filter(c=>{
+    const d = c.ts.slice(0,10);
+    return d>=inicio && d<=fim;
+  });
+  state.metas.ligacoes.progresso = daSemana.length;
+  state.metas.agendamentos.progresso = daSemana.filter(c=>String(c.agendou).toLowerCase()==='sim').length;
+  checkCelebracoes(state.vendor, state.metas);
+}
+
+// Abre o popup "Agendou?" (depois de Cliente atendeu) ou "Chamou no WhatsApp?" (depois de Caixa postal)
+function openCallModal(type){
+  state.pendingCallType = type;
+  state.callModal = type==='atendeu' ? 'agendou' : 'whatsapp';
+  render();
+}
+function answerCallModal(resposta){
+  const type = state.pendingCallType;
+  const extra = state.callModal==='agendou' ? {agendou:resposta} : {whatsapp:resposta};
+  state.callModal = null;
+  state.pendingCallType = null;
+  addCall(type, extra);
+}
+
+// Webhook: GET metas - le metas + progresso da semana atual do vendedor (automatico + manual)
+async function loadMetas(vendor){
+  state.metasLoading = true;
+  try{
+    const data = await callWebhook(N8N_WEBHOOKS.getMetas + '?vendedor=' + encodeURIComponent(vendor));
+    const metas = data.metas || null;
+    state.metas = metas;
+    if(metas) checkCelebracoes(vendor, metas);
+  }catch(e){
+    console.error('Falha ao carregar metas', e);
+    state.metas = null;
+  }
+  state.metasLoading = false;
+  render();
+}
+
+// Webhook: POST metas - atualiza 1 campo da semana atual (progresso de vendas/comparecimentos, ou uma meta manual no admin)
+async function saveMetaField(vendor, campo, valor){
+  try{
+    await callWebhook(N8N_WEBHOOKS.postMetas, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'set', vendedor: vendor, campo, valor})
+    });
+    return true;
+  }catch(e){
+    console.error('Falha ao salvar meta', e);
+    alert('Não foi possível salvar. Verifica sua conexão e tenta de novo.');
+    return false;
+  }
+}
+
+async function saveVendasProgress(){
+  const input = document.getElementById('vendasProgressoInput');
+  const valor = Number(input.value);
+  if(Number.isNaN(valor) || valor < 0){ alert('Digita um número válido de vendas.'); return; }
+  state.vendasEditOpen = false;
+  const ok = await saveMetaField(state.vendor, 'progressoVendas', valor);
+  if(ok) await loadMetas(state.vendor);
+  else render();
+}
+
+function metaBarClass(pct){
+  if(pct >= 1) return 'ok';
+  if(pct >= 0.7) return 'mid';
+  return 'low';
+}
+
+// Dispara confete quando uma meta acabou de bater 100% (uma vez por vendedor+semana+metrica)
+function checkCelebracoes(vendor, metas){
+  const chaves = ['agendamentos','comparecimentos','vendas','ligacoes'];
+  const novasBatidas = [];
+  chaves.forEach(k=>{
+    const m = metas[k];
+    if(!m) return;
+    const pct = m.meta>0 ? m.progresso/m.meta : 0;
+    const chave = vendor+'|'+metas.semana+'|'+k;
+    if(pct>=1 && !state.celebrated.has(chave)){
+      state.celebrated.add(chave);
+      novasBatidas.push(k);
+    }
+  });
+  if(novasBatidas.length===4){
+    launchConfetti(true);
+  }else if(novasBatidas.length>0){
+    launchConfetti(false);
+  }
+}
+
+function launchConfetti(mega){
+  const cores = ['#C9A84C','#2F9E64','#C9793D','#F1EDE2','#8B3A3A'];
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  const qtd = mega ? 90 : 28;
+  for(let i=0;i<qtd;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = (Math.random()*100)+'vw';
+    p.style.background = cores[Math.floor(Math.random()*cores.length)];
+    const dur = 1.6 + Math.random()*1.4;
+    p.style.animationDuration = dur+'s';
+    p.style.animationDelay = (Math.random()*(mega?0.6:0.2))+'s';
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  setTimeout(()=>layer.remove(), 3400);
 }
 
 // Webhook: POST ligacoes com action:'undo' - remove a ultima linha desse vendedor (por vendedor+timestamp)
@@ -496,7 +784,10 @@ async function undoLast(){
     state.calls.push(removed);
     alert('Não foi possível desfazer a última ligação no servidor. Tenta de novo.');
     render();
+    return;
   }
+  recomputeAutoProgress();
+  render();
 }
 
 // Webhook: POST fechar - marca o dia como fechado na planilha (aba Fechamentos)
@@ -629,6 +920,9 @@ let adminPollTimer = null;
 function startAdminPolling(){
   stopAdminPolling();
   adminPollTimer = setInterval(()=>{
+    // loadAdminMetas fica de fora do poll: 10 leituras da planilha a cada 45s
+    // sobrecarregava a cota do Google Sheets. Metas mudam pouco, entao so
+    // recarrega no login e apos uma edicao manual (ver adminSaveMeta).
     if(state.view==='admin' && !state.loading) loadAdminData();
   }, 45000);
 }
@@ -643,6 +937,7 @@ async function checkPin(){
     state.view = 'admin';
     saveSession({type:'admin'});
     loadAdminData();
+    loadAdminMetas();
     startAdminPolling();
   }else{
     state.pinError = true;
@@ -699,12 +994,36 @@ function selectVendor(name){
   state.view = 'app';
   saveSession({type:'vendor', name});
   loadVendorData(name);
+  loadMetas(name);
+}
+
+// Busca as metas de todos os vendedores pro painel admin (usado so na aba Metas do admin)
+async function loadAdminMetas(){
+  const entries = await Promise.all(VENDORES.map(async v=>{
+    try{
+      const data = await callWebhook(N8N_WEBHOOKS.getMetas + '?vendedor=' + encodeURIComponent(v));
+      return [v, data.metas || null];
+    }catch(e){
+      console.error('Falha ao carregar metas de', v, e);
+      return [v, null];
+    }
+  }));
+  state.adminMetas = Object.fromEntries(entries);
+  render();
+}
+
+async function adminSaveMeta(vendor, campo, valor){
+  if(valor===''||valor===null||Number.isNaN(Number(valor))){ alert('Digita um número válido.'); return; }
+  const ok = await saveMetaField(vendor, campo, Number(valor));
+  if(ok) await loadAdminMetas();
 }
 
 function trocarVendedor(){
   state.vendor = null;
   state.calls = [];
   state.closed = null;
+  state.metas = null;
+  state.vendasEditOpen = false;
   state.view = 'picker';
   clearSession();
   render();
@@ -724,6 +1043,63 @@ function periodLabel(){
   if(state.periodType==='dia') return new Date(state.periodValue+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
   if(state.periodType==='mes') return new Date(state.periodValue+'-01T12:00:00').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
   return `Ano de ${state.periodValue}`;
+}
+
+function renderMetasPanel(){
+  if(!state.metas){
+    return `<div class="metas-card"><div class="metas-title">Minhas metas da semana</div><div class="empty-hint" style="padding:4px 0;">${state.metasLoading?'Carregando metas...':'Não foi possível carregar suas metas agora.'}</div></div>`;
+  }
+  const m = state.metas;
+  const rows = [
+    {key:'agendamentos', label:'Agendamentos', unidade:'agendamentos'},
+    {key:'comparecimentos', label:'Comparecimentos', unidade:'comparecimentos'},
+    {key:'vendas', label:'Vendas', unidade:'vendas', editable:true},
+    {key:'ligacoes', label:'Ligações', unidade:'ligações'}
+  ];
+  return `
+    <div class="metas-card">
+      <div class="metas-title">Minhas metas da semana</div>
+      ${rows.map(r=>{
+        const d = m[r.key] || {meta:1, progresso:0};
+        const ratio = d.meta>0 ? d.progresso/d.meta : 0;
+        const pct = Math.min(1, ratio);
+        return `
+        <div class="meta-row">
+          <div class="meta-row-head">
+            <span class="meta-row-label">${r.label}${r.editable ? `
+              <button class="meta-icon-btn" id="vendasEditBtn" type="button" title="Editar vendas">&#9998;</button>
+              <button class="meta-icon-btn" id="vendasInfoBtn" type="button" title="Ajuda">&#9432;</button>
+            `:''}</span>
+            <span class="meta-row-value"><b>${d.progresso}</b> de ${d.meta} ${r.unidade}</span>
+          </div>
+          <div class="meta-bar"><div class="meta-bar-fill ${metaBarClass(ratio)}" style="width:${pct*100}%;"></div></div>
+          ${r.editable ? `<div class="meta-tooltip" id="vendasTooltip" style="display:none;">Registre aqui se você fechou uma venda essa semana.</div>` : ''}
+          ${(r.editable && state.vendasEditOpen) ? `
+            <div class="meta-edit-row">
+              <input id="vendasProgressoInput" type="number" min="0" inputmode="numeric" value="${d.progresso}">
+              <button id="vendasSaveBtn" type="button">Salvar</button>
+            </div>
+          ` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderCallModal(){
+  if(!state.callModal) return '';
+  const pergunta = state.callModal==='agendou' ? 'Agendou?' : 'Chamou no WhatsApp?';
+  return `
+    <div class="modal-backdrop" id="callModalBackdrop">
+      <div class="modal-card">
+        <h3>${pergunta}</h3>
+        <div class="modal-actions">
+          <button class="modal-btn-nao" id="callModalNao">Não</button>
+          <button class="modal-btn-sim" id="callModalSim">Sim</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function render(pulse){
@@ -896,6 +1272,43 @@ function render(pulse){
           <button class="confirm-btn" id="addVendorBtn" style="margin:0;">Adicionar vendedor</button>
         </div>
       </div>
+
+      <div class="history" style="margin-top:20px;">
+        <div class="history-head" style="cursor:default;">
+          <span>Metas da semana${state.adminMetas ? ' · ' + (Object.values(state.adminMetas).find(Boolean)?.semana || '') : ''}</span>
+        </div>
+        ${!state.adminMetas ? `<div class="empty-hint">Carregando metas...</div>` :
+          VENDORES.map(v=>{
+            const m = state.adminMetas[v];
+            if(!m) return `<div class="history-item"><span>${v}</span><span style="color:var(--text-dim);">sem dados</span></div>`;
+            const campos = [
+              {key:'agendamentos', label:'Agendamentos', metaCampo:'metaAgendamentos', progCampo:null},
+              {key:'comparecimentos', label:'Comparecimentos', metaCampo:'metaComparecimentos', progCampo:'progressoComparecimentos'},
+              {key:'vendas', label:'Vendas', metaCampo:'metaVendas', progCampo:'progressoVendas'},
+              {key:'ligacoes', label:'Ligações', metaCampo:'metaLigacoes', progCampo:null}
+            ];
+            return `
+              <div style="padding:12px 16px;border-top:1px solid var(--border);">
+                <div style="font-weight:600;font-size:14px;margin-bottom:8px;">${v}</div>
+                ${campos.map(c=>{
+                  const d = m[c.key] || {meta:1, progresso:0};
+                  return `
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:12px;">
+                      <span style="flex:1;color:var(--text-dim);">${c.label}</span>
+                      <span style="color:var(--text-dim);">meta</span>
+                      <input type="number" min="1" value="${d.meta}" class="admin-meta-input" data-vendor="${v}" data-campo="${c.metaCampo}" style="width:52px;margin:0;padding:6px;font-size:12px;">
+                      ${c.progCampo ? `
+                        <span style="color:var(--text-dim);">progresso</span>
+                        <input type="number" min="0" value="${d.progresso}" class="admin-meta-input" data-vendor="${v}" data-campo="${c.progCampo}" style="width:52px;margin:0;padding:6px;font-size:12px;">
+                      ` : `<span style="color:var(--text-dim);width:100px;text-align:right;">${d.progresso} (automático)</span>`}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `;
+          }).join('')
+        }
+      </div>
     `;
     document.getElementById('exitAdminBtn').onclick = exitAdmin;
     document.getElementById('exportBtn').onclick = exportCsv;
@@ -909,6 +1322,9 @@ function render(pulse){
     document.getElementById('addVendorBtn').onclick = addVendor;
     app.querySelectorAll('[data-remove]').forEach(btn=>{
       btn.onclick = ()=>removeVendor(btn.getAttribute('data-remove'));
+    });
+    app.querySelectorAll('.admin-meta-input').forEach(inp=>{
+      inp.onchange = ()=>adminSaveMeta(inp.getAttribute('data-vendor'), inp.getAttribute('data-campo'), inp.value);
     });
     return;
   }
@@ -930,6 +1346,8 @@ function render(pulse){
       </div>
       <button class="trocar-btn" id="trocarBtn">trocar</button>
     </div>
+
+    ${renderMetasPanel()}
 
     ${state.pendentes.length ? state.pendentes.map(p=>`
       <div class="fechado-banner" style="border-color:var(--caixa);text-align:left;">
@@ -990,13 +1408,15 @@ function render(pulse){
         }
       </div>
     </div>
+
+    ${renderCallModal()}
   `;
 
   document.getElementById('trocarBtn').onclick = trocarVendedor;
   document.getElementById('historyHead').onclick = ()=>{ state.historyOpen = !state.historyOpen; render(); };
   if(!disabled){
-    document.getElementById('btnAtendeu').onclick = ()=>addCall('atendeu');
-    document.getElementById('btnCaixa').onclick = ()=>addCall('caixa_postal');
+    document.getElementById('btnAtendeu').onclick = ()=>openCallModal('atendeu');
+    document.getElementById('btnCaixa').onclick = ()=>openCallModal('caixa_postal');
     const undo = document.getElementById('undoBtn');
     if(undo) undo.onclick = undoLast;
   }
@@ -1006,6 +1426,26 @@ function render(pulse){
   app.querySelectorAll('[data-fechar-pendente]').forEach(btn=>{
     btn.onclick = ()=>fecharPendente(btn.getAttribute('data-fechar-pendente'));
   });
+
+  const vendasEditBtn = document.getElementById('vendasEditBtn');
+  if(vendasEditBtn) vendasEditBtn.onclick = ()=>{ state.vendasEditOpen = !state.vendasEditOpen; render(); };
+  const vendasInfoBtn = document.getElementById('vendasInfoBtn');
+  const vendasTooltip = document.getElementById('vendasTooltip');
+  if(vendasInfoBtn && vendasTooltip){
+    vendasInfoBtn.onmouseenter = ()=>{ vendasTooltip.style.display = 'block'; };
+    vendasInfoBtn.onmouseleave = ()=>{ vendasTooltip.style.display = 'none'; };
+    vendasInfoBtn.onclick = (e)=>{
+      e.stopPropagation();
+      vendasTooltip.style.display = vendasTooltip.style.display==='block' ? 'none' : 'block';
+    };
+  }
+  const vendasSaveBtn = document.getElementById('vendasSaveBtn');
+  if(vendasSaveBtn) vendasSaveBtn.onclick = saveVendasProgress;
+
+  const callModalSim = document.getElementById('callModalSim');
+  const callModalNao = document.getElementById('callModalNao');
+  if(callModalSim) callModalSim.onclick = ()=>answerCallModal('sim');
+  if(callModalNao) callModalNao.onclick = ()=>answerCallModal('não');
 }
 
 async function init(){
@@ -1014,6 +1454,7 @@ async function init(){
   if(session && session.type === 'admin'){
     state.view = 'admin';
     loadAdminData();
+    loadAdminMetas();
     startAdminPolling();
     return;
   }
