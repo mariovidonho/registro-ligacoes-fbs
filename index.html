@@ -453,11 +453,93 @@ let VENDOR_PINS = {};
 // O n8n responde com respondToWebhook "allIncomingItems", que vem como um
 // array com 1 item ([{...}]). Isso normaliza tanto esse formato quanto um
 // objeto simples, caso o modo de resposta mude no futuro.
-async function callWebhook(url, options){
-  const res = await fetch(url, options);
-  if(!res.ok) throw new Error(`Erro ao comunicar com o servidor (HTTP ${res.status})`);
-  const data = await res.json().catch(()=>({}));
-  return Array.isArray(data) ? (data[0] || {}) : (data || {});
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+// GET com resposta vazia (n8n devolve 200 sem corpo quando o Google Sheets estoura a cota)
+// e tratada como erro, nunca como "zero dados". `retries` refaz so GETs.
+async function callWebhook(url, options, retries){
+  const isGet = !options || !options.method || options.method === 'GET';
+  const tries = 1 + (isGet ? (retries||0) : 0);
+  let lastErr;
+  for(let i=0;i<tries;i++){
+    try{
+      const res = await fetch(url, options);
+      if(!res.ok) throw new Error(`Erro ao comunicar com o servidor (HTTP ${res.status})`);
+      const text = await res.text();
+      if(!text.trim()){
+        if(isGet) throw new Error('Resposta vazia do servidor');
+        return {};
+      }
+      let data;
+      try{ data = JSON.parse(text); }catch(e){
+        if(isGet) throw new Error('Resposta invalida do servidor');
+        return {};
+      }
+      return Array.isArray(data) ? (data[0] || {}) : (data || {});
+    }catch(e){
+      lastErr = e;
+      if(i < tries-1) await sleep(2500*(i+1));
+    }
+  }
+  throw lastErr;
+}
+
+// Fila persistente de ligacoes ainda nao confirmadas pelo servidor.
+// Se o n8n/Google Sheets falhar (ex.: erro 429), a ligacao fica guardada aqui
+// e e reenviada sozinha - nunca some do contador do vendedor.
+const QUEUE_KEY = 'fbs_pending_calls';
+let flushing = false, flushTimer = null, inflightId = null;
+function loadQueue(){
+  try{ return JSON.parse(localStorage.getItem(QUEUE_KEY)) || []; }catch(e){ return []; }
+}
+function saveQueue(q){
+  try{ localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); }catch(e){}
+}
+function pendingCountFor(vendor){
+  return loadQueue().filter(x=>x.body.vendedor===vendor).length;
+}
+function scheduleFlush(ms){
+  if(flushTimer) return;
+  flushTimer = setTimeout(()=>{ flushTimer = null; flushQueue(); }, ms || 8000);
+}
+async function flushQueue(){
+  if(flushing) return;
+  flushing = true;
+  let failed = false;
+  let consecutiveFails = 0;
+  try{
+    while(true){
+      const q0 = loadQueue();
+      const item = q0[0];
+      if(!item) break;
+      inflightId = item.id;
+      try{
+        await callWebhook(N8N_WEBHOOKS.postLigacoes, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(item.body)
+        });
+      }catch(e){
+        console.error('Falha ao salvar ligação, vai tentar de novo', e);
+        failed = true;
+        consecutiveFails++;
+        // manda a ligacao que falhou pro fim da fila, pra ela nao travar as outras
+        saveQueue(loadQueue().filter(x=>x.id!==item.id).concat(item));
+        if(consecutiveFails >= loadQueue().length) break;
+        continue;
+      }
+      consecutiveFails = 0;
+      saveQueue(loadQueue().filter(x=>x.id!==item.id));
+      const e = state.allCalls.find(c=>c.ts===item.body.ts && item.body.vendedor===state.vendor);
+      if(e) e.pending = false;
+      recomputeAutoProgress();
+      render();
+    }
+  } finally {
+    inflightId = null;
+    flushing = false;
+  }
+  if(failed && loadQueue().length){ scheduleFlush(); render(); }
 }
 
 const SESSION_KEY = 'fbs_session';
@@ -503,7 +585,7 @@ function applyVendorList(list){
 // Webhook: GET vendedores - le a lista de vendedores/PINs da planilha
 async function loadVendorList(){
   try{
-    const data = await callWebhook(N8N_WEBHOOKS.getVendedores);
+    const data = await callWebhook(N8N_WEBHOOKS.getVendedores, undefined, 2);
     const list = data.vendedores;
     if(list && list.length){ applyVendorList(list); return; }
     applyVendorList(DEFAULT_VENDOR_LIST);
@@ -566,6 +648,7 @@ let state = {
   pendentes: [],
   historyOpen: false,
   loading: false,
+  loadError: false,
   periodType: 'dia',
   periodValue: todayKey(),
   adminRows: null,
@@ -582,10 +665,18 @@ let state = {
 
 // Webhook: GET ligacoes - le historico do vendedor + status "fechado" do dia
 async function loadVendorData(vendor){
-  state.loading = true; render();
+  state.loading = true; state.loadError = false; render();
   try{
-    const data = await callWebhook(N8N_WEBHOOKS.getLigacoes + '?vendedor=' + encodeURIComponent(vendor) + '&hoje=' + todayKey());
-    const all = (data.ligacoes || []).map(r=>({type:r.Tipo, ts:r['Data/Hora'], agendou:r.Agendou}));
+    const data = await callWebhook(N8N_WEBHOOKS.getLigacoes + '?vendedor=' + encodeURIComponent(vendor) + '&hoje=' + todayKey(), undefined, 2);
+    const all = (data.ligacoes || []).filter(r=>r['Data/Hora']).map(r=>({type:r.Tipo, ts:r['Data/Hora'], agendou:r.Agendou}));
+    // junta ligacoes deste vendedor que ainda estao na fila local (nao confirmadas no servidor)
+    const serverTs = new Set(all.map(c=>c.ts));
+    const fila = loadQueue().filter(x=>x.body.vendedor===vendor);
+    const restantes = fila.filter(x=>!serverTs.has(x.body.ts));
+    if(restantes.length !== fila.length){
+      saveQueue(loadQueue().filter(x=>x.body.vendedor!==vendor || !serverTs.has(x.body.ts)));
+    }
+    restantes.forEach(x=>all.push({type:x.body.tipo, ts:x.body.ts, agendou:x.body.agendou, pending:true}));
     state.allCalls = all;
     state.calls = all.filter(c=>c.ts.slice(0,10)===todayKey());
     const f = data.fechado;
@@ -598,43 +689,30 @@ async function loadVendorData(vendor){
     state.pendentes = data.pendentes || [];
   }catch(e){
     console.error('Falha ao carregar histórico', e);
-    alert('Não foi possível carregar o histórico de ligações. Verifica sua conexão e tenta de novo.');
-    state.allCalls = []; state.calls = []; state.closed = null; state.pendentes = [];
+    // nao zera o contador: mantem o que ja estava na tela e avisa com um banner
+    state.loadError = true;
   }
   state.loading = false;
   render();
+  if(pendingCountFor(vendor)) flushQueue();
 }
 
 // Webhook: POST ligacoes - adiciona 1 linha na planilha (INSERT), sem reescrever nada
 async function addCall(type, extra){
   if(state.closed) return;
-  const entry = {type, ts:new Date().toISOString(), agendou: extra && extra.agendou};
+  const entry = {type, ts:new Date().toISOString(), agendou: extra && extra.agendou, pending:true};
   state.allCalls.push(entry);
   state.calls.push(entry);
+  const q = loadQueue();
+  q.push({id: state.vendor+'|'+entry.ts, body:{action:'add', vendedor: state.vendor, tipo: type, ts: entry.ts, ...(extra||{})}});
+  saveQueue(q);
   render(type==='atendeu' ? 'atendeu' : 'caixa');
-  try{
-    await callWebhook(N8N_WEBHOOKS.postLigacoes, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({action:'add', vendedor: state.vendor, tipo: type, ts: entry.ts, ...(extra||{})})
-    });
-  }catch(e){
-    console.error('Falha ao salvar ligação', e);
-    // desfaz localmente pra nao mostrar uma contagem que nao foi salva no servidor
-    const idx = state.allCalls.indexOf(entry);
-    if(idx>-1) state.allCalls.splice(idx,1);
-    const idx2 = state.calls.indexOf(entry);
-    if(idx2>-1) state.calls.splice(idx2,1);
-    alert('Não foi possível salvar essa ligação. Verifica sua conexão e tenta de novo.');
-    render();
-    return;
-  }
-  // Agendamentos/Ligacoes sao recalculados aqui no cliente (dados ja carregados em
-  // state.allCalls), em vez de chamar GET /metas de novo a cada ligacao - isso evitava
-  // reler a aba Ligacoes inteira (2500+ linhas) a cada clique e estourava a cota da
-  // API do Google Sheets com o uso real de varios vendedores ao mesmo tempo.
+  // A ligacao ja esta guardada na fila local; o envio ao servidor (com reenvio
+  // automatico se o Google Sheets recusar) acontece em segundo plano.
+  // Agendamentos/Ligacoes sao recalculados no cliente (state.allCalls), sem chamar
+  // GET /metas de novo a cada clique, pra nao estourar a cota da API do Google Sheets.
   recomputeAutoProgress();
-  render();
+  flushQueue();
 }
 
 function currentWeekRangeKeys(){
@@ -767,6 +845,21 @@ function launchConfetti(mega){
 async function undoLast(){
   if(state.closed || state.calls.length===0) return;
   const removed = state.calls[state.calls.length-1];
+  if(removed.pending){
+    // ainda nao chegou ao servidor: basta tirar da fila local
+    const qid = state.vendor+'|'+removed.ts;
+    if(inflightId === qid){
+      alert('Essa ligação está sendo enviada agora. Espera um instante e tenta desfazer de novo.');
+      return;
+    }
+    saveQueue(loadQueue().filter(x=>x.id!==qid));
+    state.calls.pop();
+    const pi = state.allCalls.lastIndexOf(removed);
+    if(pi>-1) state.allCalls.splice(pi,1);
+    recomputeAutoProgress();
+    render();
+    return;
+  }
   state.calls.pop();
   const idx = state.allCalls.lastIndexOf(removed);
   if(idx>-1) state.allCalls.splice(idx,1);
@@ -796,6 +889,10 @@ async function fecharRelatorio(){
   const caixa = state.calls.filter(c=>c.type==='caixa_postal').length;
   if(state.calls.length===0){
     alert('Registra pelo menos uma ligação antes de fechar o relatório do dia.');
+    return;
+  }
+  if(state.calls.some(c=>c.pending)){
+    alert('Ainda tem ligação sincronizando com a planilha. Espera alguns segundos e fecha o relatório de novo.');
     return;
   }
   if(!confirm(`Fechar o relatório de hoje?\n\nAtendidas: ${atendidas}\nCaixa postal: ${caixa}\nTotal: ${state.calls.length}\n\nDepois de fechado, não dá pra registrar mais ligações hoje (mas dá pra reabrir se precisar).`)) return;
@@ -873,11 +970,11 @@ async function reopenDay(){
 }
 
 // Webhook: GET admin - retorna dados JA AGREGADOS por vendedor pro periodo selecionado (dia/mes/ano)
-async function loadAdminData(){
-  state.loading = true; render();
+async function loadAdminData(silent){
+  state.loading = true; if(!silent) render();
   try{
     const url = N8N_WEBHOOKS.getAdmin + '?tipo=' + encodeURIComponent(state.periodType) + '&valor=' + encodeURIComponent(state.periodValue);
-    const data = await callWebhook(url);
+    const data = await callWebhook(url, undefined, silent ? 0 : 1);
     const rows = (data.ranking || []).map(r=>({
       vendor: r.vendedor,
       atendeu: r.atendeu || 0,
@@ -895,8 +992,11 @@ async function loadAdminData(){
     state.adminRows = rows;
   }catch(e){
     console.error('Falha ao carregar dados do painel', e);
-    alert('Não foi possível carregar os dados do painel administrativo. Verifica sua conexão e tenta de novo.');
-    state.adminRows = [];
+    // em atualizacao automatica, mantem os numeros que ja estavam na tela em vez de mostrar zero
+    if(!silent){
+      alert('Não foi possível carregar os dados do painel administrativo. Verifica sua conexão e tenta de novo.');
+      state.adminRows = state.adminRows || [];
+    }
   }
   state.loading = false;
   render();
@@ -923,8 +1023,8 @@ function startAdminPolling(){
     // loadAdminMetas fica de fora do poll: 10 leituras da planilha a cada 45s
     // sobrecarregava a cota do Google Sheets. Metas mudam pouco, entao so
     // recarrega no login e apos uma edicao manual (ver adminSaveMeta).
-    if(state.view==='admin' && !state.loading) loadAdminData();
-  }, 45000);
+    if(state.view==='admin' && !state.loading && !document.hidden) loadAdminData(true);
+  }, 90000);
 }
 function stopAdminPolling(){
   if(adminPollTimer){ clearInterval(adminPollTimer); adminPollTimer = null; }
@@ -988,6 +1088,9 @@ function checkVendorPin(){
 }
 
 function selectVendor(name){
+  if(state.vendor !== name){
+    state.allCalls = []; state.calls = []; state.closed = null; state.pendentes = [];
+  }
   state.vendor = name;
   state.pendingVendor = null;
   state.vendorPinError = false;
@@ -998,29 +1101,42 @@ function selectVendor(name){
 }
 
 // Busca as metas de todos os vendedores pro painel admin (usado so na aba Metas do admin)
+// Uma vendedora por vez (nao 11 em paralelo): cada GET /metas le duas abas inteiras
+// do Google Sheets e o disparo em massa estourava a cota da API.
+async function fetchMetasOf(v){
+  try{
+    const data = await callWebhook(N8N_WEBHOOKS.getMetas + '?vendedor=' + encodeURIComponent(v));
+    return data.metas || null;
+  }catch(e){
+    console.error('Falha ao carregar metas de', v, e);
+    return null;
+  }
+}
 async function loadAdminMetas(){
-  const entries = await Promise.all(VENDORES.map(async v=>{
-    try{
-      const data = await callWebhook(N8N_WEBHOOKS.getMetas + '?vendedor=' + encodeURIComponent(v));
-      return [v, data.metas || null];
-    }catch(e){
-      console.error('Falha ao carregar metas de', v, e);
-      return [v, null];
-    }
-  }));
-  state.adminMetas = Object.fromEntries(entries);
-  render();
+  const result = {};
+  for(const v of VENDORES){
+    result[v] = await fetchMetasOf(v);
+    state.adminMetas = {...result};
+    if(state.view==='admin') render();
+    await sleep(400);
+  }
 }
 
 async function adminSaveMeta(vendor, campo, valor){
   if(valor===''||valor===null||Number.isNaN(Number(valor))){ alert('Digita um número válido.'); return; }
   const ok = await saveMetaField(vendor, campo, Number(valor));
-  if(ok) await loadAdminMetas();
+  if(ok){
+    const m = await fetchMetasOf(vendor);
+    state.adminMetas = {...(state.adminMetas||{}), [vendor]: m};
+    render();
+  }
 }
 
 function trocarVendedor(){
   state.vendor = null;
   state.calls = [];
+  state.allCalls = [];
+  state.loadError = false;
   state.closed = null;
   state.metas = null;
   state.vendasEditOpen = false;
@@ -1368,6 +1484,8 @@ function render(pulse){
       </div>
     </div>
     <div class="tally-total">Total de ligações hoje: <b>${total}</b></div>
+    ${state.calls.filter(c=>c.pending).length ? `<div class="tally-total" style="color:var(--caixa);margin-top:-14px;">⏳ ${state.calls.filter(c=>c.pending).length} ligação(ões) sincronizando com a planilha — já estão guardadas, o envio é automático</div>` : ''}
+    ${state.loadError ? `<div class="fechado-banner" style="border-color:var(--caixa);"><div class="t" style="color:var(--caixa);">Não consegui atualizar o histórico</div><div class="s">A contagem na tela pode estar incompleta.</div><button class="undo-btn" id="retryLoadBtn" style="margin-top:8px;color:var(--caixa);">tentar de novo</button></div>` : ''}
 
     ${state.closed ? `
       <div class="fechado-banner">
@@ -1413,6 +1531,8 @@ function render(pulse){
   `;
 
   document.getElementById('trocarBtn').onclick = trocarVendedor;
+  const retryLoadBtn = document.getElementById('retryLoadBtn');
+  if(retryLoadBtn) retryLoadBtn.onclick = ()=>loadVendorData(state.vendor);
   document.getElementById('historyHead').onclick = ()=>{ state.historyOpen = !state.historyOpen; render(); };
   if(!disabled){
     document.getElementById('btnAtendeu').onclick = ()=>openCallModal('atendeu');
@@ -1449,6 +1569,7 @@ function render(pulse){
 }
 
 async function init(){
+  if(loadQueue().length) scheduleFlush(1500);
   await loadVendorList();
   const session = loadSession();
   if(session && session.type === 'admin'){
