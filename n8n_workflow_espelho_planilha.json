@@ -1,0 +1,597 @@
+{
+  "name": "FBS Prime - Espelho Supabase para Planilha",
+  "nodes": [
+    {
+      "id": "8e8e8610-6e5a-4a5f-9856-9d88c45d91cf",
+      "name": "A cada 10 minutos",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        400
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "b38d5ebd-9433-436d-ba56-018d68879f44",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -40
+      ],
+      "parameters": {
+        "width": 1100,
+        "height": 260,
+        "content": "## Espelho Supabase -> Planilha\nO site grava no Supabase. A cada 10 min este fluxo reescreve as abas Ligações, Fechamentos, Metas e Vendedores com o conteúdo do banco (a linha de cabeçalho é mantida).\n\n**Só ATIVE depois de importar o histórico da planilha para o Supabase** — senão as linhas antigas somem da planilha na primeira execução.\n\nA planilha é só leitura: o que for editado nela à mão é sobrescrito na próxima execução."
+      }
+    },
+    {
+      "id": "b31edac3-955e-4f02-8bf9-6c064b2004b3",
+      "name": "Buscar Ligacoes no Supabase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Busca a tabela inteira no Supabase (a API devolve no maximo 1000 linhas por vez).\n// Se vier vazia, nao devolve nada: o fluxo para aqui e a aba NAO e apagada.\nconst URL = 'https://cnwqzxrqxjatyqsnkxqx.supabase.co/rest/v1/ligacoes?select=*&order=ts,id';\nconst KEY = 'sb_publishable_A4bCcKHzh2XzmSCh6QXY4A_32aWwLuy';\nconst linhas = [];\nfor (let de = 0; ; de += 1000) {\n  const lote = await this.helpers.httpRequest({ url: `${URL}&offset=${de}&limit=1000`, headers: { apikey: KEY }, json: true });\n  linhas.push(...lote);\n  if (lote.length < 1000) break;\n}\nconst iso = t => t ? new Date(t).toISOString() : '';\nreturn linhas.map(r => ({ json: {\n  Vendedor: r.vendedor,\n  Tipo: r.tipo,\n  'Data/Hora': iso(r.ts),\n  Agendou: r.agendou || '',\n  'Chamou WhatsApp': r.chamou_whatsapp || ''\n} }));\n"
+      }
+    },
+    {
+      "id": "8f8d641d-1556-4ad5-ad38-ecde1f5ce475",
+      "name": "Limpar aba Ligacoes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        300
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "clear": "wholeSheet",
+        "keepFirstRow": true
+      }
+    },
+    {
+      "id": "c280a53b-d0ad-43f7-82bd-7009f391e81f",
+      "name": "Linhas Ligacoes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "jsCode": "return $('Buscar Ligacoes no Supabase').all();"
+      }
+    },
+    {
+      "id": "0b8fccd4-8eac-4850-8ed0-26cb54831480",
+      "name": "Gravar aba Ligacoes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Ligações"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "c032c95c-6153-4dfb-8207-a6ab49529ab4",
+      "name": "Buscar Fechamentos no Supabase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        500
+      ],
+      "parameters": {
+        "jsCode": "// Busca a tabela inteira no Supabase (a API devolve no maximo 1000 linhas por vez).\n// Se vier vazia, nao devolve nada: o fluxo para aqui e a aba NAO e apagada.\nconst URL = 'https://cnwqzxrqxjatyqsnkxqx.supabase.co/rest/v1/fechamentos?select=*&order=data,vendedor';\nconst KEY = 'sb_publishable_A4bCcKHzh2XzmSCh6QXY4A_32aWwLuy';\nconst linhas = [];\nfor (let de = 0; ; de += 1000) {\n  const lote = await this.helpers.httpRequest({ url: `${URL}&offset=${de}&limit=1000`, headers: { apikey: KEY }, json: true });\n  linhas.push(...lote);\n  if (lote.length < 1000) break;\n}\nconst iso = t => t ? new Date(t).toISOString() : '';\nreturn linhas.map(r => ({ json: {\n  Vendedor: r.vendedor,\n  Data: r.data,\n  Atendidas: r.atendidas,\n  'Caixa Postal': r.caixa_postal,\n  Total: r.total,\n  'Fechado em': iso(r.fechado_em)\n} }));\n"
+      }
+    },
+    {
+      "id": "bc544ca2-be69-4144-a674-a7cda5286f1a",
+      "name": "Limpar aba Fechamentos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        500
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "clear": "wholeSheet",
+        "keepFirstRow": true
+      }
+    },
+    {
+      "id": "b6bb5b0e-c0ea-416d-b90a-dcf3ea6bc226",
+      "name": "Linhas Fechamentos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        500
+      ],
+      "parameters": {
+        "jsCode": "return $('Buscar Fechamentos no Supabase').all();"
+      }
+    },
+    {
+      "id": "5b2db2b9-2a6c-4241-834d-13dcfcdac5d9",
+      "name": "Gravar aba Fechamentos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        500
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Fechamentos"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "039d8851-ad7b-4351-b8fa-1de6b567b8f6",
+      "name": "Buscar Metas no Supabase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        700
+      ],
+      "parameters": {
+        "jsCode": "// Busca a tabela inteira no Supabase (a API devolve no maximo 1000 linhas por vez).\n// Se vier vazia, nao devolve nada: o fluxo para aqui e a aba NAO e apagada.\nconst URL = 'https://cnwqzxrqxjatyqsnkxqx.supabase.co/rest/v1/metas?select=*&order=semana,vendedor';\nconst KEY = 'sb_publishable_A4bCcKHzh2XzmSCh6QXY4A_32aWwLuy';\nconst linhas = [];\nfor (let de = 0; ; de += 1000) {\n  const lote = await this.helpers.httpRequest({ url: `${URL}&offset=${de}&limit=1000`, headers: { apikey: KEY }, json: true });\n  linhas.push(...lote);\n  if (lote.length < 1000) break;\n}\nconst iso = t => t ? new Date(t).toISOString() : '';\nreturn linhas.map(r => ({ json: {\n  Vendedor: r.vendedor,\n  Semana: r.semana,\n  'Meta Agendamentos': r.meta_agendamentos,\n  'Meta Comparecimentos': r.meta_comparecimentos,\n  'Progresso Comparecimentos': r.progresso_comparecimentos,\n  'Meta Vendas': r.meta_vendas,\n  'Progresso Vendas': r.progresso_vendas,\n  'Meta Ligacoes': r.meta_ligacoes\n} }));\n"
+      }
+    },
+    {
+      "id": "2e8f0ad3-77c6-4d67-b0ae-a57bceacddc6",
+      "name": "Limpar aba Metas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        700
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Metas"
+        },
+        "clear": "wholeSheet",
+        "keepFirstRow": true
+      }
+    },
+    {
+      "id": "9ff0e6dd-c810-4534-9a56-a04a862d9497",
+      "name": "Linhas Metas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        700
+      ],
+      "parameters": {
+        "jsCode": "return $('Buscar Metas no Supabase').all();"
+      }
+    },
+    {
+      "id": "773cb362-b99a-4037-a94d-68a309d4c95f",
+      "name": "Gravar aba Metas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        700
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Metas"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "4d2116d7-0dc0-4542-8df6-d81aca0a5a48",
+      "name": "Buscar Vendedores no Supabase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        900
+      ],
+      "parameters": {
+        "jsCode": "// Busca a tabela inteira no Supabase (a API devolve no maximo 1000 linhas por vez).\n// Se vier vazia, nao devolve nada: o fluxo para aqui e a aba NAO e apagada.\nconst URL = 'https://cnwqzxrqxjatyqsnkxqx.supabase.co/rest/v1/vendedores?select=*&order=criado_em,nome';\nconst KEY = 'sb_publishable_A4bCcKHzh2XzmSCh6QXY4A_32aWwLuy';\nconst linhas = [];\nfor (let de = 0; ; de += 1000) {\n  const lote = await this.helpers.httpRequest({ url: `${URL}&offset=${de}&limit=1000`, headers: { apikey: KEY }, json: true });\n  linhas.push(...lote);\n  if (lote.length < 1000) break;\n}\nconst iso = t => t ? new Date(t).toISOString() : '';\nreturn linhas.map(r => ({ json: {\n  Nome: r.nome,\n  PIN: r.pin\n} }));\n"
+      }
+    },
+    {
+      "id": "830b8080-d00d-47c2-82b3-b87183f29c69",
+      "name": "Limpar aba Vendedores",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        900
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "clear": "wholeSheet",
+        "keepFirstRow": true
+      }
+    },
+    {
+      "id": "c976a780-139a-478b-9522-d0cc4a2b2754",
+      "name": "Linhas Vendedores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        900
+      ],
+      "parameters": {
+        "jsCode": "return $('Buscar Vendedores no Supabase').all();"
+      }
+    },
+    {
+      "id": "b15c113a-b9e8-42bc-9e71-8c92be743fe6",
+      "name": "Gravar aba Vendedores",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        900
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SUBSTITUA_PELO_ID_DA_CREDENCIAL",
+          "name": "Google Sheets - FBS Prime"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1fz5t4jmA2_z-T9FYYzRikGrAfnfzipc1ZictzkXgk4s"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vendedores"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "A cada 10 minutos": {
+      "main": [
+        [
+          {
+            "node": "Buscar Ligacoes no Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Fechamentos no Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Metas no Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Vendedores no Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Ligacoes no Supabase": {
+      "main": [
+        [
+          {
+            "node": "Limpar aba Ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpar aba Ligacoes": {
+      "main": [
+        [
+          {
+            "node": "Linhas Ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linhas Ligacoes": {
+      "main": [
+        [
+          {
+            "node": "Gravar aba Ligacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Fechamentos no Supabase": {
+      "main": [
+        [
+          {
+            "node": "Limpar aba Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpar aba Fechamentos": {
+      "main": [
+        [
+          {
+            "node": "Linhas Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linhas Fechamentos": {
+      "main": [
+        [
+          {
+            "node": "Gravar aba Fechamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Metas no Supabase": {
+      "main": [
+        [
+          {
+            "node": "Limpar aba Metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpar aba Metas": {
+      "main": [
+        [
+          {
+            "node": "Linhas Metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linhas Metas": {
+      "main": [
+        [
+          {
+            "node": "Gravar aba Metas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Vendedores no Supabase": {
+      "main": [
+        [
+          {
+            "node": "Limpar aba Vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpar aba Vendedores": {
+      "main": [
+        [
+          {
+            "node": "Linhas Vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linhas Vendedores": {
+      "main": [
+        [
+          {
+            "node": "Gravar aba Vendedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
