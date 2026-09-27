@@ -1367,9 +1367,15 @@ function render(pulse){
               {key:'vendas', label:'Vendas', metaCampo:'metaVendas', progCampo:'progressoVendas'},
               {key:'ligacoes', label:'Ligações', metaCampo:'metaLigacoes', progCampo:null}
             ];
+            // resultado da semana anterior, pro admin avaliar antes de ajustar a meta
+            const a = m.anterior;
+            const resumoAnterior = a ? (a.ligacoes
+              ? `Semana passada: ${a.ligacoes} ligações em ${a.dias} dia(s) (${Math.round(a.ligacoes/Math.max(1,a.dias))}/dia) · ${a.agendamentos} agend. · ${a.comparecimentos} comp. · ${a.vendas} vendas`
+              : 'Semana passada: nenhuma ligação registrada') : '';
             return `
               <div style="padding:12px 16px;border-top:1px solid var(--border);">
-                <div style="font-weight:600;font-size:14px;margin-bottom:8px;">${v}</div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:${resumoAnterior ? 2 : 8}px;">${v}</div>
+                ${resumoAnterior ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">${resumoAnterior}</div>` : ''}
                 ${campos.map(c=>{
                   const d = m[c.key] || {meta:1, progresso:0};
                   return `

@@ -121,7 +121,9 @@ language sql stable as $$
 $$;
 
 -- Metas da semana atual do vendedor. Se a semana ainda não tem linha, cria uma
--- com metas baseadas no resultado da semana anterior (mesma regra da planilha).
+-- com cada meta = resultado da semana anterior + 1 (sempre um pouco melhor);
+-- o admin pode mudar qualquer meta depois no painel. Devolve também o resultado
+-- da semana anterior, pro admin avaliar.
 create or replace function public.get_metas(p_vendedor text)
 returns jsonb language plpgsql as $$
 declare
@@ -130,27 +132,27 @@ declare
   v_anterior date := v_semana - 7;
   m          public.metas;
   ant        public.metas;
-  lig_atual int; ag_atual int; lig_ant int; ag_ant int;
+  lig_atual int; ag_atual int; lig_ant int; ag_ant int; dias_ant int;
 begin
   select count(*), count(*) filter (where lower(agendou) = 'sim')
     into lig_atual, ag_atual
     from public.ligacoes
    where vendedor = p_vendedor and public.dia_sp(ts) between v_semana and v_semana + 6;
 
+  select count(*), count(*) filter (where lower(agendou) = 'sim'), count(distinct public.dia_sp(ts))
+    into lig_ant, ag_ant, dias_ant
+    from public.ligacoes
+   where vendedor = p_vendedor and public.dia_sp(ts) between v_anterior and v_anterior + 6;
+  select * into ant from public.metas where vendedor = p_vendedor and semana = v_anterior;
+
   select * into m from public.metas where vendedor = p_vendedor and semana = v_semana;
   if not found then
-    select count(*), count(*) filter (where lower(agendou) = 'sim')
-      into lig_ant, ag_ant
-      from public.ligacoes
-     where vendedor = p_vendedor and public.dia_sp(ts) between v_anterior and v_anterior + 6;
-    select * into ant from public.metas where vendedor = p_vendedor and semana = v_anterior;
-
     insert into public.metas (vendedor, semana, meta_agendamentos, meta_comparecimentos, meta_vendas, meta_ligacoes)
     values (p_vendedor, v_semana,
-            greatest(1, ag_ant),
-            greatest(1, coalesce(ant.progresso_comparecimentos, 1)),
-            greatest(1, coalesce(ant.progresso_vendas, 1)),
-            greatest(1, lig_ant))
+            ag_ant + 1,
+            coalesce(ant.progresso_comparecimentos, 0) + 1,
+            coalesce(ant.progresso_vendas, 0) + 1,
+            lig_ant + 1)
     on conflict do nothing;
     select * into m from public.metas where vendedor = p_vendedor and semana = v_semana;
   end if;
@@ -160,7 +162,14 @@ begin
     'agendamentos',    jsonb_build_object('meta', m.meta_agendamentos,    'progresso', ag_atual),
     'comparecimentos', jsonb_build_object('meta', m.meta_comparecimentos, 'progresso', m.progresso_comparecimentos),
     'vendas',          jsonb_build_object('meta', m.meta_vendas,          'progresso', m.progresso_vendas),
-    'ligacoes',        jsonb_build_object('meta', m.meta_ligacoes,        'progresso', lig_atual)
+    'ligacoes',        jsonb_build_object('meta', m.meta_ligacoes,        'progresso', lig_atual),
+    'anterior', jsonb_build_object(
+      'semana', v_anterior,
+      'ligacoes', lig_ant,
+      'agendamentos', ag_ant,
+      'comparecimentos', coalesce(ant.progresso_comparecimentos, 0),
+      'vendas', coalesce(ant.progresso_vendas, 0),
+      'dias', dias_ant)
   );
 end
 $$;
