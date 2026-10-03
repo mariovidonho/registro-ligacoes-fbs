@@ -213,6 +213,18 @@ create policy "site" on public.ligacoes    for all to anon using (true) with che
 create policy "site" on public.fechamentos for all to anon using (true) with check (true);
 create policy "site" on public.metas       for all to anon using (true) with check (true);
 
+-- Horários do cronograma diário: uma linha só, editada pelo painel administrativo.
+-- Enquanto estiver vazia, o site usa os horários padrão que já vêm no código.
+-- Tabela à parte: não mexe nas outras nem no espelho do n8n.
+create table if not exists public.cronograma (
+  id            int primary key default 1 check (id = 1),
+  blocos        jsonb not null,
+  atualizado_em timestamptz not null default now()
+);
+alter table public.cronograma enable row level security;
+drop policy if exists "site" on public.cronograma;
+create policy "site" on public.cronograma for all to anon using (true) with check (true);
+
 -- Lista inicial de vendedores (a mesma que está no site)
 insert into public.vendedores (nome, pin) values
   ('Arthur Lima', '1098'), ('Wellington Augusto', '1111'), ('Rayane Castro', '1095'),

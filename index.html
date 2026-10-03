@@ -412,6 +412,134 @@
     to{ transform:translateY(115vh) rotate(540deg); opacity:.3; }
   }
   .meta-row.celebrating .meta-bar{ box-shadow:0 0 0 2px var(--gold); }
+
+  /* ---- Cronograma do dia ---- */
+  .crono-card{
+    background:var(--panel);
+    border:1px solid rgba(201,168,76,.4);
+    border-radius:16px;
+    padding:13px 16px 10px;
+    margin-bottom:16px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .crono-card.pausa{border-color:var(--border);}
+  .crono-card.fim{border-color:rgba(47,158,100,.45);}
+  .crono-card.flash{animation:crono-flash 1.2s ease-in-out 3;}
+  @keyframes crono-flash{
+    0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0);}
+    50%{box-shadow:0 0 0 3px rgba(201,168,76,.55),0 0 24px rgba(201,168,76,.35);}
+  }
+  .crono-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .crono-card.pausa .crono-top{color:var(--text-dim);}
+  .crono-clock{color:var(--text-dim);letter-spacing:0;font-weight:400;font-variant-numeric:tabular-nums;}
+  .crono-main{display:flex;align-items:center;gap:12px;margin:8px 0 11px;}
+  .crono-num{
+    font-size:38px;
+    font-weight:800;
+    line-height:1;
+    letter-spacing:-.02em;
+    color:var(--gold);
+    min-width:52px;
+    font-variant-numeric:tabular-nums;
+  }
+  .crono-num.dim{color:var(--text-dim);font-size:30px;}
+  .crono-num.ok{color:var(--atendeu);font-size:30px;}
+  .crono-title{font-size:15px;font-weight:600;line-height:1.25;}
+  .crono-sub{font-size:12px;color:var(--text-dim);margin-top:3px;}
+  .crono-sub .alerta{color:var(--caixa);}
+  .crono-bar{position:relative;display:flex;gap:2px;height:6px;}
+  .crono-seg{border-radius:2px;background:#2A4D6B;}
+  .crono-seg.passo.feito{background:rgba(201,168,76,.4);}
+  .crono-seg.passo.atual{background:var(--gold);}
+  .crono-seg.intervalo{background:#3A4A5A;}
+  .crono-seg.cafe{background:repeating-linear-gradient(45deg,#E8D3A3 0 3px,#F1E6CC 3px 6px);}
+  .crono-seg.intervalo.feito,.crono-seg.cafe.feito{opacity:.45;}
+  .crono-seg.vazio{background:transparent;}
+  .crono-agora{
+    position:absolute;
+    top:-4px;
+    width:2px;
+    height:14px;
+    margin-left:-1px;
+    background:var(--text);
+    border-radius:1px;
+  }
+  .crono-ticks{position:relative;height:13px;margin-top:5px;font-size:10px;color:var(--text-dim);font-variant-numeric:tabular-nums;}
+  .crono-ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap;}
+  .crono-ticks span.first{transform:none;}
+  .crono-ticks span.last{transform:translateX(-100%);}
+  .crono-more{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;}
+  .crono-rule-label{
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:7px;
+  }
+  .crono-prioridade{
+    background:rgba(201,168,76,.12);
+    border:1px solid rgba(201,168,76,.45);
+    border-radius:10px;
+    padding:8px 10px;
+    font-size:12px;
+    line-height:1.45;
+    margin-bottom:10px;
+  }
+  .crono-prioridade b{color:var(--gold);}
+  .crono-chips{display:flex;flex-wrap:wrap;gap:5px;}
+  .crono-chip{font-size:11px;border:1px solid var(--border);border-radius:999px;padding:3px 9px;}
+  .crono-chip b{color:var(--gold);}
+  .crono-qc{font-size:11px;color:var(--text-dim);margin-top:9px;}
+  .crono-hint{text-align:center;font-size:11px;color:var(--text-dim);margin-top:7px;}
+  .crono-toast{
+    position:fixed;
+    top:14px;
+    left:50%;
+    transform:translate(-50%,-160%);
+    transition:transform .35s ease;
+    z-index:55;
+    background:var(--panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:12px 16px;
+    width:max-content;
+    max-width:min(420px,calc(100vw - 32px));
+    box-shadow:0 10px 28px rgba(0,0,0,.45);
+    font-size:14px;
+    cursor:pointer;
+  }
+  .crono-toast.show{transform:translate(-50%,0);}
+  .crono-toast .k{
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .crono-edit-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:6px 8px;
+    padding:10px 16px;
+    border-top:1px solid var(--border);
+    font-size:12px;
+  }
+  .crono-edit-row .nome{flex-basis:100%;font-size:13px;}
+  .crono-edit-row .nome b{color:var(--gold);}
+  .crono-edit-row input{flex:1;max-width:130px;margin:0;padding:7px 8px;font-size:13px;}
 </style>
 </head>
 <body>
@@ -672,7 +800,11 @@ let state = {
   vendasEditOpen: false,
   celebrated: new Set(), // chaves "vendedor|semana|metrica" ja celebradas nesta sessao
   adminMetas: null,      // { [vendedor]: metasObj } no painel admin
-  adminMetasEdit: {}     // { [vendedor]: {campo:valor} } rascunho dos inputs do admin
+  adminMetasEdit: {},    // { [vendedor]: {campo:valor} } rascunho dos inputs do admin
+  cronoOpen: false,      // cartao do cronograma expandido (regra de ouro)
+  cronoEditOpen: false,  // editor de horarios aberto no admin
+  cronoDraft: null,      // rascunho dos horarios sendo editados no admin
+  cronoFlashAte: 0       // brilho dourado do cartao ate esse instante (troca de passo)
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -992,7 +1124,9 @@ function startAdminPolling(){
   stopAdminPolling();
   adminPollTimer = setInterval(()=>{
     // metas mudam pouco: so recarregam no login e apos uma edicao manual (ver adminSaveMeta)
-    if(state.view==='admin' && !state.loading && !document.hidden) loadAdminData(true);
+    // nao redesenha enquanto o admin esta digitando (meta, horario do cronograma...)
+    const digitando = document.activeElement && document.activeElement.tagName==='INPUT';
+    if(state.view==='admin' && !state.loading && !document.hidden && !digitando) loadAdminData(true);
   }, 30000);
 }
 function stopAdminPolling(){
@@ -1123,6 +1257,338 @@ function periodLabel(){
   if(state.periodType==='dia') return new Date(state.periodValue+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
   if(state.periodType==='mes') return new Date(state.periodValue+'-01T12:00:00').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
   return `Ano de ${state.periodValue}`;
+}
+
+/*
+  Cronograma do dia (segunda a sexta). Os horarios ficam numa linha da tabela
+  `cronograma` no Supabase, editada pelo painel admin; se ela nao carregar, vale o
+  que estiver guardado no celular ou, em ultimo caso, o padrao abaixo (o do PDF).
+  O passo atual e calculado pelo relogio, no fuso de Sao Paulo, sem ir ao servidor.
+*/
+const CRONO_PADRAO = [
+  {tipo:'passo',     num:'01', titulo:'Oportunidade e primeiro contato',    inicio:'09:30', fim:'13:00'},
+  {tipo:'intervalo',           titulo:'Intervalo',                          inicio:'13:00', fim:'14:30'},
+  {tipo:'passo',     num:'02', titulo:'Segundo contato',                    inicio:'14:30', fim:'16:00'},
+  {tipo:'cafe',                titulo:'Café e networking',                  inicio:'16:00', fim:'16:30'},
+  {tipo:'passo',     num:'03', titulo:'Acompanhamentos e reunião agendada', inicio:'16:30', fim:'18:00'},
+  {tipo:'passo',     num:'04', titulo:'Terceiro contato',                   inicio:'18:00', fim:'19:00'}
+];
+const CRONO_CACHE_KEY = 'fbs_cronograma';
+const CRONO_AVISO_MIN = 10; // faltando isso, o "faltam X" fica laranja e lembra do controle de qualidade
+
+const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hhmmMin = s => { const [h,m] = s.split(':').map(Number); return h*60+m; };
+const minHhmm = m => Math.floor(m/60)+':'+String(m%60).padStart(2,'0');
+function duracaoLabel(min){
+  if(min < 60) return min+' min';
+  const r = min%60;
+  return Math.floor(min/60)+'h'+(r ? String(r).padStart(2,'0') : '');
+}
+
+// Aceita so uma lista de blocos com horarios validos e em ordem; senao devolve null
+function validarBlocos(blocos){
+  if(!Array.isArray(blocos) || !blocos.length) return null;
+  let fimAnterior = -1;
+  for(const b of blocos){
+    if(!b || !['passo','intervalo','cafe'].includes(b.tipo) || typeof b.titulo!=='string') return null;
+    if(!/^\d{2}:\d{2}$/.test(b.inicio||'') || !/^\d{2}:\d{2}$/.test(b.fim||'')) return null;
+    const ini = hhmmMin(b.inicio), fim = hhmmMin(b.fim);
+    if(ini >= fim || ini < fimAnterior || fim > 24*60) return null;
+    fimAnterior = fim;
+  }
+  return blocos;
+}
+
+let cronoBlocos = (()=>{
+  try{ return validarBlocos(JSON.parse(localStorage.getItem(CRONO_CACHE_KEY))) || CRONO_PADRAO; }
+  catch(e){ return CRONO_PADRAO; }
+})();
+let cronoCarregadoEm = 0;
+
+async function loadCronograma(){
+  cronoCarregadoEm = Date.now();
+  try{
+    const rows = await sb('cronograma?select=blocos&id=eq.1', undefined, 1);
+    const blocos = validarBlocos(rows && rows[0] && rows[0].blocos);
+    if(!blocos) return;
+    cronoBlocos = blocos;
+    try{ localStorage.setItem(CRONO_CACHE_KEY, JSON.stringify(blocos)); }catch(e){}
+    atualizarCronoCard();
+  }catch(e){
+    console.error('Falha ao carregar o cronograma, usando os horários guardados', e);
+  }
+}
+
+const SP_FMT = new Intl.DateTimeFormat('en-US', {
+  timeZone:'America/Sao_Paulo', hour12:false, weekday:'short', hour:'2-digit', minute:'2-digit', second:'2-digit'
+});
+// Dia da semana (0 = domingo) e minutos desde a meia-noite, no horario de Sao Paulo
+function agoraSP(){
+  const p = {};
+  SP_FMT.formatToParts(new Date()).forEach(x=>{ p[x.type] = x.value; });
+  return {
+    dow: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(p.weekday),
+    min: (Number(p.hour)%24)*60 + Number(p.minute) + Number(p.second)/60
+  };
+}
+
+// Em que ponto do cronograma estamos agora
+function cronoEstado(){
+  const {dow, min} = agoraSP();
+  const blocos = cronoBlocos;
+  const ini = hhmmMin(blocos[0].inicio), fim = hhmmMin(blocos[blocos.length-1].fim);
+  const base = {min, ini, fim, relogio: minHhmm(Math.floor(min))};
+  const proxPasso = de => blocos.slice(de).find(b=>b.tipo==='passo');
+  if(dow===0 || dow===6) return {...base, fase:'fds', min:-1};
+  if(min < ini) return {...base, fase:'antes', prox: proxPasso(0)};
+  if(min >= fim) return {...base, fase:'fim'};
+  const i = blocos.findIndex(b=>min>=hhmmMin(b.inicio) && min<hhmmMin(b.fim));
+  if(i < 0){
+    const j = blocos.findIndex(b=>hhmmMin(b.inicio) > min);
+    return {...base, fase:'livre', i:'livre'+j, prox: proxPasso(j), ateMin: hhmmMin(blocos[j].inicio)};
+  }
+  const b = blocos[i];
+  return {
+    ...base,
+    fase: b.tipo==='passo' ? 'passo' : 'pausa',
+    i, bloco: b,
+    restante: Math.ceil(hhmmMin(b.fim) - min),
+    prox: proxPasso(i+1)
+  };
+}
+
+function renderCronoCard(modoAdmin){
+  const e = cronoEstado();
+  if(e.fase==='fds' && !modoAdmin) return '';
+  const blocos = cronoBlocos;
+  const prefixo = modoAdmin ? 'Cronograma do time' : 'Cronograma';
+  let cls = '', fase = 'agora', num = '', numCls = '', titulo = '', sub = '';
+
+  if(e.fase==='passo'){
+    num = e.bloco.num || '';
+    titulo = esc(e.bloco.titulo);
+    const faixa = e.bloco.inicio.replace(/^0/,'')+' – '+e.bloco.fim.replace(/^0/,'');
+    sub = e.restante <= CRONO_AVISO_MIN
+      ? `${faixa} · <span class="alerta">faltam ${duracaoLabel(e.restante)} · controle de qualidade</span>`
+      : `${faixa} · faltam ${duracaoLabel(e.restante)}`;
+  }else if(e.fase==='pausa' || e.fase==='livre'){
+    cls = 'pausa'; fase = 'pausa'; numCls = 'dim';
+    const ate = e.fase==='pausa' ? hhmmMin(e.bloco.fim) : e.ateMin;
+    if(e.fase==='pausa'){
+      num = e.bloco.tipo==='cafe' ? '☕' : 'II';
+      titulo = esc(e.bloco.titulo);
+    }else{
+      num = '–';
+      titulo = 'Pausa no cronograma';
+    }
+    sub = e.prox
+      ? `Volta às ${minHhmm(ate)} com o Passo ${esc(e.prox.num||'')} · em ${duracaoLabel(Math.ceil(ate - e.min))}`
+      : `Volta às ${minHhmm(ate)}`;
+  }else if(e.fase==='antes'){
+    cls = 'pausa'; fase = 'antes do início'; num = '–'; numCls = 'dim';
+    titulo = `Cronograma começa às ${minHhmm(e.ini)}`;
+    sub = e.prox ? `Primeiro: Passo ${esc(e.prox.num||'')} · ${esc(e.prox.titulo)}` : '';
+  }else if(e.fase==='fim'){
+    cls = 'fim'; fase = 'encerrado'; num = '✓'; numCls = 'ok';
+    titulo = 'Cronograma do dia concluído';
+    sub = modoAdmin ? 'Hora do time fechar o relatório do dia' : 'Não esqueça de fechar o relatório do dia';
+  }else{
+    cls = 'pausa'; fase = 'fim de semana'; num = '–'; numCls = 'dim';
+    titulo = 'Hoje não tem cronograma';
+    sub = `Volta na segunda às ${minHhmm(e.ini)}`;
+  }
+  if(e.fase==='passo' && Date.now() < state.cronoFlashAte) cls += ' flash';
+
+  // barra do dia: cada bloco ocupa a largura proporcional a sua duracao
+  const total = e.fim - e.ini;
+  let cursor = e.ini, segs = '';
+  const marcas = [];
+  blocos.forEach(b=>{
+    const s = hhmmMin(b.inicio), f = hhmmMin(b.fim);
+    if(s > cursor) segs += `<div class="crono-seg vazio" style="flex:${s-cursor};"></div>`;
+    const st = f <= e.min ? 'feito' : (s <= e.min ? 'atual' : '');
+    segs += `<div class="crono-seg ${b.tipo} ${st}" style="flex:${f-s};"></div>`;
+    marcas.push(s);
+    cursor = f;
+  });
+  marcas.push(e.fim);
+  const agora = (e.min >= e.ini && e.min < e.fim)
+    ? `<div class="crono-agora" style="left:${(e.min-e.ini)/total*100}%;"></div>` : '';
+  // rotulos de horario sem encavalar: pula os que ficariam perto demais do anterior
+  // (o ultimo e alinhado pela direita, entao precisa de mais folga)
+  const pcts = [...new Set(marcas)].map(m=>({m, p:(m-e.ini)/total*100}));
+  const visiveis = [];
+  pcts.forEach((x,k)=>{
+    const ult = visiveis[visiveis.length-1];
+    if(ult && x.p - ult.p < (k===pcts.length-1 ? 15 : 9)){
+      if(k===pcts.length-1) visiveis[visiveis.length-1] = x; // o horario final sempre aparece
+      return;
+    }
+    visiveis.push(x);
+  });
+  const ticks = visiveis.map((x,k)=>
+    `<span class="${k===0?'first':(k===visiveis.length-1?'last':'')}" style="left:${x.p}%;">${minHhmm(x.m)}</span>`
+  ).join('');
+
+  return `
+    <div class="crono-card ${cls}" id="cronoCard" role="button" tabindex="0" aria-expanded="${state.cronoOpen}">
+      <div class="crono-top">
+        <span>${prefixo} · ${fase}</span>
+        <span class="crono-clock">${e.relogio}</span>
+      </div>
+      <div class="crono-main">
+        <div class="crono-num ${numCls}">${num}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="crono-title">${titulo}</div>
+          ${sub ? `<div class="crono-sub">${sub}</div>` : ''}
+        </div>
+      </div>
+      <div class="crono-bar">${segs}${agora}</div>
+      <div class="crono-ticks">${ticks}</div>
+      ${state.cronoOpen ? `
+        <div class="crono-more">
+          <div class="crono-rule-label">Regra de ouro</div>
+          <div class="crono-prioridade"><b>Prioridade máxima:</b> leads em oportunidade em tempo real ou que chegam pela automação. Ligue na hora.</div>
+          <div class="crono-rule-label" style="color:var(--text-dim);">Toda tentativa de contato inclui</div>
+          <div class="crono-chips">
+            <span class="crono-chip"><b>3</b> ligações convencionais</span>
+            <span class="crono-chip"><b>1</b> mensagem no WhatsApp</span>
+            <span class="crono-chip"><b>1</b> ligação no WhatsApp</span>
+            <span class="crono-chip"><b>1</b> áudio</span>
+          </div>
+          <div class="crono-qc">Ao fim de cada passo, faça o controle de qualidade.</div>
+        </div>
+      ` : ''}
+      <div class="crono-hint">${state.cronoOpen ? 'recolher ▴' : 'toque para ver a regra de ouro ▾'}</div>
+    </div>
+  `;
+}
+
+// Redesenha so o cartao (sem render() geral, pra nao atrapalhar quem esta digitando)
+function atualizarCronoCard(){
+  if(state.view!=='app' && state.view!=='admin') return;
+  const atual = document.getElementById('cronoCard');
+  const html = renderCronoCard(state.view==='admin').trim();
+  if(!atual && !html) return;
+  if(!atual || !html){
+    // o cartao apareceu ou sumiu (virada do fim de semana): precisa da tela inteira
+    if(!(document.activeElement && document.activeElement.tagName==='INPUT')) render();
+    return;
+  }
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  atual.replaceWith(tmp.firstElementChild);
+}
+
+let cronoToastTimer = null;
+function showCronoToast(kicker, texto){
+  let el = document.getElementById('cronoToast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'cronoToast';
+    el.className = 'crono-toast';
+    el.setAttribute('role', 'status');
+    el.onclick = ()=>el.classList.remove('show');
+    document.body.appendChild(el);
+  }
+  el.innerHTML = `<div class="k">${kicker}</div><div>${texto}</div>`;
+  requestAnimationFrame(()=>el.classList.add('show'));
+  clearTimeout(cronoToastTimer);
+  cronoToastTimer = setTimeout(()=>el.classList.remove('show'), 7000);
+}
+
+// A cada poucos segundos: atualiza relogio/barra e avisa quando muda o passo
+let cronoUltimaChave = null;
+function cronoTick(){
+  if(Date.now() - cronoCarregadoEm > 15*60*1000) loadCronograma();
+  const e = cronoEstado();
+  const chave = e.fase + '|' + (e.i ?? '');
+  const mudou = cronoUltimaChave !== null && chave !== cronoUltimaChave;
+  cronoUltimaChave = chave;
+  const naTela = state.view==='app' || state.view==='admin';
+  if(mudou && naTela && !(e.fase==='fds' && state.view==='app')){
+    if(e.fase==='passo'){
+      state.cronoFlashAte = Date.now() + 3700;
+      showCronoToast('Começou agora', `Passo ${esc(e.bloco.num||'')} · ${esc(e.bloco.titulo)}`);
+    }else if(e.fase==='pausa'){
+      showCronoToast('Pausa', `${esc(e.bloco.titulo)} · volta às ${e.bloco.fim.replace(/^0/,'')}`);
+    }else if(e.fase==='fim'){
+      showCronoToast('Cronograma concluído', state.view==='admin' ? 'Hora do time fechar o relatório do dia' : 'Não esqueça de fechar o relatório do dia');
+    }
+  }
+  atualizarCronoCard();
+}
+setInterval(cronoTick, 15000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) cronoTick(); });
+
+// Abre/fecha a regra de ouro (o cartao e redesenhado sozinho, entao o clique e delegado)
+function toggleCronoCard(){
+  state.cronoOpen = !state.cronoOpen;
+  atualizarCronoCard();
+}
+document.addEventListener('click', ev=>{ if(ev.target.closest && ev.target.closest('#cronoCard')) toggleCronoCard(); });
+document.addEventListener('keydown', ev=>{
+  if((ev.key==='Enter' || ev.key===' ') && ev.target && ev.target.id==='cronoCard'){ ev.preventDefault(); toggleCronoCard(); }
+});
+
+// ---- Editor de horarios (admin) ----
+function cronoNomeBloco(b){
+  return b.tipo==='passo' ? `<b>Passo ${esc(b.num||'')}</b> · ${esc(b.titulo)}` : esc(b.titulo);
+}
+function renderCronoEditor(){
+  const blocos = state.cronoDraft || cronoBlocos;
+  return `
+    <div class="history" style="margin-top:20px;">
+      <div class="history-head" id="cronoEditHead">
+        <span>Horários do cronograma</span>
+        <span class="chev">${state.cronoEditOpen?'&#9650;':'&#9660;'}</span>
+      </div>
+      ${state.cronoEditOpen ? `
+        ${blocos.map((b,i)=>`
+          <div class="crono-edit-row">
+            <span class="nome">${cronoNomeBloco(b)}</span>
+            <input type="time" class="crono-time" data-i="${i}" data-campo="inicio" value="${b.inicio}" aria-label="Início">
+            <span style="color:var(--text-dim);">até</span>
+            <input type="time" class="crono-time" data-i="${i}" data-campo="fim" value="${b.fim}" aria-label="Fim">
+          </div>
+        `).join('')}
+        <div style="padding:10px 16px 14px;border-top:1px solid var(--border);">
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Vale para todos os vendedores, de segunda a sexta. Quem estiver com o site aberto recebe a mudança em até 15 minutos.</div>
+          <button class="confirm-btn" id="cronoSaveBtn" style="margin:0;">Salvar horários</button>
+          <div style="text-align:center;margin-top:8px;">
+            <button class="undo-btn" id="cronoResetBtn">voltar aos horários padrão</button>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+async function salvarCronograma(blocos){
+  const validos = validarBlocos(blocos);
+  if(!validos){
+    alert('Confere os horários: cada etapa precisa terminar depois de começar, e uma etapa não pode começar antes da anterior terminar.');
+    return;
+  }
+  try{
+    await sb('cronograma?on_conflict=id', {
+      method:'POST',
+      prefer:'resolution=merge-duplicates,return=minimal',
+      body:{id:1, blocos: validos, atualizado_em: new Date().toISOString()}
+    });
+  }catch(e){
+    console.error('Falha ao salvar o cronograma', e);
+    alert(/HTTP 404|PGRST205/.test(e.message)
+      ? 'A tabela do cronograma ainda não foi criada no Supabase. Roda o trecho do cronograma do supabase/schema.sql e tenta de novo.'
+      : 'Não foi possível salvar os horários. Verifica sua conexão e tenta de novo.');
+    return;
+  }
+  cronoBlocos = validos;
+  try{ localStorage.setItem(CRONO_CACHE_KEY, JSON.stringify(validos)); }catch(e){}
+  state.cronoDraft = null;
+  state.cronoEditOpen = false;
+  render();
+  showCronoToast('Cronograma', 'Horários salvos');
 }
 
 function renderMetasPanel(){
@@ -1275,6 +1741,8 @@ function render(pulse){
         <button class="trocar-btn" id="exitAdminBtn">sair</button>
       </div>
 
+      ${renderCronoCard(true)}
+
       <div class="picker-card" style="padding:14px 16px;margin-bottom:16px;">
         <p class="tally-label" style="margin-bottom:8px;">Período</p>
         <div style="display:flex;gap:8px;margin-bottom:4px;">
@@ -1395,8 +1863,27 @@ function render(pulse){
           }).join('')
         }
       </div>
+
+      ${renderCronoEditor()}
     `;
     document.getElementById('exitAdminBtn').onclick = exitAdmin;
+    document.getElementById('cronoEditHead').onclick = ()=>{
+      state.cronoEditOpen = !state.cronoEditOpen;
+      if(!state.cronoEditOpen) state.cronoDraft = null;
+      render();
+    };
+    app.querySelectorAll('.crono-time').forEach(inp=>{
+      inp.onchange = ()=>{
+        state.cronoDraft = (state.cronoDraft || cronoBlocos).map(b=>({...b}));
+        state.cronoDraft[Number(inp.getAttribute('data-i'))][inp.getAttribute('data-campo')] = inp.value;
+      };
+    });
+    const cronoSaveBtn = document.getElementById('cronoSaveBtn');
+    if(cronoSaveBtn) cronoSaveBtn.onclick = ()=>salvarCronograma(state.cronoDraft || cronoBlocos);
+    const cronoResetBtn = document.getElementById('cronoResetBtn');
+    if(cronoResetBtn) cronoResetBtn.onclick = ()=>{
+      if(confirm('Voltar todos os horários para o padrão do cronograma (9:30 às 19:00)?')) salvarCronograma(CRONO_PADRAO.map(b=>({...b})));
+    };
     document.getElementById('exportBtn').onclick = exportCsv;
     document.getElementById('periodDia').onclick = ()=>setPeriodType('dia');
     document.getElementById('periodMes').onclick = ()=>setPeriodType('mes');
@@ -1432,6 +1919,8 @@ function render(pulse){
       </div>
       <button class="trocar-btn" id="trocarBtn">trocar</button>
     </div>
+
+    ${renderCronoCard(false)}
 
     ${renderMetasPanel()}
 
@@ -1540,6 +2029,7 @@ function render(pulse){
 
 async function init(){
   if(loadQueue().length) scheduleFlush(1500);
+  cronoTick(); // marca o passo atual (sem aviso de troca ao abrir o site) e busca os horarios no banco
   await loadVendorList();
   const session = loadSession();
   if(session && session.type === 'admin'){
