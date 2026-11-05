@@ -540,6 +540,38 @@
   .crono-edit-row .nome{flex-basis:100%;font-size:13px;}
   .crono-edit-row .nome b{color:var(--gold);}
   .crono-edit-row input{flex:1;max-width:130px;margin:0;padding:7px 8px;font-size:13px;}
+
+  /* ---- Admin: abas e produção ---- */
+  .admin-tabs{display:flex;gap:6px;margin:-6px 0 16px;}
+  .admin-tabs button{flex:1;}
+  .prod-anos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .prod-anos button{flex:1;min-width:64px;}
+  .prod-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;}
+  .prod-table th,.prod-table td{padding:7px 6px;text-align:right;border-top:1px solid var(--border);white-space:nowrap;}
+  .prod-table th:first-child,.prod-table td:first-child{text-align:left;padding-left:14px;}
+  .prod-table th:last-child,.prod-table td:last-child{padding-right:14px;}
+  .prod-table thead th{border-top:none;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:700;vertical-align:bottom;}
+  .prod-table thead th .coord{display:block;font-size:10px;letter-spacing:0;text-transform:none;color:var(--text-dim);font-weight:400;}
+  .prod-table td.vazio{color:var(--text-dim);}
+  .prod-table td.auto{color:var(--atendeu);}
+  .prod-table td.total,.prod-table th.total{font-weight:700;color:var(--text);}
+  .prod-table tr.futuro td{color:#4A6178;}
+  .prod-table tfoot td{border-top:2px solid var(--gold);font-weight:700;color:var(--gold);}
+  .prod-table input{width:86px;margin:0;padding:5px 6px;font-size:12px;text-align:right;}
+  .prod-chart{display:flex;align-items:flex-end;gap:4px;height:120px;padding:10px 14px 0;}
+  .prod-chart .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;}
+  .prod-chart .bars{display:flex;align-items:flex-end;gap:2px;width:100%;height:100%;justify-content:center;}
+  .prod-chart .bar{width:45%;border-radius:3px 3px 0 0;background:var(--gold);min-height:2px;}
+  .prod-chart .bar.ant{background:#2A4D6B;}
+  .prod-chart-labels{display:flex;gap:4px;padding:4px 14px 12px;font-size:10px;color:var(--text-dim);}
+  .prod-chart-labels span{flex:1;text-align:center;}
+  .prod-legend{display:flex;gap:14px;padding:0 14px 12px;font-size:11px;color:var(--text-dim);}
+  .prod-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+  .prod-form{padding:4px 16px 14px;}
+  .prod-form label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-top:10px;}
+  .prod-form input,.prod-form select{margin:5px 0 0;padding:11px 12px;font-size:15px;}
+  .prod-form .linha{display:flex;gap:8px;}
+  .prod-form .linha > div{flex:1;min-width:0;}
 </style>
 </head>
 <body>
@@ -804,7 +836,12 @@ let state = {
   cronoOpen: false,      // cartao do cronograma expandido (regra de ouro)
   cronoEditOpen: false,  // editor de horarios aberto no admin
   cronoDraft: null,      // rascunho dos horarios sendo editados no admin
-  cronoFlashAte: 0       // brilho dourado do cartao ate esse instante (troca de passo)
+  cronoFlashAte: 0,      // brilho dourado do cartao ate esse instante (troca de passo)
+  adminTab: 'ligacoes',  // 'ligacoes' | 'producao'
+  prod: null,            // { equipes, manual, vendas } da tela de producao
+  prodAno: new Date().getFullYear(),
+  prodEdit: false,       // tabela de producao com campos editaveis
+  prodEquipesOpen: false
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -1591,6 +1628,399 @@ async function salvarCronograma(blocos){
   showCronoToast('Cronograma', 'Horários salvos');
 }
 
+/*
+  Producao do time (aba "Producao" do admin). Cada mes de cada equipe vale o
+  numero fechado em `producao_mensal` (historico das planilhas ou correcao manual);
+  se nao tem, vale a soma das vendas registradas no site naquele mes.
+*/
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const CANAIS_VENDA = ['Lead - Trafego Pago','Facebook','TikTok','Indicação','Outro'];
+const BRL = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'});
+function brlCurto(v){
+  if(v >= 1e6) return (v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi';
+  if(v >= 1e3) return Math.round(v/1e3).toLocaleString('pt-BR')+' mil';
+  return Math.round(v).toLocaleString('pt-BR');
+}
+// "1.517.156,10" / "400000" / "R$ 400.000" -> numero (ponto e separador de milhar)
+function parseBRL(s){
+  s = String(s||'').replace(/R\$|\s/g,'');
+  if(!s) return null;
+  s = s.includes(',') ? s.replace(/\./g,'').replace(',','.') : s.replace(/\./g,'');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+async function loadProducao(){
+  try{
+    const [equipes, manual, vendas] = await Promise.all([
+      sb('equipes?select=nome,coordenadores,ativa,ordem&order=ordem,nome', undefined, 1),
+      sb('producao_mensal?select=ano,mes,equipe,valor', undefined, 1),
+      sb('vendas?select=id,vendedor,equipe,data,valor,cliente,canal&order=data.desc,id.desc', undefined, 1)
+    ]);
+    state.prod = {
+      equipes: equipes || [],
+      manual: (manual || []).map(r=>({...r, valor:Number(r.valor)})),
+      vendas: (vendas || []).map(r=>({...r, valor:Number(r.valor)}))
+    };
+  }catch(e){
+    console.error('Falha ao carregar a produção', e);
+    if(!state.prod) state.prod = {erro:true};
+  }
+  if(state.view==='admin') render();
+}
+
+// Valor de uma equipe num mes: {valor, fonte:'manual'|'vendas'} ou null se nao tem nada
+function prodCelula(ano, mes, equipe){
+  const p = state.prod;
+  const m = p.manual.find(r=>r.ano===ano && r.mes===mes && r.equipe===equipe);
+  if(m) return {valor:m.valor, fonte:'manual'};
+  const chave = ano+'-'+String(mes).padStart(2,'0');
+  const vs = p.vendas.filter(v=>v.equipe===equipe && v.data.slice(0,7)===chave);
+  return vs.length ? {valor: vs.reduce((s,v)=>s+v.valor,0), fonte:'vendas'} : null;
+}
+function prodAnos(){
+  const p = state.prod, atual = new Date().getFullYear();
+  const anos = new Set([atual, ...p.manual.map(r=>r.ano), ...p.vendas.map(v=>Number(v.data.slice(0,4)))]);
+  return [...anos].sort((a,b)=>a-b);
+}
+// Equipes que aparecem no ano: as que produziram nele, mais as ativas no ano atual
+function prodEquipesDoAno(ano){
+  const atual = new Date().getFullYear();
+  return state.prod.equipes.filter(eq=>
+    (eq.ativa && ano >= atual) || MESES.some((_,i)=>prodCelula(ano, i+1, eq.nome))
+  );
+}
+function prodTotalMes(ano, mes){
+  let tem = false, soma = 0;
+  state.prod.equipes.forEach(eq=>{ const c = prodCelula(ano, mes, eq.nome); if(c){ tem = true; soma += c.valor; } });
+  return tem ? soma : null;
+}
+
+function renderProducao(){
+  const p = state.prod;
+  if(!p) return `<div class="empty-hint">Carregando produção...</div>`;
+  if(p.erro) return `<div class="fechado-banner" style="border-color:var(--caixa);"><div class="t" style="color:var(--caixa);">Não consegui carregar a produção</div><button class="undo-btn" id="prodRetryBtn" style="margin-top:8px;color:var(--caixa);">tentar de novo</button></div>`;
+
+  const ano = state.prodAno, hoje = new Date();
+  const anoAtual = hoje.getFullYear(), mesAtual = hoje.getMonth()+1;
+  const equipes = prodEquipesDoAno(ano);
+  const totais = MESES.map((_,i)=>prodTotalMes(ano, i+1));
+  const totaisAnt = MESES.map((_,i)=>prodTotalMes(ano-1, i+1));
+  const totalAno = totais.reduce((s,v)=>s+(v||0),0);
+  // comparacao justa: mesmos meses do ano anterior que ja tem valor neste ano
+  const mesesComValor = totais.map((v,i)=>v!==null ? i : -1).filter(i=>i>=0);
+  const totalAntMesmo = mesesComValor.reduce((s,i)=>s+(totaisAnt[i]||0),0);
+  const temAnt = mesesComValor.some(i=>totaisAnt[i]!==null);
+  const variacao = temAnt && totalAntMesmo>0 ? (totalAno/totalAntMesmo - 1)*100 : null;
+  const melhorMes = totais.reduce((b,v,i)=>(v!==null && (b<0 || v>totais[b])) ? i : b, -1);
+  const maxBar = Math.max(1, ...totais.map(v=>v||0), ...totaisAnt.map(v=>v||0));
+  const anos = prodAnos();
+  const vendasAno = p.vendas.filter(v=>v.data.slice(0,4)===String(ano));
+  const ativas = p.equipes.filter(e=>e.ativa);
+
+  return `
+    <div class="prod-anos">
+      ${anos.map(a=>`<button class="trocar-btn ${a===ano?'active':''}" data-prod-ano="${a}">${a}</button>`).join('')}
+    </div>
+
+    <div class="tally" style="grid-template-columns:1fr 1fr;">
+      <div class="tally-card">
+        <div class="tally-label">Produção ${ano}</div>
+        <div class="tally-num" style="font-size:22px;color:var(--gold);">${brlCurto(totalAno)}</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">${BRL.format(totalAno)}</div>
+      </div>
+      <div class="tally-card">
+        <div class="tally-label">vs ${ano-1}</div>
+        <div class="tally-num" style="font-size:22px;color:${variacao===null?'var(--text-dim)':(variacao>=0?'var(--atendeu)':'#E8B4B4')};">${variacao===null?'—':(variacao>=0?'+':'')+Math.round(variacao)+'%'}</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">${variacao===null?'sem dados para comparar':'mesmos meses de '+(ano-1)}</div>
+      </div>
+    </div>
+    ${melhorMes>=0 ? `<div class="tally-total" style="margin-top:-8px;">Melhor mês: <b>${MESES[melhorMes]}</b> · ${BRL.format(totais[melhorMes])}</div>` : ''}
+
+    <div class="history" style="margin-bottom:16px;">
+      <div class="history-head" style="cursor:default;">
+        <span>Produção mês a mês</span>
+        <button class="undo-btn" id="prodEditBtn" style="font-size:12px;">${state.prodEdit?'concluir edição':'editar valores'}</button>
+      </div>
+      ${state.prodEdit ? `<div style="padding:0 14px 10px;font-size:11px;color:var(--text-dim);">Digite o valor fechado do mês em reais. Deixe em branco para usar a soma das vendas registradas no site.</div>` : ''}
+      <div style="overflow-x:auto;">
+        <table class="prod-table">
+          <thead><tr>
+            <th>Mês</th>
+            ${equipes.map(eq=>`<th>${esc(eq.nome)}${(eq.coordenadores||{})[ano] ? `<span class="coord">${esc(eq.coordenadores[ano])}</span>` : ''}</th>`).join('')}
+            <th class="total">Total FBS</th>
+          </tr></thead>
+          <tbody>
+            ${MESES.map((nome,i)=>{
+              const futuro = ano > anoAtual || (ano===anoAtual && i+1 > mesAtual);
+              return `<tr class="${futuro && totais[i]===null ? 'futuro' : ''}">
+                <td>${nome}</td>
+                ${equipes.map(eq=>{
+                  const c = prodCelula(ano, i+1, eq.nome);
+                  if(state.prodEdit){
+                    const man = p.manual.find(r=>r.ano===ano && r.mes===i+1 && r.equipe===eq.nome);
+                    return `<td><input class="prod-cell" inputmode="decimal" data-mes="${i+1}" data-equipe="${esc(eq.nome)}" value="${man ? man.valor.toLocaleString('pt-BR') : ''}" placeholder="${c && c.fonte==='vendas' ? brlCurto(c.valor) : '—'}"></td>`;
+                  }
+                  return c ? `<td class="${c.fonte==='vendas'?'auto':''}" title="${BRL.format(c.valor)}">${brlCurto(c.valor)}</td>` : `<td class="vazio">—</td>`;
+                }).join('')}
+                <td class="total">${totais[i]===null ? '<span style="color:var(--text-dim);font-weight:400;">—</span>' : brlCurto(totais[i])}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+          <tfoot><tr>
+            <td>Total</td>
+            ${equipes.map(eq=>{
+              const s = MESES.reduce((acc,_,i)=>{ const c = prodCelula(ano, i+1, eq.nome); return acc + (c ? c.valor : 0); }, 0);
+              return `<td title="${BRL.format(s)}">${s ? brlCurto(s) : '—'}</td>`;
+            }).join('')}
+            <td>${brlCurto(totalAno)}</td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <div class="prod-legend" style="padding-top:10px;">
+        <span><i style="background:var(--text);"></i>fechado</span>
+        <span><i style="background:var(--atendeu);"></i>soma das vendas do site</span>
+      </div>
+    </div>
+
+    <div class="history" style="margin-bottom:16px;">
+      <div class="history-head" style="cursor:default;"><span>Total FBS por mês</span></div>
+      <div class="prod-chart">
+        ${MESES.map((_,i)=>`
+          <div class="col" title="${MESES[i]}: ${totais[i]===null?'—':BRL.format(totais[i])}${totaisAnt[i]!==null?' · '+(ano-1)+': '+BRL.format(totaisAnt[i]):''}">
+            <div class="bars">
+              <div class="bar ant" style="height:${(totaisAnt[i]||0)/maxBar*100}%;${totaisAnt[i]===null?'visibility:hidden;':''}"></div>
+              <div class="bar" style="height:${(totais[i]||0)/maxBar*100}%;${totais[i]===null?'visibility:hidden;':''}"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="prod-chart-labels">${MESES.map(m=>`<span>${m.slice(0,1)}</span>`).join('')}</div>
+      <div class="prod-legend">
+        <span><i style="background:#2A4D6B;"></i>${ano-1}</span>
+        <span><i style="background:var(--gold);"></i>${ano}</span>
+      </div>
+    </div>
+
+    <div class="history" style="margin-bottom:16px;">
+      <div class="history-head" style="cursor:default;"><span>Registrar venda</span></div>
+      <div class="prod-form">
+        <label for="vendaVendedor">Vendedor</label>
+        <select id="vendaVendedor">
+          <option value="" disabled selected>Escolha o vendedor</option>
+          ${VENDORES.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}
+        </select>
+        <div class="linha">
+          <div>
+            <label for="vendaValor">Valor (R$)</label>
+            <input id="vendaValor" inputmode="decimal" placeholder="400.000">
+          </div>
+          <div>
+            <label for="vendaData">Data</label>
+            <input id="vendaData" type="date" value="${todayKey()}">
+          </div>
+        </div>
+        <label for="vendaCliente">Cliente</label>
+        <input id="vendaCliente" placeholder="Nome do cliente">
+        <div class="linha">
+          <div>
+            <label for="vendaCanal">Canal</label>
+            <select id="vendaCanal">
+              <option value="">—</option>
+              ${CANAIS_VENDA.map(c=>`<option>${c}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label for="vendaEquipe">Equipe</label>
+            <select id="vendaEquipe">
+              ${ativas.map(e=>`<option>${esc(e.nome)}</option>`).join('') || '<option value="">(cadastre uma equipe)</option>'}
+            </select>
+          </div>
+        </div>
+        <button class="confirm-btn" id="vendaSalvarBtn" style="margin-top:14px;">Registrar venda</button>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:8px;text-align:center;">A venda entra na produção do mês e é copiada para o Airtable.</div>
+      </div>
+    </div>
+
+    <div class="history" style="margin-bottom:16px;">
+      <div class="history-head" style="cursor:default;"><span>Vendas registradas em ${ano} (${vendasAno.length})</span></div>
+      ${vendasAno.length ? vendasAno.map(v=>`
+        <div class="history-item">
+          <span style="min-width:0;">
+            <b>${BRL.format(v.valor)}</b> · ${esc(v.vendedor)}
+            <span style="display:block;color:var(--text-dim);font-size:11px;">${new Date(v.data+'T12:00:00').toLocaleDateString('pt-BR')}${v.cliente?' · '+esc(v.cliente):''}${v.canal?' · '+esc(v.canal):''}${v.equipe?' · '+esc(v.equipe):''}</span>
+          </span>
+          <button class="undo-btn" data-venda-del="${v.id}">remover</button>
+        </div>
+      `).join('') : `<div class="empty-hint">Nenhuma venda registrada no site em ${ano}.</div>`}
+    </div>
+
+    <div class="history" style="margin-bottom:16px;">
+      <div class="history-head" id="prodEquipesHead">
+        <span>Equipes (${p.equipes.length})</span>
+        <span class="chev">${state.prodEquipesOpen?'&#9650;':'&#9660;'}</span>
+      </div>
+      ${state.prodEquipesOpen ? `
+        ${p.equipes.map(eq=>`
+          <div class="history-item">
+            <span style="flex:1;min-width:0;">
+              <b>${esc(eq.nome)}</b>${eq.ativa ? '' : ' <span style="color:var(--text-dim);">· encerrada</span>'}
+              <span style="display:block;color:var(--text-dim);font-size:11px;">${Object.entries(eq.coordenadores||{}).sort().map(([a,n])=>a+': '+esc(n)).join(' · ') || 'sem coordenador registrado'}</span>
+            </span>
+            <button class="undo-btn" data-equipe-coord="${esc(eq.nome)}">coordenador</button>
+            <button class="undo-btn" data-equipe-ativa="${esc(eq.nome)}">${eq.ativa?'encerrar':'reativar'}</button>
+          </div>
+        `).join('')}
+        <div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--border);">
+          <input id="novaEquipeNome" placeholder="Nome da equipe" style="flex:1;margin:0;padding:10px;font-size:14px;">
+          <input id="novaEquipeCoord" placeholder="Coordenador" style="flex:1;margin:0;padding:10px;font-size:14px;">
+        </div>
+        <div style="padding:0 16px 14px;">
+          <button class="confirm-btn" id="novaEquipeBtn" style="margin:0;">Adicionar equipe</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function bindProducao(app){
+  const retry = document.getElementById('prodRetryBtn');
+  if(retry) retry.onclick = ()=>{ state.prod = null; render(); loadProducao(); };
+  if(!state.prod || state.prod.erro) return;
+  app.querySelectorAll('[data-prod-ano]').forEach(b=>{
+    b.onclick = ()=>{ state.prodAno = Number(b.getAttribute('data-prod-ano')); render(); };
+  });
+  document.getElementById('prodEditBtn').onclick = ()=>{ state.prodEdit = !state.prodEdit; render(); };
+  app.querySelectorAll('.prod-cell').forEach(inp=>{
+    inp.onchange = ()=>salvarProducaoMes(Number(inp.getAttribute('data-mes')), inp.getAttribute('data-equipe'), inp.value);
+  });
+  document.getElementById('vendaSalvarBtn').onclick = registrarVenda;
+  // a equipe padrao da venda e a do vendedor na ultima venda dele (ou a primeira ativa)
+  const selV = document.getElementById('vendaVendedor'), selE = document.getElementById('vendaEquipe');
+  selV.onchange = ()=>{
+    const ult = state.prod.vendas.find(v=>v.vendedor===selV.value && v.equipe);
+    if(ult && [...selE.options].some(o=>o.value===ult.equipe)) selE.value = ult.equipe;
+  };
+  app.querySelectorAll('[data-venda-del]').forEach(b=>{ b.onclick = ()=>removerVenda(Number(b.getAttribute('data-venda-del'))); });
+  document.getElementById('prodEquipesHead').onclick = ()=>{ state.prodEquipesOpen = !state.prodEquipesOpen; render(); };
+  app.querySelectorAll('[data-equipe-coord]').forEach(b=>{ b.onclick = ()=>editarCoordenador(b.getAttribute('data-equipe-coord')); });
+  app.querySelectorAll('[data-equipe-ativa]').forEach(b=>{ b.onclick = ()=>alternarEquipe(b.getAttribute('data-equipe-ativa')); });
+  const nova = document.getElementById('novaEquipeBtn');
+  if(nova) nova.onclick = adicionarEquipe;
+}
+
+async function salvarProducaoMes(mes, equipe, texto){
+  const ano = state.prodAno;
+  const valor = parseBRL(texto);
+  if(Number.isNaN(valor) || (valor !== null && valor < 0)){ alert('Digita um valor válido, por exemplo 1.517.156,10'); render(); return; }
+  try{
+    if(valor === null){
+      await sb(`producao_mensal?ano=eq.${ano}&mes=eq.${mes}&equipe=${eq(equipe)}`, {method:'DELETE'});
+    }else{
+      await sb('producao_mensal?on_conflict=ano,mes,equipe', {
+        method:'POST', prefer:'resolution=merge-duplicates,return=minimal', body:{ano, mes, equipe, valor}
+      });
+    }
+  }catch(e){
+    console.error('Falha ao salvar produção do mês', e);
+    alert('Não foi possível salvar esse valor. Verifica sua conexão e tenta de novo.');
+  }
+  await loadProducao();
+}
+
+async function registrarVenda(){
+  const vendedor = document.getElementById('vendaVendedor').value;
+  const valor = parseBRL(document.getElementById('vendaValor').value);
+  const data = document.getElementById('vendaData').value;
+  const cliente = document.getElementById('vendaCliente').value.trim();
+  const canal = document.getElementById('vendaCanal').value;
+  const equipe = document.getElementById('vendaEquipe').value;
+  if(!vendedor){ alert('Escolhe o vendedor.'); return; }
+  if(!valor || valor <= 0){ alert('Digita o valor da venda, por exemplo 400.000'); return; }
+  if(!data){ alert('Escolhe a data da venda.'); return; }
+  if(!equipe){ alert('Cadastre uma equipe ativa antes de registrar vendas.'); return; }
+  if(!confirm(`Registrar venda?\n\n${vendedor} · ${BRL.format(valor)}\n${new Date(data+'T12:00:00').toLocaleDateString('pt-BR')}${cliente?' · '+cliente:''}\nEquipe ${equipe}`)) return;
+  const btn = document.getElementById('vendaSalvarBtn');
+  btn.disabled = true; btn.textContent = 'Registrando...';
+  try{
+    // sem reenvio automatico: repetir poderia duplicar a venda
+    await sb('vendas', {method:'POST', prefer:'return=minimal', body:{vendedor, valor, data, cliente: cliente||null, canal: canal||null, equipe}});
+  }catch(e){
+    console.error('Falha ao registrar venda', e);
+    alert('Não foi possível registrar a venda. Verifica sua conexão e tenta de novo.');
+    btn.disabled = false; btn.textContent = 'Registrar venda';
+    return;
+  }
+  state.prodAno = Number(data.slice(0,4));
+  await loadProducao();
+  launchConfetti(false);
+  showCronoToast('Venda registrada', `${esc(vendedor)} · ${BRL.format(valor)}`);
+}
+
+async function removerVenda(id){
+  const v = state.prod.vendas.find(x=>x.id===id);
+  if(!v) return;
+  if(!confirm(`Remover a venda de ${v.vendedor} (${BRL.format(v.valor)}, ${new Date(v.data+'T12:00:00').toLocaleDateString('pt-BR')})?\n\nA cópia que já foi para o Airtable não é apagada: ajuste lá também.`)) return;
+  try{
+    await sb('vendas?id=eq.'+id, {method:'DELETE'});
+  }catch(e){
+    console.error('Falha ao remover venda', e);
+    alert('Não foi possível remover a venda. Tenta de novo.');
+    return;
+  }
+  await loadProducao();
+}
+
+async function adicionarEquipe(){
+  const nome = document.getElementById('novaEquipeNome').value.trim();
+  const coord = document.getElementById('novaEquipeCoord').value.trim();
+  if(!nome){ alert('Digita o nome da equipe.'); return; }
+  if(state.prod.equipes.some(e=>e.nome.toLowerCase()===nome.toLowerCase())){ alert('Já existe uma equipe com esse nome.'); return; }
+  const ordem = Math.max(0, ...state.prod.equipes.map(e=>e.ordem||0)) + 1;
+  const coordenadores = coord ? {[new Date().getFullYear()]: coord} : {};
+  try{
+    await sb('equipes', {method:'POST', prefer:'return=minimal', body:{nome, coordenadores, ativa:true, ordem}});
+  }catch(e){
+    console.error('Falha ao adicionar equipe', e);
+    alert('Não foi possível adicionar a equipe. Tenta de novo.');
+    return;
+  }
+  await loadProducao();
+}
+
+async function editarCoordenador(nome){
+  const eqp = state.prod.equipes.find(e=>e.nome===nome);
+  const ano = state.prodAno;
+  const atual = (eqp.coordenadores||{})[ano] || '';
+  const novo = prompt(`Coordenador da ${nome} em ${ano} (deixe vazio para tirar):`, atual);
+  if(novo === null) return;
+  const coordenadores = {...(eqp.coordenadores||{})};
+  if(novo.trim()) coordenadores[ano] = novo.trim(); else delete coordenadores[ano];
+  try{
+    await sb('equipes?nome='+eq(nome), {method:'PATCH', prefer:'return=minimal', body:{coordenadores}});
+  }catch(e){
+    console.error('Falha ao salvar coordenador', e);
+    alert('Não foi possível salvar o coordenador. Tenta de novo.');
+    return;
+  }
+  await loadProducao();
+}
+
+async function alternarEquipe(nome){
+  const eqp = state.prod.equipes.find(e=>e.nome===nome);
+  const msg = eqp.ativa
+    ? `Encerrar a equipe ${nome}? O histórico dela continua guardado; ela só deixa de aparecer para novas vendas.`
+    : `Reativar a equipe ${nome}?`;
+  if(!confirm(msg)) return;
+  try{
+    await sb('equipes?nome='+eq(nome), {method:'PATCH', prefer:'return=minimal', body:{ativa: !eqp.ativa}});
+  }catch(e){
+    console.error('Falha ao alterar equipe', e);
+    alert('Não foi possível alterar a equipe. Tenta de novo.');
+    return;
+  }
+  await loadProducao();
+}
+
 function renderMetasPanel(){
   if(!state.metas){
     return `<div class="metas-card"><div class="metas-title">Minhas metas da semana</div><div class="empty-hint" style="padding:4px 0;">${state.metasLoading?'Carregando metas...':'Não foi possível carregar suas metas agora.'}</div></div>`;
@@ -1722,6 +2152,40 @@ function render(pulse){
   }
 
   if(state.view === 'admin'){
+    const abas = `
+      <div class="admin-tabs">
+        <button class="trocar-btn ${state.adminTab==='ligacoes'?'active':''}" id="tabLigacoes">Ligações</button>
+        <button class="trocar-btn ${state.adminTab==='producao'?'active':''}" id="tabProducao">Produção</button>
+      </div>`;
+    const bindAbas = ()=>{
+      document.getElementById('tabLigacoes').onclick = ()=>{ state.adminTab = 'ligacoes'; render(); };
+      document.getElementById('tabProducao').onclick = ()=>{
+        state.adminTab = 'producao';
+        if(!state.prod) loadProducao();
+        render();
+      };
+    };
+
+    if(state.adminTab === 'producao'){
+      app.innerHTML = `
+        <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
+        <h1>Painel administrativo</h1>
+        ${abas}
+        <div class="vendor-row">
+          <div>
+            <div class="vendor-name">Produção FBS</div>
+            <div class="vendor-date">Ano de ${state.prodAno}</div>
+          </div>
+          <button class="trocar-btn" id="exitAdminBtn">sair</button>
+        </div>
+        ${renderProducao()}
+      `;
+      document.getElementById('exitAdminBtn').onclick = exitAdmin;
+      bindAbas();
+      bindProducao(app);
+      return;
+    }
+
     const rows = state.adminRows || [];
     const totalAtendeu = rows.reduce((s,r)=>s+r.atendeu,0);
     const totalCaixa = rows.reduce((s,r)=>s+r.caixa,0);
@@ -1732,6 +2196,7 @@ function render(pulse){
     app.innerHTML = `
       <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
       <h1>Painel administrativo</h1>
+      ${abas}
 
       <div class="vendor-row">
         <div>
@@ -1867,6 +2332,7 @@ function render(pulse){
       ${renderCronoEditor()}
     `;
     document.getElementById('exitAdminBtn').onclick = exitAdmin;
+    bindAbas();
     document.getElementById('cronoEditHead').onclick = ()=>{
       state.cronoEditOpen = !state.cronoEditOpen;
       if(!state.cronoEditOpen) state.cronoDraft = null;

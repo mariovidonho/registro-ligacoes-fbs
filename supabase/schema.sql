@@ -225,6 +225,99 @@ alter table public.cronograma enable row level security;
 drop policy if exists "site" on public.cronograma;
 create policy "site" on public.cronograma for all to anon using (true) with check (true);
 
+-- ---------------------------------------------------------------------------
+-- Produção do time (painel admin): equipes, histórico mensal e vendas.
+-- Tabelas à parte: não mexem nas de ligações/metas nem no espelho do n8n.
+-- ---------------------------------------------------------------------------
+
+-- Equipes (coordenações). `coordenadores` guarda quem coordenou em cada ano,
+-- ex.: {"2024": "Danilo", "2025": "Danilo"}.
+create table if not exists public.equipes (
+  nome          text primary key,
+  coordenadores jsonb not null default '{}',
+  ativa         boolean not null default true,
+  ordem         int not null default 0,
+  criado_em     timestamptz not null default now()
+);
+
+-- Valor fechado de um mês por equipe (histórico das planilhas ou correção manual).
+-- Quando existe, vale este valor; senão o site soma as vendas registradas.
+create table if not exists public.producao_mensal (
+  ano    int  not null check (ano between 2000 and 2100),
+  mes    int  not null check (mes between 1 and 12),
+  equipe text not null references public.equipes (nome) on update cascade,
+  valor  numeric(14,2) not null check (valor >= 0),
+  primary key (ano, mes, equipe)
+);
+
+-- Cada venda registrada no admin. `equipe` é a do vendedor no dia da venda.
+create table if not exists public.vendas (
+  id        bigint generated always as identity primary key,
+  vendedor  text not null,
+  equipe    text references public.equipes (nome) on update cascade,
+  data      date not null,
+  valor     numeric(14,2) not null check (valor > 0),
+  cliente   text,
+  canal     text,
+  criado_em timestamptz not null default now()
+);
+create index if not exists vendas_data_idx on public.vendas (data);
+
+alter table public.equipes         enable row level security;
+alter table public.producao_mensal enable row level security;
+alter table public.vendas          enable row level security;
+drop policy if exists "site" on public.equipes;
+drop policy if exists "site" on public.producao_mensal;
+drop policy if exists "site" on public.vendas;
+create policy "site" on public.equipes         for all to anon using (true) with check (true);
+create policy "site" on public.producao_mensal for all to anon using (true) with check (true);
+create policy "site" on public.vendas          for all to anon using (true) with check (true);
+
+-- Cópia de cada venda nova para o Airtable (tabela "Marketing - Conjuntos"),
+-- feita pelo próprio banco. Só funciona depois que a chave do Airtable for
+-- guardada no cofre (Vault) com o nome 'airtable_token'; sem a chave, a venda
+-- é salva normalmente e só não é copiada.
+create extension if not exists pg_net;
+
+create or replace function public.enviar_venda_airtable()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  v_token text;
+  v_ini   date;
+  v_fim   date;
+begin
+  select decrypted_secret into v_token from vault.decrypted_secrets where name = 'airtable_token';
+  if v_token is null then
+    return new;
+  end if;
+  -- semana de segunda a domingo, cortada na virada do mês (mesmo padrão dos relatórios)
+  v_ini := greatest(date_trunc('week', new.data)::date, date_trunc('month', new.data)::date);
+  v_fim := least(date_trunc('week', new.data)::date + 6, (date_trunc('month', new.data) + interval '1 month - 1 day')::date);
+  perform net.http_post(
+    url     := 'https://api.airtable.com/v0/appjgrhsM4izs8ilX/tbloaJEIi6zcQB1Lq',
+    headers := jsonb_build_object('Authorization', 'Bearer ' || v_token, 'Content-Type', 'application/json'),
+    body    := jsonb_build_object('typecast', true, 'records', jsonb_build_array(jsonb_build_object('fields',
+      jsonb_strip_nulls(jsonb_build_object(
+        'Vendedor', new.vendedor,
+        'Cliente',  coalesce(nullif(new.cliente, ''), '(cliente nao informado)') || ' (registrada no site)',
+        'Valor',    new.valor,
+        'Data',     new.data,
+        'Semana',   to_char(v_ini, 'DD') || '-' || to_char(v_fim, 'DD/MM/YYYY'),
+        'Canal',    nullif(new.canal, '')
+      ))
+    )))
+  );
+  return new;
+exception when others then
+  -- falha no envio nunca impede de salvar a venda
+  return new;
+end
+$$;
+
+drop trigger if exists vendas_airtable on public.vendas;
+create trigger vendas_airtable after insert on public.vendas
+  for each row execute function public.enviar_venda_airtable();
+
 -- Lista inicial de vendedores (a mesma que está no site)
 insert into public.vendedores (nome, pin) values
   ('Arthur Lima', '1098'), ('Wellington Augusto', '1111'), ('Rayane Castro', '1095'),
