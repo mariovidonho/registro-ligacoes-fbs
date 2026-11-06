@@ -457,6 +457,33 @@ alter table public.ranking_historico enable row level security;
 drop policy if exists "site" on public.ranking_historico;
 create policy "site" on public.ranking_historico for all to anon using (true) with check (true);
 
+-- ---------------------------------------------------------------------------
+-- Eventos fixos do cronograma (ex.: reunião de marketing toda segunda às 10h)
+-- e perfil do vendedor (foto, apelido, frase, aniversário).
+-- ---------------------------------------------------------------------------
+alter table public.cronograma add column if not exists eventos jsonb not null default '[]';
+update public.cronograma
+   set eventos = '[{"titulo":"Reunião de marketing","dia":1,"inicio":"10:00","fim":"11:00"}]'
+ where id = 1 and eventos = '[]';
+
+alter table public.vendedores add column if not exists foto_url   text;
+alter table public.vendedores add column if not exists apelido    text;
+alter table public.vendedores add column if not exists frase      text;
+alter table public.vendedores add column if not exists aniversario text;  -- "dd/mm"
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('fotos', 'fotos', true, 2097152, array['image/jpeg','image/png','image/webp'])
+on conflict (id) do nothing;
+drop policy if exists "fotos leitura" on storage.objects;
+drop policy if exists "fotos envio"   on storage.objects;
+drop policy if exists "fotos remocao" on storage.objects;
+create policy "fotos leitura" on storage.objects for select to anon using (bucket_id = 'fotos');
+create policy "fotos envio"   on storage.objects for insert to anon with check (bucket_id = 'fotos');
+create policy "fotos remocao" on storage.objects for delete to anon using (bucket_id = 'fotos');
+-- reenviar um relatório com o mesmo nome substitui o arquivo
+drop policy if exists "relatorios troca" on storage.objects;
+create policy "relatorios troca" on storage.objects for update to anon using (bucket_id = 'relatorios') with check (bucket_id = 'relatorios');
+
 -- Lista inicial de vendedores (a mesma que está no site)
 insert into public.vendedores (nome, pin) values
   ('Arthur Lima', '1098'), ('Wellington Augusto', '1111'), ('Rayane Castro', '1095'),
