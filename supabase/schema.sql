@@ -484,6 +484,39 @@ create policy "fotos remocao" on storage.objects for delete to anon using (bucke
 drop policy if exists "relatorios troca" on storage.objects;
 create policy "relatorios troca" on storage.objects for update to anon using (bucket_id = 'relatorios') with check (bucket_id = 'relatorios');
 
+-- ---------------------------------------------------------------------------
+-- Campanhas de premiação (Central do Vendedor). O progresso de cada vendedor
+-- é a base lançada pelo admin (vendas de antes do site, ex.: outubro/2026)
+-- + as vendas registradas no site dentro do período, só dos canais da campanha.
+-- ---------------------------------------------------------------------------
+create table if not exists public.campanhas (
+  id          bigint generated always as identity primary key,
+  titulo      text not null,
+  premio      text,
+  inicio      date not null,
+  fim         date not null,
+  meta        numeric(14,2) not null check (meta > 0),
+  canais      text[] not null default '{}',   -- vazio = qualquer canal
+  marco_valor numeric(14,2),                  -- antecipação: valor ...
+  marco_ate   date,                           -- ... atingido até esta data
+  marco_texto text,
+  imagem_url  text,
+  ativa       boolean not null default true,
+  criado_em   timestamptz not null default now()
+);
+create table if not exists public.campanha_ajustes (
+  campanha_id bigint not null references public.campanhas (id) on delete cascade,
+  vendedor    text not null,
+  valor       numeric(14,2) not null default 0,
+  primary key (campanha_id, vendedor)
+);
+alter table public.campanhas        enable row level security;
+alter table public.campanha_ajustes enable row level security;
+drop policy if exists "site" on public.campanhas;
+drop policy if exists "site" on public.campanha_ajustes;
+create policy "site" on public.campanhas        for all to anon using (true) with check (true);
+create policy "site" on public.campanha_ajustes for all to anon using (true) with check (true);
+
 -- Lista inicial de vendedores (a mesma que está no site)
 insert into public.vendedores (nome, pin) values
   ('Arthur Lima', '1098'), ('Wellington Augusto', '1111'), ('Rayane Castro', '1095'),

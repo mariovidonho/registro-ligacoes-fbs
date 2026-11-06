@@ -804,8 +804,33 @@
   .drop.over{border-color:var(--a-gold);background:var(--a-gold-soft);color:var(--text);}
   .drop b{color:var(--text);}
 
+  /* ---- Campanhas ---- */
+  .camp-hero{display:grid;grid-template-columns:minmax(220px,340px) minmax(0,1fr);gap:26px;padding:22px;}
+  .camp-arte{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--a-line);align-self:start;}
+  .camp-arte img{display:block;width:100%;height:auto;transition:transform .3s;}
+  .camp-arte:hover img{transform:scale(1.02);}
+  .camp-premio{display:inline-flex;align-items:center;gap:8px;background:var(--a-gold-soft);border:1px solid rgba(201,168,76,.45);border-radius:12px;padding:8px 12px;font-weight:600;color:var(--a-gold);margin-top:4px;}
+  .camp-premio span{color:var(--text);}
+  .camp-regra{margin-top:14px;border-left:3px solid #5FD39A;background:rgba(47,158,100,.10);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13px;line-height:1.5;}
+  .camp-regra b{color:#5FD39A;}
+  .camp-meu{margin-top:18px;background:var(--a-card-2);border:1px solid var(--a-line);border-radius:14px;padding:16px 18px;}
+  .camp-status{margin-top:12px;font-size:14px;font-weight:600;}
+  .camp-status.ok{color:#5FD39A;}
+  .camp-barra{position:relative;background:#0D1A28;border-radius:999px;overflow:visible;}
+  .camp-barra > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#B8953A,#E2C46A);min-width:2px;}
+  .camp-marco{position:absolute;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;background:#B39DDB;border:2px solid #0D1A28;transform:rotate(45deg);border-radius:2px;}
+  .camp-linha{display:flex;align-items:center;gap:12px;padding:9px 6px;border-top:1px solid rgba(29,56,80,.6);font-size:13px;}
+  .camp-linha:first-child{border-top:none;}
+  .camp-linha.eu{background:var(--a-gold-soft);border-radius:10px;}
+  .camp-linha .nm{width:170px;min-width:0;}
+  .camp-linha .val{width:80px;text-align:right;color:var(--a-gold);}
+  .camp-canal{display:inline-flex !important;align-items:center;gap:6px;margin:0 !important;font:500 13px Inter,sans-serif !important;letter-spacing:0 !important;text-transform:none !important;color:var(--text) !important;background:var(--a-card);border:1px solid var(--a-line);border-radius:999px;padding:6px 11px;cursor:pointer;}
+  body.modo-admin .camp-canal input{width:auto;padding:0;}
+
   @media (max-width:1180px){
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .camp-hero{grid-template-columns:minmax(0,1fr);}
+    .camp-arte{max-width:340px;}
     .rel-wrap{grid-template-columns:minmax(0,1fr);}
     .viewer{display:none;}
     .rel-list{max-height:none;}
@@ -814,6 +839,8 @@
   @media (max-width:860px){
     .rk-tabela{display:none;}
     .rk-lista{display:block !important;}
+    .camp-linha .nm{width:auto;flex:1;}
+    .camp-linha > span:nth-child(4){display:none;}
   }
   @media (max-width:860px){
     .adm{grid-template-columns:minmax(0,1fr);}
@@ -1114,7 +1141,9 @@ let state = {
   desemp: null,          // dados da pagina Desempenho (ligacoes por dia, semanas oficiais, vendas)
   ranking: null,         // historico do ranking anual + vendas do site
   cronoEventosDraft: null, // rascunho dos eventos fixos editados no admin
-  perfil: null           // perfil aberto na janela lateral {nome, foto, apelido, frase, aniversario}
+  perfil: null,          // perfil aberto na janela lateral {nome, foto, apelido, frase, aniversario}
+  camp: null,            // campanhas + bases + vendas (aba Campanhas)
+  campForm: null         // campanha sendo criada/editada no admin
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -1452,6 +1481,7 @@ async function checkPin(){
     saveSession({type:'admin'});
     loadAdminData();
     loadAdminMetas();
+    loadCampanhas();
     startAdminPolling();
   }else{
     state.pinError = true;
@@ -2153,6 +2183,7 @@ function irParaPagina(id){
   if(id==='metas' && !state.adminMetas) loadAdminMetas();
   if(id==='relatorios' && !state.adminRel) loadAdminRelatorios();
   if(id==='ranking' && !state.ranking) loadRanking();
+  if(id==='campanhas' && !state.camp) loadCampanhas();
   render();
   window.scrollTo(0,0);
 }
@@ -2174,7 +2205,7 @@ function renderAdmin(app){
   const pagina = {
     ligacoes: paginaLigacoes, metas: paginaMetas, producao: paginaProducao,
     vendedores: paginaVendedores, relatorios: paginaRelatoriosAdmin, cronograma: paginaCronograma,
-    ranking: ()=>paginaRanking(true)
+    ranking: ()=>paginaRanking(true), campanhas: paginaCampanhasAdmin
   }[state.adminTab] || paginaLigacoes;
   const p = pagina();
   app.innerHTML = `
@@ -2211,6 +2242,7 @@ function renderAdmin(app){
   if(p.bind) p.bind(app);
   if(state.vendaDrawer) bindVendaDrawer(app);
   if(state.perfil){ app.insertAdjacentHTML('beforeend', renderPerfilDrawer()); bindPerfilDrawer(); }
+  if(state.campForm){ app.insertAdjacentHTML('beforeend', renderCampanhaDrawer()); bindCampanhaDrawer(); }
 }
 
 // ---------------- Ligacoes ----------------
@@ -2641,6 +2673,8 @@ function renderVendaDrawer(){
         <input id="vendaCliente" placeholder="Nome do cliente" autocomplete="off">
         <label for="vendaCanal">Canal</label>
         <select id="vendaCanal"><option value="">—</option>${CANAIS_VENDA.map(c=>`<option>${c}</option>`).join('')}</select>
+        ${(state.camp && !state.camp.erro ? state.camp.lista : []).filter(c=>c.ativa && c.canais.length && todayKey()<=c.fim).map(c=>
+          `<div style="font-size:12px;color:#C9B8F0;margin-top:6px;">★ ${esc(c.titulo)}: só conta venda de ${c.canais.map(esc).join(', ')}.</div>`).join('')}
         <div class="acoes">
           <button class="btn" id="vendaCancelarBtn">Cancelar</button>
           <button class="btn gold" id="vendaSalvarBtn">Registrar venda</button>
@@ -2829,6 +2863,7 @@ function irParaCentral(id){
   if(id==='relatorios' && !state.relatorios) loadRelatoriosVendedor();
   if(id==='desempenho' && !state.desemp) loadDesempenho();
   if(id==='ranking' && !state.ranking) loadRanking();
+  if(id==='campanhas' && !state.camp) loadCampanhas();
   render();
   window.scrollTo(0,0);
 }
@@ -3500,6 +3535,323 @@ function paginaRanking(modoAdmin){
   return {top, html};
 }
 
+/*
+  Campanhas de premiacao. Progresso do vendedor = base lancada no admin (vendas de
+  antes do site) + vendas registradas no site dentro do periodo, so dos canais da
+  campanha. "Marco" e a antecipacao (ex.: R$ 3 mi ate 31/10 ja libera o premio).
+*/
+ICONES.campanhas = '<path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/>';
+CENTRAL_PAGINAS.splice(CENTRAL_PAGINAS.findIndex(p=>p.id==='ranking')+1, 0, {id:'campanhas', nome:'Campanhas'});
+ADMIN_PAGINAS.splice(ADMIN_PAGINAS.findIndex(p=>p.id==='ranking')+1, 0, {id:'campanhas', nome:'Campanhas'});
+
+async function loadCampanhas(){
+  try{
+    const [lista, ajustes, vendas] = await Promise.all([
+      sb('campanhas?select=*&order=inicio.desc', undefined, 1),
+      sb('campanha_ajustes?select=campanha_id,vendedor,valor', undefined, 1),
+      sb('vendas?select=vendedor,data,valor,canal', undefined, 1)
+    ]);
+    state.camp = {
+      lista: (lista||[]).map(c=>({...c, meta:Number(c.meta), marco_valor: c.marco_valor!=null ? Number(c.marco_valor) : null})),
+      ajustes: (ajustes||[]).map(a=>({...a, valor:Number(a.valor)})),
+      vendas: (vendas||[]).map(v=>({...v, valor:Number(v.valor)}))
+    };
+  }catch(e){
+    console.error('Falha ao carregar campanhas', e);
+    state.camp = {erro:true};
+  }
+  render();
+}
+
+function progressoCampanha(c, vendedor){
+  const C = state.camp;
+  const base = (C.ajustes.find(a=>a.campanha_id===c.id && a.vendedor===vendedor)||{}).valor || 0;
+  const vale = v => v.vendedor===vendedor && v.data>=c.inicio && v.data<=c.fim && (!c.canais.length || c.canais.includes(v.canal));
+  const vendas = C.vendas.filter(vale);
+  const site = vendas.reduce((s,v)=>s+v.valor,0);
+  const total = base + site;
+  const ateMarco = c.marco_ate ? base + vendas.filter(v=>v.data<=c.marco_ate).reduce((s,v)=>s+v.valor,0) : 0;
+  return {base, site, nVendas: vendas.length, total, pct: total/c.meta, bateu: total>=c.meta,
+          marcoOk: !!(c.marco_valor && ateMarco>=c.marco_valor), ateMarco};
+}
+
+function statusCampanha(c, pr){
+  const hoje = todayKey();
+  if(pr.bateu) return {cls:'ok', txt:'🏆 Meta batida! O prêmio é seu.'};
+  if(pr.marcoOk) return {cls:'ok', txt:`Antecipação garantida: o prêmio já é seu. Faltam ${BRL.format(c.meta-pr.total)} para confirmar até ${dataCurta(c.fim)}.`};
+  if(hoje > c.fim) return {cls:'', txt:`Campanha encerrada com ${BRL.format(pr.total)}.`};
+  if(c.marco_valor && c.marco_ate && hoje <= c.marco_ate)
+    return {cls:'', txt:`Faltam ${BRL.format(c.marco_valor-pr.ateMarco)} para a antecipação até ${dataCurta(c.marco_ate)} · ${BRL.format(c.meta-pr.total)} para a meta.`};
+  const dias = diasUteisEntre(hoje, c.fim);
+  return {cls:'', txt:`Faltam ${BRL.format(c.meta-pr.total)} até ${dataCurta(c.fim)}${dias ? ` · cerca de ${brlCurto((c.meta-pr.total)/dias)} por dia útil` : ''}.`};
+}
+
+function barraCampanha(c, pr, alto){
+  const marco = c.marco_valor ? Math.min(100, c.marco_valor/c.meta*100) : null;
+  return `<div class="camp-barra" style="height:${alto||12}px;">
+    <i style="width:${Math.min(100, pr.pct*100)}%;"></i>
+    ${marco!==null ? `<span class="camp-marco" style="left:${marco}%;" title="Antecipação: ${BRL.format(c.marco_valor)} até ${dataCurta(c.marco_ate)}"></span>` : ''}
+  </div>`;
+}
+
+function periodoCampanha(c){
+  const hoje = todayKey();
+  if(hoje < c.inicio) return `<span class="pill">começa em ${dataCurta(c.inicio)}</span>`;
+  if(hoje > c.fim) return `<span class="pill">encerrada em ${dataCurta(c.fim)}</span>`;
+  const dias = Math.round((dDe(c.fim) - dDe(hoje)) / 864e5);
+  return `<span class="pill live">valendo · ${dias===0 ? 'último dia' : `faltam ${dias} ${dias===1?'dia':'dias'}`}</span>`;
+}
+
+// ---------------- Campanhas (vendedor) ----------------
+function paginaCampanhasVendedor(){
+  const top = {titulo:'Campanhas', sub:'Premiações valendo para o time'};
+  const C = state.camp;
+  if(!C) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando campanhas...</div></div>`};
+  if(C.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar as campanhas agora</div><button class="btn small" id="campRetry" style="margin-top:10px;">Tentar de novo</button></div>`,
+    bind:()=>{ document.getElementById('campRetry').onclick = ()=>{ state.camp = null; render(); loadCampanhas(); }; }};
+  const ativas = C.lista.filter(c=>c.ativa);
+  if(!ativas.length) return {top, html:`<div class="card"><div class="card-b" style="padding:36px;text-align:center;color:var(--a-dim);">Nenhuma campanha valendo agora. Quando o gestor lançar uma, ela aparece aqui.</div></div>`};
+  const eu = state.vendor;
+  const html = ativas.map(c=>{
+    const pr = progressoCampanha(c, eu), st = statusCampanha(c, pr);
+    const corrida = VENDORES.map(v=>({v, pr:progressoCampanha(c, v)})).sort((a,b)=>b.pr.total-a.pr.total);
+    return `
+    <div class="camp-hero card" style="margin-bottom:18px;">
+      ${c.imagem_url ? `<a class="camp-arte" href="${esc(c.imagem_url)}" target="_blank" rel="noopener" title="Abrir a arte da campanha"><img src="${esc(c.imagem_url)}" alt="Arte da campanha ${esc(c.titulo)}"></a>` : ''}
+      <div class="camp-info">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="eb" style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;">Campanha de premiação</div>
+          ${periodoCampanha(c)}
+        </div>
+        <h2 class="serif" style="font-size:30px;margin:8px 0 6px;">${esc(c.titulo)}</h2>
+        ${c.premio ? `<div class="camp-premio">🏆 <span>${esc(c.premio)}</span></div>` : ''}
+        <div style="font-size:13px;color:var(--a-dim);margin-top:4px;">Válida de ${dataCurta(c.inicio)} até ${dataCurta(c.fim)} · meta de <b style="color:var(--text);">${BRL.format(c.meta)}</b> acumulados</div>
+        ${c.canais.length ? `<div class="camp-regra"><b>Atenção:</b> só contam vendas de ${c.canais.map(x=>esc(x==='Lead - Trafego Pago' ? 'leads do tráfego pago' : x)).join(', ')}. Vendas de outros canais não entram na campanha.</div>` : ''}
+
+        <div class="camp-meu">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;">
+            <div>
+              <div class="mute" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;">Seu acumulado</div>
+              <div class="serif" style="font-size:34px;color:var(--a-gold);line-height:1.1;">${BRL.format(pr.total)}</div>
+            </div>
+            <div class="serif" style="font-size:22px;">${Math.min(100, Math.round(pr.pct*100))}%</div>
+          </div>
+          <div style="margin:12px 0 6px;">${barraCampanha(c, pr, 14)}</div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--a-mute);">
+            <span>R$ 0</span>${c.marco_valor ? `<span style="color:#C9B8F0;">◆ ${brlCurto(c.marco_valor)} até ${dataCurta(c.marco_ate)}</span>` : ''}<span>${brlCurto(c.meta)}</span>
+          </div>
+          <div class="camp-status ${st.cls}">${st.txt}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+            ${pr.base ? `<span class="pill">antes do site: ${brlCurto(pr.base)}</span>` : ''}
+            <span class="pill">vendas no site: ${brlCurto(pr.site)}${pr.nVendas ? ` (${pr.nVendas})` : ''}</span>
+          </div>
+        </div>
+        ${c.marco_texto ? `<div style="font-size:13px;color:var(--a-dim);margin-top:12px;line-height:1.55;">${esc(c.marco_texto)}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-h"><h3>Corrida do time</h3><span class="legend"><span><i style="background:var(--a-gold);"></i>acumulado</span>${c.marco_valor ? `<span><i style="background:#B39DDB;"></i>antecipação</span>` : ''}</span></div>
+      <div class="card-b">
+        ${corrida.map((x,i)=>`
+          <div class="camp-linha ${x.v===eu?'eu':''}">
+            <span class="pos ${i<3 && x.pr.total>0 ? 'p'+(i+1) : ''}">${i+1}</span>
+            ${avatar(x.v)}
+            <span class="nm">${esc(nomeCurto(x.v))}${x.v===eu?' <span class="pill ok">você</span>':''}${x.pr.bateu ? ' 🏆' : (x.pr.marcoOk ? ' <span class="pill ok">antecipou</span>' : '')}</span>
+            <span style="flex:1;min-width:80px;">${barraCampanha(c, x.pr, 8)}</span>
+            <b class="val">${brlCurto(x.pr.total)}</b>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  return {top, html};
+}
+
+// ---------------- Campanhas (admin) ----------------
+function paginaCampanhasAdmin(){
+  const top = {titulo:'Campanhas', sub:'Premiações para o time · progresso calculado com as vendas registradas no site',
+    acoes:`<button class="btn gold" id="campNovaBtn">${icone('mais')}Nova campanha</button>`};
+  const C = state.camp;
+  if(!C) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando campanhas...</div></div>`,
+    bind:()=>{ document.getElementById('campNovaBtn').onclick = ()=>abrirCampanha(null); }};
+  if(C.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar as campanhas</div></div>`};
+  const html = C.lista.map(c=>{
+    const linhas = VENDORES.map(v=>({v, pr:progressoCampanha(c, v)})).sort((a,b)=>b.pr.total-a.pr.total);
+    return `
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h" style="align-items:flex-start;">
+        <div style="display:flex;gap:14px;align-items:center;min-width:0;">
+          ${c.imagem_url ? `<img src="${esc(c.imagem_url)}" alt="" style="width:54px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--a-line);">` : ''}
+          <div style="min-width:0;">
+            <h3 style="font-size:17px;">${esc(c.titulo)}</h3>
+            <div style="font-size:12px;color:var(--a-dim);margin-top:4px;">${dataCurta(c.inicio)} a ${dataCurta(c.fim)} · meta ${BRL.format(c.meta)}${c.marco_valor ? ` · antecipação ${brlCurto(c.marco_valor)} até ${dataCurta(c.marco_ate)}` : ''}${c.canais.length ? ` · só ${c.canais.map(esc).join(', ')}` : ''}</div>
+            <div style="margin-top:6px;">${c.ativa ? periodoCampanha(c) : '<span class="pill">oculta para os vendedores</span>'}</div>
+          </div>
+        </div>
+        <span style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+          <button class="btn small" data-camp-edit="${c.id}">Editar</button>
+          <button class="btn small ghost" data-camp-ativa="${c.id}">${c.ativa?'Ocultar':'Mostrar'}</button>
+        </span>
+      </div>
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr><th>#</th><th>Vendedor</th><th class="r">Base antes do site</th><th class="r">Vendas no site</th><th class="r">Acumulado</th><th>Progresso</th><th>Situação</th></tr></thead>
+          <tbody>
+            ${linhas.map((x,i)=>`<tr>
+              <td><span class="pos">${i+1}</span></td>
+              <td><span class="pessoa">${avatar(x.v)}${esc(x.v)}</span></td>
+              <td class="r"><input class="cel camp-base" inputmode="decimal" data-camp="${c.id}" data-vendedor="${esc(x.v)}" value="${x.pr.base ? x.pr.base.toLocaleString('pt-BR',{minimumFractionDigits:2}) : ''}" placeholder="R$ 0,00"></td>
+              <td class="r">${x.pr.site ? BRL.format(x.pr.site) : '<span class="mute">—</span>'}${x.pr.nVendas ? ` <span class="mute">(${x.pr.nVendas})</span>` : ''}</td>
+              <td class="r"><b style="color:var(--a-gold);">${BRL.format(x.pr.total)}</b></td>
+              <td style="min-width:160px;">${barraCampanha(c, x.pr, 8)}</td>
+              <td>${x.pr.bateu ? '<span class="pill ok">bateu a meta</span>' : (x.pr.marcoOk ? '<span class="pill ok">antecipou</span>' : `<span class="mute">${Math.round(x.pr.pct*100)}%</span>`)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-b" style="padding-top:12px;font-size:12px;color:var(--a-dim);">"Base antes do site" são as vendas do período que foram feitas antes de existir o registro de vendas no site (ex.: outubro), só dos canais da campanha.</div>
+    </div>`;
+  }).join('') || `<div class="card"><div class="card-b" style="padding:36px;text-align:center;color:var(--a-dim);">Nenhuma campanha ainda. Clique em <b>Nova campanha</b>.</div></div>`;
+
+  const bind = app=>{
+    document.getElementById('campNovaBtn').onclick = ()=>abrirCampanha(null);
+    app.querySelectorAll('[data-camp-edit]').forEach(b=>{ b.onclick = ()=>abrirCampanha(Number(b.getAttribute('data-camp-edit'))); });
+    app.querySelectorAll('[data-camp-ativa]').forEach(b=>{ b.onclick = ()=>alternarCampanha(Number(b.getAttribute('data-camp-ativa'))); });
+    app.querySelectorAll('.camp-base').forEach(inp=>{
+      inp.onchange = ()=>salvarBaseCampanha(Number(inp.getAttribute('data-camp')), inp.getAttribute('data-vendedor'), inp.value);
+    });
+  };
+  return {top, html, bind};
+}
+
+async function salvarBaseCampanha(id, vendedor, texto){
+  const valor = parseBRL(texto);
+  if(Number.isNaN(valor) || (valor!==null && valor<0)){ alert('Digita um valor válido, por exemplo 1.050.000'); render(); return; }
+  try{
+    await sb('campanha_ajustes?on_conflict=campanha_id,vendedor', {method:'POST', prefer:'resolution=merge-duplicates,return=minimal',
+      body:{campanha_id:id, vendedor, valor: valor||0}});
+  }catch(e){
+    console.error('Falha ao salvar base da campanha', e);
+    alert('Não foi possível salvar. Tenta de novo.');
+  }
+  await loadCampanhas();
+}
+
+async function alternarCampanha(id){
+  const c = state.camp.lista.find(x=>x.id===id);
+  if(!confirm(c.ativa ? `Ocultar "${c.titulo}" da Central do Vendedor?` : `Mostrar "${c.titulo}" para os vendedores?`)) return;
+  try{ await sb('campanhas?id=eq.'+id, {method:'PATCH', prefer:'return=minimal', body:{ativa:!c.ativa}}); }
+  catch(e){ console.error(e); alert('Não foi possível alterar a campanha.'); return; }
+  await loadCampanhas();
+}
+
+// janela lateral de criar/editar campanha
+function abrirCampanha(id){
+  const c = id ? state.camp.lista.find(x=>x.id===id) : null;
+  const hoje = todayKey();
+  state.campForm = c ? {...c, canais:[...c.canais]} : {id:null, titulo:'', premio:'', inicio:hoje, fim:fimMes(hoje), meta:null, canais:['Lead - Trafego Pago'], marco_valor:null, marco_ate:'', marco_texto:'', imagem_url:'', ativa:true};
+  render();
+}
+function renderCampanhaDrawer(){
+  const f = state.campForm;
+  const num = v => v ? Number(v).toLocaleString('pt-BR') : '';
+  return `
+    <div class="drawer-bg" id="campBg">
+      <div class="drawer" role="dialog" aria-modal="true" aria-labelledby="campTitulo">
+        <h2 id="campTitulo">${f.id ? 'Editar campanha' : 'Nova campanha'}</h2>
+        <div class="sub">Aparece na aba Campanhas da Central do Vendedor.</div>
+        <label for="cfTitulo">Nome da campanha</label>
+        <input id="cfTitulo" value="${esc(f.titulo)}" placeholder="Desempenho que leva o HB20">
+        <label for="cfPremio">Prêmio</label>
+        <input id="cfPremio" value="${esc(f.premio||'')}" placeholder="30 dias com um Hyundai HB20">
+        <div class="linha">
+          <div><label for="cfInicio">Início</label><input id="cfInicio" type="date" value="${f.inicio}"></div>
+          <div><label for="cfFim">Fim</label><input id="cfFim" type="date" value="${f.fim}"></div>
+        </div>
+        <label for="cfMeta">Meta acumulada (R$)</label>
+        <input id="cfMeta" class="valor-grande" inputmode="decimal" value="${num(f.meta)}" placeholder="5.000.000">
+        <label>Canais que contam</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${CANAIS_VENDA.map(cn=>`<label class="camp-canal"><input type="checkbox" class="cf-canal" value="${esc(cn)}" ${f.canais.includes(cn)?'checked':''}> ${esc(cn)}</label>`).join('')}
+        </div>
+        <div style="font-size:11px;color:var(--a-mute);margin-top:6px;">Nenhum marcado = vendas de qualquer canal contam.</div>
+        <div class="linha">
+          <div><label for="cfMarco">Antecipação (R$, opcional)</label><input id="cfMarco" inputmode="decimal" value="${num(f.marco_valor)}" placeholder="3.000.000"></div>
+          <div><label for="cfMarcoAte">Até a data</label><input id="cfMarcoAte" type="date" value="${f.marco_ate||''}"></div>
+        </div>
+        <label for="cfTexto">Como funciona (texto para os vendedores)</label>
+        <input id="cfTexto" value="${esc(f.marco_texto||'')}" placeholder="Bateu R$ 3 milhões em outubro? Já fica com o carro em novembro.">
+        <label>Arte da campanha</label>
+        <div style="display:flex;align-items:center;gap:12px;">
+          ${f.imagem_url ? `<img src="${esc(f.imagem_url)}" alt="" style="width:60px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--a-line);">` : ''}
+          <label class="btn" for="cfArte">${f.enviando ? 'Enviando…' : (f.imagem_url ? 'Trocar arte' : 'Enviar arte')}</label>
+          <input type="file" id="cfArte" accept="image/jpeg,image/png,image/webp" hidden>
+        </div>
+        <div class="acoes">
+          <button class="btn" id="cfCancelar">Cancelar</button>
+          <button class="btn gold" id="cfSalvar" ${f.enviando?'disabled':''}>Salvar campanha</button>
+        </div>
+      </div>
+    </div>`;
+}
+function lerCampanhaForm(){
+  const f = state.campForm, val = id => document.getElementById(id).value;
+  f.titulo = val('cfTitulo').trim(); f.premio = val('cfPremio').trim();
+  f.inicio = val('cfInicio'); f.fim = val('cfFim');
+  f.meta = parseBRL(val('cfMeta')); f.marco_valor = parseBRL(val('cfMarco')); f.marco_ate = val('cfMarcoAte');
+  f.marco_texto = val('cfTexto').trim();
+  f.canais = [...document.querySelectorAll('.cf-canal:checked')].map(x=>x.value);
+}
+function bindCampanhaDrawer(){
+  const bg = document.getElementById('campBg');
+  const fechar = ()=>{ state.campForm = null; render(); };
+  bg.onclick = e=>{ if(e.target===bg) fechar(); };
+  document.getElementById('cfCancelar').onclick = fechar;
+  document.getElementById('cfArte').onchange = async e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    lerCampanhaForm();
+    if(file.size > 2*1024*1024){ alert('A arte precisa ter até 2 MB. Exporte em JPG ou WEBP e tenta de novo.'); return; }
+    state.campForm.enviando = true; render();
+    try{
+      const ext = (file.type.split('/')[1]||'jpg').replace('jpeg','jpg');
+      const caminho = `campanhas/${slugNome(state.campForm.titulo||'campanha')}-${Date.now()}.${ext}`;
+      const res = await fetch(SUPABASE_URL + '/storage/v1/object/fotos/' + caminho, {method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type': file.type}, body:file});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      state.campForm.imagem_url = SUPABASE_URL + '/storage/v1/object/public/fotos/' + caminho;
+    }catch(err){
+      console.error('Falha ao enviar arte', err);
+      alert('Não foi possível enviar a arte. Tenta de novo.');
+    }
+    if(state.campForm){ state.campForm.enviando = false; render(); }
+  };
+  document.getElementById('cfSalvar').onclick = salvarCampanha;
+}
+async function salvarCampanha(){
+  lerCampanhaForm();
+  const f = state.campForm;
+  if(!f.titulo){ alert('Dá um nome para a campanha.'); return; }
+  if(!f.inicio || !f.fim || f.fim < f.inicio){ alert('Confere as datas: o fim precisa ser depois do início.'); return; }
+  if(!f.meta || Number.isNaN(f.meta) || f.meta<=0){ alert('Digita a meta em reais, por exemplo 5.000.000'); return; }
+  if(Number.isNaN(f.marco_valor)){ alert('O valor da antecipação não está certo.'); return; }
+  if(f.marco_valor && !f.marco_ate){ alert('Escolhe até que data vale a antecipação.'); return; }
+  const corpo = {titulo:f.titulo, premio:f.premio||null, inicio:f.inicio, fim:f.fim, meta:f.meta, canais:f.canais,
+    marco_valor:f.marco_valor||null, marco_ate:f.marco_valor ? f.marco_ate : null, marco_texto:f.marco_texto||null,
+    imagem_url:f.imagem_url||null, ativa:f.ativa!==false};
+  try{
+    if(f.id) await sb('campanhas?id=eq.'+f.id, {method:'PATCH', prefer:'return=minimal', body:corpo});
+    else await sb('campanhas', {method:'POST', prefer:'return=minimal', body:corpo});
+  }catch(e){
+    console.error('Falha ao salvar campanha', e);
+    alert('Não foi possível salvar a campanha. Tenta de novo.');
+    return;
+  }
+  state.campForm = null;
+  await loadCampanhas();
+  showCronoToast('Campanhas', 'Campanha salva');
+}
+document.addEventListener('keydown', ev=>{ if(ev.key==='Escape' && state.campForm){ state.campForm = null; render(); } });
+
 async function salvarProducaoMes(mes, equipe, texto){
   const ano = state.prodAno;
   const valor = parseBRL(texto);
@@ -3768,7 +4120,7 @@ function render(pulse){
   const disabled = !!state.closed;
 
   if(state.centralTab !== 'hoje'){
-    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false)}[state.centralTab];
+    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false), campanhas: paginaCampanhasVendedor}[state.centralTab];
     if(pagina){ renderCentral(app, pagina()); return; }
   }
 
@@ -3900,6 +4252,7 @@ async function init(){
     state.view = 'admin';
     loadAdminData();
     loadAdminMetas();
+    loadCampanhas();
     startAdminPolling();
     return;
   }
