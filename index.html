@@ -815,6 +815,11 @@
   .camp-regra b{color:#5FD39A;}
   .camp-meu{margin-top:18px;background:var(--a-card-2);border:1px solid var(--a-line);border-radius:14px;padding:16px 18px;}
   .camp-status{margin-top:12px;font-size:14px;font-weight:600;}
+  .camp-resumo{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+  .camp-resumo > div{background:#0D1A28;border-radius:10px;padding:10px 12px;min-width:0;}
+  .camp-resumo span{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-dim);font-weight:600;}
+  .camp-resumo b{display:block;font-size:20px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .camp-resumo small{display:block;font-size:11px;color:var(--a-mute);margin-top:2px;}
   .camp-status.ok{color:#5FD39A;}
   .camp-barra{position:relative;background:#0D1A28;border-radius:999px;overflow:visible;}
   .camp-barra > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#B8953A,#E2C46A);min-width:2px;}
@@ -830,6 +835,7 @@
   @media (max-width:1180px){
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
     .camp-hero{grid-template-columns:minmax(0,1fr);}
+    .camp-resumo{grid-template-columns:repeat(2,minmax(0,1fr));}
     .camp-arte{max-width:340px;}
     .rel-wrap{grid-template-columns:minmax(0,1fr);}
     .viewer{display:none;}
@@ -3603,32 +3609,13 @@ function periodoCampanha(c){
 }
 
 // ---------------- Campanhas (vendedor) ----------------
-function paginaCampanhasVendedor(){
-  const top = {titulo:'Campanhas', sub:'Premiações valendo para o time'};
-  const C = state.camp;
-  if(!C) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando campanhas...</div></div>`};
-  if(C.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar as campanhas agora</div><button class="btn small" id="campRetry" style="margin-top:10px;">Tentar de novo</button></div>`,
-    bind:()=>{ document.getElementById('campRetry').onclick = ()=>{ state.camp = null; render(); loadCampanhas(); }; }};
-  const ativas = C.lista.filter(c=>c.ativa);
-  if(!ativas.length) return {top, html:`<div class="card"><div class="card-b" style="padding:36px;text-align:center;color:var(--a-dim);">Nenhuma campanha valendo agora. Quando o gestor lançar uma, ela aparece aqui.</div></div>`};
-  const eu = state.vendor;
-  const html = ativas.map(c=>{
-    const pr = progressoCampanha(c, eu), st = statusCampanha(c, pr);
+// Visual da campanha (arte, regra, acumulado e corrida do time). eu = vendedor logado; null = visao do gestor
+function visualCampanha(c, eu){
     const corrida = VENDORES.map(v=>({v, pr:progressoCampanha(c, v)})).sort((a,b)=>b.pr.total-a.pr.total);
-    return `
-    <div class="camp-hero card" style="margin-bottom:18px;">
-      ${c.imagem_url ? `<a class="camp-arte" href="${esc(c.imagem_url)}" target="_blank" rel="noopener" title="Abrir a arte da campanha"><img src="${esc(c.imagem_url)}" alt="Arte da campanha ${esc(c.titulo)}"></a>` : ''}
-      <div class="camp-info">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
-          <div class="eb" style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;">Campanha de premiação</div>
-          ${periodoCampanha(c)}
-        </div>
-        <h2 class="serif" style="font-size:30px;margin:8px 0 6px;">${esc(c.titulo)}</h2>
-        ${c.premio ? `<div class="camp-premio">🏆 <span>${esc(c.premio)}</span></div>` : ''}
-        <div style="font-size:13px;color:var(--a-dim);margin-top:4px;">Válida de ${dataCurta(c.inicio)} até ${dataCurta(c.fim)} · meta de <b style="color:var(--text);">${BRL.format(c.meta)}</b> acumulados</div>
-        ${c.canais.length ? `<div class="camp-regra"><b>Atenção:</b> só contam vendas de ${c.canais.map(x=>esc(x==='Lead - Trafego Pago' ? 'leads do tráfego pago' : x)).join(', ')}. Vendas de outros canais não entram na campanha.</div>` : ''}
-
-        <div class="camp-meu">
+    let blocoMeu;
+    if(eu){
+      const pr = progressoCampanha(c, eu), st = statusCampanha(c, pr);
+      blocoMeu = `
           <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;">
             <div>
               <div class="mute" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;">Seu acumulado</div>
@@ -3644,7 +3631,39 @@ function paginaCampanhasVendedor(){
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
             ${pr.base ? `<span class="pill">antes do site: ${brlCurto(pr.base)}</span>` : ''}
             <span class="pill">vendas no site: ${brlCurto(pr.site)}${pr.nVendas ? ` (${pr.nVendas})` : ''}</span>
+          </div>`;
+    }else{
+      // visao do gestor: resumo do time
+      const totalTime = corrida.reduce((a,x)=>a+x.pr.total,0);
+      const lider = corrida[0];
+      const antecipou = corrida.filter(x=>x.pr.marcoOk && !x.pr.bateu).length, bateram = corrida.filter(x=>x.pr.bateu).length;
+      const comVenda = corrida.filter(x=>x.pr.total>0).length;
+      blocoMeu = `
+          <div class="camp-resumo">
+            <div><span>Acumulado do time</span><b class="serif" style="color:var(--a-gold);">${brlCurto(totalTime)}</b></div>
+            <div><span>Líder</span><b>${lider && lider.pr.total ? esc(nomeCurto(lider.v)) : '—'}</b><small>${lider && lider.pr.total ? brlCurto(lider.pr.total)+' · '+Math.round(lider.pr.pct*100)+'%' : ''}</small></div>
+            <div><span>Já pontuaram</span><b>${comVenda} / ${corrida.length}</b></div>
+            <div><span>${c.marco_valor ? 'Antecipou' : 'Bateram a meta'}</span><b>${c.marco_valor ? antecipou : bateram}</b>${c.marco_valor ? `<small>${bateram} bateram a meta</small>` : ''}</div>
           </div>
+          ${lider && lider.pr.total ? `<div style="margin:14px 0 6px;">${barraCampanha(c, lider.pr, 14)}</div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--a-mute);">
+            <span>líder: ${esc(nomeCurto(lider.v))}</span>${c.marco_valor ? `<span style="color:#C9B8F0;">◆ ${brlCurto(c.marco_valor)} até ${dataCurta(c.marco_ate)}</span>` : ''}<span>${brlCurto(c.meta)}</span>
+          </div>` : ''}`;
+    }
+    return `
+    <div class="camp-hero card" style="margin-bottom:18px;">
+      ${c.imagem_url ? `<a class="camp-arte" href="${esc(c.imagem_url)}" target="_blank" rel="noopener" title="Abrir a arte da campanha"><img src="${esc(c.imagem_url)}" alt="Arte da campanha ${esc(c.titulo)}"></a>` : ''}
+      <div class="camp-info">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="eb" style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;">Campanha de premiação</div>
+          ${periodoCampanha(c)}
+        </div>
+        <h2 class="serif" style="font-size:30px;margin:8px 0 6px;">${esc(c.titulo)}</h2>
+        ${c.premio ? `<div class="camp-premio">🏆 <span>${esc(c.premio)}</span></div>` : ''}
+        <div style="font-size:13px;color:var(--a-dim);margin-top:4px;">Válida de ${dataCurta(c.inicio)} até ${dataCurta(c.fim)} · meta de <b style="color:var(--text);">${BRL.format(c.meta)}</b> acumulados</div>
+        ${c.canais.length ? `<div class="camp-regra"><b>Atenção:</b> só contam vendas de ${c.canais.map(x=>esc(x==='Lead - Trafego Pago' ? 'leads do tráfego pago' : x)).join(', ')}. Vendas de outros canais não entram na campanha.</div>` : ''}
+
+        <div class="camp-meu">${blocoMeu}
         </div>
         ${c.marco_texto ? `<div style="font-size:13px;color:var(--a-dim);margin-top:12px;line-height:1.55;">${esc(c.marco_texto)}</div>` : ''}
       </div>
@@ -3663,7 +3682,18 @@ function paginaCampanhasVendedor(){
           </div>`).join('')}
       </div>
     </div>`;
-  }).join('');
+  }
+
+function paginaCampanhasVendedor(){
+  const top = {titulo:'Campanhas', sub:'Premiações valendo para o time'};
+  const C = state.camp;
+  if(!C) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando campanhas...</div></div>`};
+  if(C.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar as campanhas agora</div><button class="btn small" id="campRetry" style="margin-top:10px;">Tentar de novo</button></div>`,
+    bind:()=>{ document.getElementById('campRetry').onclick = ()=>{ state.camp = null; render(); loadCampanhas(); }; }};
+  const ativas = C.lista.filter(c=>c.ativa);
+  if(!ativas.length) return {top, html:`<div class="card"><div class="card-b" style="padding:36px;text-align:center;color:var(--a-dim);">Nenhuma campanha valendo agora. Quando o gestor lançar uma, ela aparece aqui.</div></div>`};
+  const eu = state.vendor;
+  const html = ativas.map(c=>visualCampanha(c, eu)).join('');
   return {top, html};
 }
 
@@ -3678,11 +3708,13 @@ function paginaCampanhasAdmin(){
   const html = C.lista.map(c=>{
     const linhas = VENDORES.map(v=>({v, pr:progressoCampanha(c, v)})).sort((a,b)=>b.pr.total-a.pr.total);
     return `
-    <div class="card" style="margin-bottom:18px;">
+    ${visualCampanha(c, null)}
+    <div class="card" style="margin-bottom:34px;">
       <div class="card-h" style="align-items:flex-start;">
         <div style="display:flex;gap:14px;align-items:center;min-width:0;">
           ${c.imagem_url ? `<img src="${esc(c.imagem_url)}" alt="" style="width:54px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--a-line);">` : ''}
           <div style="min-width:0;">
+            <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-dim);font-weight:700;margin-bottom:3px;">Gestão da campanha</div>
             <h3 style="font-size:17px;">${esc(c.titulo)}</h3>
             <div style="font-size:12px;color:var(--a-dim);margin-top:4px;">${dataCurta(c.inicio)} a ${dataCurta(c.fim)} · meta ${BRL.format(c.meta)}${c.marco_valor ? ` · antecipação ${brlCurto(c.marco_valor)} até ${dataCurta(c.marco_ate)}` : ''}${c.canais.length ? ` · só ${c.canais.map(esc).join(', ')}` : ''}</div>
             <div style="margin-top:6px;">${c.ativa ? periodoCampanha(c) : '<span class="pill">oculta para os vendedores</span>'}</div>
