@@ -8,6 +8,9 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0D1B2A;
@@ -541,37 +544,278 @@
   .crono-edit-row .nome b{color:var(--gold);}
   .crono-edit-row input{flex:1;max-width:130px;margin:0;padding:7px 8px;font-size:13px;}
 
-  /* ---- Admin: abas e produção ---- */
-  .admin-tabs{display:flex;gap:6px;margin:-6px 0 16px;}
-  .admin-tabs button{flex:1;}
-  .prod-anos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
-  .prod-anos button{flex:1;min-width:64px;}
-  .prod-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;}
-  .prod-table th,.prod-table td{padding:7px 6px;text-align:right;border-top:1px solid var(--border);white-space:nowrap;}
-  .prod-table th:first-child,.prod-table td:first-child{text-align:left;padding-left:14px;}
-  .prod-table th:last-child,.prod-table td:last-child{padding-right:14px;}
-  .prod-table thead th{border-top:none;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:700;vertical-align:bottom;}
-  .prod-table thead th .coord{display:block;font-size:10px;letter-spacing:0;text-transform:none;color:var(--text-dim);font-weight:400;}
-  .prod-table td.vazio{color:var(--text-dim);}
-  .prod-table td.auto{color:var(--atendeu);}
-  .prod-table td.total,.prod-table th.total{font-weight:700;color:var(--text);}
-  .prod-table tr.futuro td{color:#4A6178;}
-  .prod-table tfoot td{border-top:2px solid var(--gold);font-weight:700;color:var(--gold);}
-  .prod-table input{width:86px;margin:0;padding:5px 6px;font-size:12px;text-align:right;}
-  .prod-chart{display:flex;align-items:flex-end;gap:4px;height:120px;padding:10px 14px 0;}
-  .prod-chart .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;}
-  .prod-chart .bars{display:flex;align-items:flex-end;gap:2px;width:100%;height:100%;justify-content:center;}
-  .prod-chart .bar{width:45%;border-radius:3px 3px 0 0;background:var(--gold);min-height:2px;}
-  .prod-chart .bar.ant{background:#2A4D6B;}
-  .prod-chart-labels{display:flex;gap:4px;padding:4px 14px 12px;font-size:10px;color:var(--text-dim);}
-  .prod-chart-labels span{flex:1;text-align:center;}
-  .prod-legend{display:flex;gap:14px;padding:0 14px 12px;font-size:11px;color:var(--text-dim);}
-  .prod-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
-  .prod-form{padding:4px 16px 14px;}
-  .prod-form label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-top:10px;}
-  .prod-form input,.prod-form select{margin:5px 0 0;padding:11px 12px;font-size:15px;}
-  .prod-form .linha{display:flex;gap:8px;}
-  .prod-form .linha > div{flex:1;min-width:0;}
+  /* ---- Painel admin (tela cheia) ---- */
+  body.modo-admin{
+    --a-bg:#0A1520; --a-side:#0D1A28; --a-card:#112334; --a-card-2:#162D43; --a-line:#1D3850;
+    --a-dim:#8A9BB0; --a-mute:#5D7189; --a-gold:#C9A84C; --a-gold-soft:rgba(201,168,76,.14);
+    background:#0A1520;
+    font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  body.modo-admin #app{max-width:none;padding:0;}
+  .adm{
+    display:grid;
+    grid-template-columns:236px minmax(0,1fr);
+    min-height:100vh;
+    font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;
+    color:var(--text);
+  }
+  .adm .serif{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;}
+  .adm-side{
+    position:sticky;top:0;height:100vh;
+    background:var(--a-side);
+    border-right:1px solid var(--a-line);
+    display:flex;flex-direction:column;
+    padding:22px 14px 18px;
+  }
+  .adm-brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px;}
+  .adm-brand img{height:30px;}
+  .adm-brand .n{font-size:11px;letter-spacing:.18em;color:var(--a-gold);font-weight:700;}
+  .adm-brand .t{font-size:13px;color:var(--a-dim);margin-top:1px;}
+  .adm-nav{display:flex;flex-direction:column;gap:2px;}
+  .adm-nav button{
+    display:flex;align-items:center;gap:11px;
+    background:none;border:none;border-radius:10px;
+    color:var(--a-dim);font:500 14px Inter,sans-serif;
+    padding:10px 12px;cursor:pointer;text-align:left;
+    transition:background .15s,color .15s;
+  }
+  .adm-nav button svg{width:18px;height:18px;flex:none;}
+  .adm-nav button:hover{background:rgba(255,255,255,.04);color:var(--text);}
+  .adm-nav button.on{background:var(--a-gold-soft);color:var(--a-gold);}
+  .adm-side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;}
+  .adm-mini-crono{
+    border:1px solid var(--a-line);border-radius:12px;padding:11px 12px;font-size:12px;cursor:pointer;
+  }
+  .adm-mini-crono .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
+  .adm-mini-crono .v{margin-top:4px;color:var(--text);font-weight:600;line-height:1.3;}
+  .adm-mini-crono .s{margin-top:2px;color:var(--a-dim);}
+  .adm-sair{
+    display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--a-line);
+    border-radius:10px;color:var(--a-dim);font:500 13px Inter,sans-serif;padding:9px 12px;cursor:pointer;
+  }
+  .adm-sair svg{width:16px;height:16px;}
+  .adm-sair:hover{color:var(--text);border-color:#2C4C68;}
+
+  .adm-main{padding:28px 36px 56px;min-width:0;}
+  .adm-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px;}
+  .adm-top .eb{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
+  .adm-top h1{font-family:Fraunces,Georgia,serif;font-size:32px;font-weight:600;margin:4px 0 2px;letter-spacing:-.01em;}
+  .adm-top .sub{color:var(--a-dim);font-size:14px;}
+  .adm-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+
+  .seg{display:inline-flex;background:var(--a-card);border:1px solid var(--a-line);border-radius:11px;padding:3px;}
+  .seg button{
+    background:none;border:none;border-radius:8px;color:var(--a-dim);
+    font:500 13px Inter,sans-serif;padding:7px 14px;cursor:pointer;
+  }
+  .seg button.on{background:var(--a-card-2);color:var(--text);box-shadow:inset 0 0 0 1px #2C4C68;}
+  body.modo-admin input,body.modo-admin select{
+    width:auto;margin:0;padding:9px 12px;font:14px Inter,sans-serif;border-radius:10px;
+    background:var(--a-card);border:1px solid var(--a-line);color:var(--text);
+  }
+  body.modo-admin input:focus,body.modo-admin select:focus{outline:none;border-color:var(--a-gold);}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;border-radius:10px;cursor:pointer;
+    font:600 13px Inter,sans-serif;padding:9px 15px;border:1px solid var(--a-line);
+    background:var(--a-card);color:var(--text);transition:filter .15s,border-color .15s;
+  }
+  .btn svg{width:16px;height:16px;}
+  .btn:hover{border-color:#2C4C68;}
+  .btn.gold{background:var(--a-gold);border-color:var(--a-gold);color:#241D0B;}
+  .btn.gold:hover{filter:brightness(1.07);}
+  .btn.ghost{background:none;}
+  .btn.small{padding:6px 11px;font-size:12px;}
+  .btn:disabled{opacity:.6;cursor:wait;}
+  .link{background:none;border:none;color:var(--a-dim);font:500 12px Inter,sans-serif;cursor:pointer;padding:2px 4px;}
+  .link:hover{color:var(--text);text-decoration:underline;}
+  .link.danger:hover{color:#E8B4B4;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px;}
+  .kpi{background:var(--a-card);border:1px solid var(--a-line);border-radius:16px;padding:16px 18px 15px;position:relative;overflow:hidden;}
+  .kpi .l{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--a-dim);font-weight:600;}
+  .kpi .v{font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;margin-top:8px;line-height:1.05;font-variant-numeric:tabular-nums;}
+  .kpi .d{font-size:12px;color:var(--a-dim);margin-top:6px;}
+  .kpi.destaque{background:linear-gradient(160deg,#1A3047,#112334 70%);border-color:rgba(201,168,76,.45);}
+  .kpi.destaque .v{color:var(--a-gold);}
+  .up{color:#5FD39A;} .down{color:#F0A3A3;}
+
+  .grid-2{display:grid;grid-template-columns:minmax(0,2fr) minmax(300px,1fr);gap:18px;align-items:start;}
+  .stack{display:flex;flex-direction:column;gap:18px;min-width:0;}
+  .faixa{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:18px;align-items:stretch;}
+  .faixa > *{margin:0 !important;}
+  .faixa:empty{display:none;}
+  .card{background:var(--a-card);border:1px solid var(--a-line);border-radius:16px;min-width:0;}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px 12px;}
+  .card-h h3{margin:0;font-size:15px;font-weight:600;}
+  .card-h .hint{font-size:12px;color:var(--a-dim);}
+  .card-b{padding:0 20px 18px;}
+
+  .tbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;}
+  .tbl th{
+    text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-dim);
+    font-weight:600;padding:10px 14px;border-bottom:1px solid var(--a-line);white-space:nowrap;
+  }
+  .tbl td{padding:11px 14px;border-bottom:1px solid rgba(29,56,80,.6);white-space:nowrap;}
+  .tbl tbody tr{transition:background .12s;}
+  .tbl tbody tr:hover{background:rgba(255,255,255,.025);}
+  .tbl .r{text-align:right;}
+  .tbl th:first-child,.tbl td:first-child{padding-left:20px;}
+  .tbl th:last-child,.tbl td:last-child{padding-right:20px;}
+  .tbl tfoot td{border-bottom:none;border-top:1px solid var(--a-gold);font-weight:700;color:var(--a-gold);padding-top:13px;}
+  .tbl .mute{color:var(--a-mute);}
+  .tbl .auto{color:#5FD39A;}
+  .tbl tr.futuro td{color:var(--a-mute);}
+  .tbl tr.atual td:first-child{box-shadow:inset 3px 0 0 var(--a-gold);}
+  .tbl input.cel{width:130px;text-align:right;padding:6px 9px;font-size:13px;}
+  .tbl th .coord{display:block;font-size:11px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--a-mute);margin-top:2px;}
+  .scroll-x{overflow-x:auto;}
+
+  .pessoa{display:flex;align-items:center;gap:10px;}
+  .av{
+    width:30px;height:30px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:#0A1520;background:var(--a-gold);
+  }
+  .pos{width:22px;text-align:center;font-weight:700;color:var(--a-dim);}
+  .pos.p1{color:#E7C766;} .pos.p2{color:#C8D1DC;} .pos.p3{color:#D59A6A;}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--a-line);color:var(--a-dim);}
+  .pill.ok{color:var(--a-gold);border-color:rgba(201,168,76,.45);background:var(--a-gold-soft);}
+  .pill.warn{color:#F0A3A3;border-color:rgba(240,163,163,.35);background:rgba(139,58,58,.18);}
+  .pill.live{color:#5FD39A;border-color:rgba(95,211,154,.35);background:rgba(47,158,100,.14);}
+  .barra{height:8px;border-radius:5px;background:var(--a-card-2);overflow:hidden;display:flex;min-width:120px;}
+  .barra > i{display:block;height:100%;}
+
+  .chart{position:relative;height:250px;display:flex;align-items:flex-end;gap:10px;padding:8px 20px 0 70px;}
+  .chart .gl{position:absolute;left:70px;right:20px;border-top:1px dashed rgba(29,56,80,.9);font-size:10px;color:var(--a-mute);}
+  .chart .gl span{position:absolute;right:calc(100% + 8px);top:-7px;white-space:nowrap;}
+  .chart .m{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:3px;position:relative;cursor:default;}
+  .chart .b{width:42%;max-width:26px;border-radius:5px 5px 0 0;background:linear-gradient(180deg,#E2C46A,#B8953A);min-height:2px;transition:filter .15s;}
+  .chart .b.ant{background:#26445F;}
+  .chart .m:hover .b{filter:brightness(1.18);}
+  .chart .tip{
+    position:absolute;bottom:calc(100% - 4px);left:50%;transform:translate(-50%,6px);opacity:0;pointer-events:none;
+    background:#0A1520;border:1px solid var(--a-line);border-radius:10px;padding:8px 11px;font-size:12px;
+    white-space:nowrap;z-index:5;transition:opacity .12s,transform .12s;box-shadow:0 10px 24px rgba(0,0,0,.45);
+  }
+  .chart .m:hover .tip{opacity:1;transform:translate(-50%,0);}
+  .chart .tip.esq{left:0;transform:translate(0,6px);}
+  .chart .tip.dir{left:auto;right:0;transform:translate(0,6px);}
+  .chart .m:hover .tip.esq,.chart .m:hover .tip.dir{transform:translate(0,0);}
+  .chart .tip b{color:var(--a-gold);}
+  .chart-x{display:flex;gap:10px;padding:8px 20px 4px 70px;}
+  .chart-x span{flex:1;text-align:center;font-size:11px;color:var(--a-dim);}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--a-dim);}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+
+  .share{display:flex;height:12px;border-radius:7px;overflow:hidden;background:var(--a-card-2);margin:4px 0 14px;}
+  .share i{display:block;height:100%;}
+  .share-row{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 0;border-top:1px solid rgba(29,56,80,.6);}
+  .share-row .dot{width:10px;height:10px;border-radius:3px;flex:none;}
+  .share-row .nm{flex:1;min-width:0;}
+  .share-row .nm small{display:block;color:var(--a-mute);font-size:11px;}
+
+  .feed-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid rgba(29,56,80,.6);font-size:13px;}
+  .feed-item:first-child{border-top:none;}
+  .feed-item .val{margin-left:auto;font-weight:700;color:var(--a-gold);white-space:nowrap;}
+  .feed-item small{display:block;color:var(--a-mute);font-size:11px;margin-top:1px;}
+
+  .alerta{border:1px solid rgba(240,163,163,.35);background:rgba(139,58,58,.14);border-radius:14px;padding:14px 16px;}
+  .alerta .t{color:#F0A3A3;font-weight:600;font-size:13px;}
+  .alerta .s{color:var(--a-dim);font-size:12px;margin-top:4px;line-height:1.5;}
+
+  .ritmo .n{font-family:Fraunces,Georgia,serif;font-size:26px;font-weight:600;}
+  .ritmo .barra{height:10px;margin:10px 0 6px;}
+
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+  .pcard{background:var(--a-card);border:1px solid var(--a-line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+  .pcard .top{display:flex;align-items:center;gap:12px;}
+  .pcard .top .av{width:40px;height:40px;font-size:14px;}
+  .pcard .nm{font-weight:600;font-size:15px;}
+  .pcard .meta-l{font-size:12px;color:var(--a-dim);margin-top:2px;}
+  .pcard .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .pcard .stats div{background:var(--a-card-2);border-radius:10px;padding:8px 10px;}
+  .pcard .stats b{display:block;font-size:15px;font-variant-numeric:tabular-nums;}
+  .pcard .stats span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-dim);}
+  .pcard .foot{display:flex;justify-content:space-between;align-items:center;}
+  .pcard.novo{border-style:dashed;justify-content:center;}
+  .pcard.novo input{width:100%;}
+
+  .meta-cel{min-width:150px;}
+  .meta-cel .lin{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:6px;}
+  .meta-cel .lin b{font-size:14px;}
+  body.modo-admin .meta-cel input{width:58px;padding:4px 6px;font-size:12px;text-align:right;}
+  .meta-cel .barra{min-width:0;height:6px;}
+
+  .timeline{display:flex;gap:4px;height:74px;margin:6px 0 10px;}
+  .timeline .blk{border-radius:10px;padding:9px 11px;font-size:12px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-width:0;border:1px solid transparent;}
+  .timeline .blk.passo{background:var(--a-card-2);border-color:var(--a-line);}
+  .timeline .blk.passo.atual{background:var(--a-gold-soft);border-color:rgba(201,168,76,.6);}
+  .timeline .blk.intervalo{background:#14212E;color:var(--a-dim);}
+  .timeline .blk.cafe{background:repeating-linear-gradient(45deg,rgba(232,211,163,.16) 0 6px,rgba(232,211,163,.06) 6px 12px);color:#E8D3A3;}
+  .timeline .blk b{font-family:Fraunces,Georgia,serif;font-size:18px;color:var(--a-gold);}
+  .timeline .blk span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .drawer-bg{position:fixed;inset:0;background:rgba(3,8,14,.62);z-index:60;display:flex;justify-content:flex-end;}
+  .drawer{width:min(440px,100%);height:100%;background:var(--a-side);border-left:1px solid var(--a-line);padding:26px 26px 22px;overflow-y:auto;animation:slide .22s ease;display:flex;flex-direction:column;}
+  .drawer h2{font-family:Fraunces,Georgia,serif;font-size:24px;margin:0 0 4px;}
+  .drawer .sub{color:var(--a-dim);font-size:13px;margin-bottom:18px;}
+  .drawer label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-dim);font-weight:600;margin:14px 0 6px;}
+  body.modo-admin .drawer input,body.modo-admin .drawer select{width:100%;padding:12px 13px;font-size:15px;}
+  .drawer .linha{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .drawer .acoes{margin-top:auto;padding-top:22px;display:flex;gap:10px;}
+  .drawer .acoes .btn{flex:1;justify-content:center;padding:13px;font-size:14px;}
+  .valor-grande{font-family:Fraunces,Georgia,serif;font-size:26px !important;color:var(--a-gold);}
+  @keyframes slide{from{transform:translateX(40px)}}
+
+  /* ---- Central do vendedor ---- */
+  .adm-nav .badge{margin-left:auto;background:var(--a-gold);color:#241D0B;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px;}
+  .adm-quem{display:flex;align-items:center;gap:10px;padding:10px 4px 2px;font-size:13px;}
+  .adm-quem .av{width:34px;height:34px;}
+  .adm-quem small{display:block;color:var(--a-dim);font-size:11px;}
+  /* a aba Hoje fica numa coluna estreita: o vendedor deixa a janela minimizada de lado pra clicar */
+  .hoje{max-width:460px;margin:0 auto;}
+  .adm-main.estreita .adm-top{max-width:460px;margin-left:auto;margin-right:auto;}
+  .rel-wrap{display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start;}
+  .rel-list{max-height:calc(100vh - 170px);overflow-y:auto;}
+  .rel-mes{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-dim);font-weight:700;padding:14px 18px 6px;}
+  .rel-item{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;border-top:1px solid rgba(29,56,80,.6);color:var(--text);text-align:left;padding:12px 18px;cursor:pointer;font:500 14px Inter,sans-serif;}
+  .rel-item:hover{background:rgba(255,255,255,.03);}
+  .rel-item.on{background:var(--a-gold-soft);box-shadow:inset 3px 0 0 var(--a-gold);}
+  .rel-item .ic{width:34px;height:40px;border-radius:6px;background:var(--a-card-2);border:1px solid var(--a-line);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#F0A3A3;flex:none;}
+  .rel-item small{display:block;color:var(--a-dim);font-size:11px;font-weight:400;margin-top:2px;}
+  .rel-item .novo{margin-left:auto;}
+  .viewer{height:calc(100vh - 170px);min-height:520px;display:flex;flex-direction:column;overflow:hidden;}
+  .viewer iframe{flex:1;width:100%;border:none;background:#525659;border-radius:0 0 16px 16px;}
+  .drop{border:2px dashed #2C4C68;border-radius:16px;padding:30px;text-align:center;color:var(--a-dim);cursor:pointer;transition:border-color .15s,background .15s;}
+  .drop.over{border-color:var(--a-gold);background:var(--a-gold-soft);color:var(--text);}
+  .drop b{color:var(--text);}
+
+  @media (max-width:1180px){
+    .kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .rel-wrap{grid-template-columns:minmax(0,1fr);}
+    .viewer{display:none;}
+    .rel-list{max-height:none;}
+    .grid-2{grid-template-columns:minmax(0,1fr);}
+  }
+  @media (max-width:860px){
+    .rk-tabela{display:none;}
+    .rk-lista{display:block !important;}
+  }
+  @media (max-width:860px){
+    .adm{grid-template-columns:minmax(0,1fr);}
+    .adm-side{position:sticky;top:0;z-index:20;height:auto;flex-direction:row;align-items:center;gap:8px;padding:10px 12px;border-right:none;border-bottom:1px solid var(--a-line);overflow-x:auto;}
+    .adm-brand{padding:0 6px 0 0;}
+    .adm-brand .t,.adm-mini-crono,.adm-quem{display:none;}
+    .adm-nav{flex-direction:row;}
+    .adm-nav button{padding:8px 10px;white-space:nowrap;}
+    .adm-side-foot{margin:0 0 0 auto;flex-direction:row;}
+    .adm-sair span{display:none;}
+    .adm-main{padding:20px 16px 40px;}
+    .adm-top h1{font-size:26px;}
+    .kpi .v{font-size:24px;}
+    .chart{gap:4px;padding:8px 10px 0 52px;height:200px;}
+    .chart .gl{left:52px;right:10px;}
+    .chart-x{gap:4px;padding:8px 10px 4px 52px;}
+  }
 </style>
 </head>
 <body>
@@ -834,14 +1078,20 @@ let state = {
   adminMetas: null,      // { [vendedor]: metasObj } no painel admin
   adminMetasEdit: {},    // { [vendedor]: {campo:valor} } rascunho dos inputs do admin
   cronoOpen: false,      // cartao do cronograma expandido (regra de ouro)
-  cronoEditOpen: false,  // editor de horarios aberto no admin
   cronoDraft: null,      // rascunho dos horarios sendo editados no admin
   cronoFlashAte: 0,      // brilho dourado do cartao ate esse instante (troca de passo)
-  adminTab: 'ligacoes',  // 'ligacoes' | 'producao'
+  adminTab: 'ligacoes',  // pagina do painel admin: ligacoes | metas | producao | vendedores | cronograma
   prod: null,            // { equipes, manual, vendas } da tela de producao
   prodAno: new Date().getFullYear(),
   prodEdit: false,       // tabela de producao com campos editaveis
-  prodEquipesOpen: false
+  vendaDrawer: false,    // janela lateral de registrar venda aberta
+  centralTab: 'hoje',    // pagina da central do vendedor: hoje | relatorios
+  relatorios: null,      // relatorios do vendedor logado
+  relAberto: null,       // id do relatorio aberto no visualizador
+  adminRel: null,        // todos os relatorios (pagina Relatorios do admin)
+  relEnvio: [],          // arquivos escolhidos no admin aguardando envio
+  desemp: null,          // dados da pagina Desempenho (ligacoes por dia, semanas oficiais, vendas)
+  ranking: null          // historico do ranking anual + vendas do site
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -1161,9 +1411,10 @@ function startAdminPolling(){
   stopAdminPolling();
   adminPollTimer = setInterval(()=>{
     // metas mudam pouco: so recarregam no login e apos uma edicao manual (ver adminSaveMeta)
-    // nao redesenha enquanto o admin esta digitando (meta, horario do cronograma...)
-    const digitando = document.activeElement && document.activeElement.tagName==='INPUT';
-    if(state.view==='admin' && !state.loading && !document.hidden && !digitando) loadAdminData(true);
+    // nao redesenha enquanto o admin esta digitando ou com a janela de venda aberta
+    const digitando = document.activeElement && ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName);
+    const naTelaDeLigacoes = state.adminTab==='ligacoes' || state.adminTab==='vendedores';
+    if(state.view==='admin' && naTelaDeLigacoes && !state.vendaDrawer && !state.loading && !document.hidden && !digitando) loadAdminData(true);
   }, 30000);
 }
 function stopAdminPolling(){
@@ -1231,6 +1482,7 @@ function selectVendor(name){
   if(state.vendor !== name){
     state.allCalls = []; state.calls = []; state.closed = null; state.pendentes = [];
   }
+  if(state.vendor !== name){ state.relatorios = null; state.relAberto = null; state.relErro = false; state.centralTab = 'hoje'; }
   state.vendor = name;
   state.pendingVendor = null;
   state.vendorPinError = false;
@@ -1238,6 +1490,7 @@ function selectVendor(name){
   saveSession({type:'vendor', name});
   loadVendorData(name);
   loadMetas(name);
+  loadRelatoriosVendedor();
 }
 
 // Busca as metas de todos os vendedores pro painel admin (usado so na aba Metas do admin)
@@ -1274,6 +1527,9 @@ function trocarVendedor(){
   state.loadError = false;
   state.closed = null;
   state.metas = null;
+  state.relatorios = null;
+  state.relAberto = null;
+  state.centralTab = 'hoje';
   state.vendasEditOpen = false;
   state.view = 'picker';
   clearSession();
@@ -1554,6 +1810,8 @@ function cronoTick(){
     }
   }
   atualizarCronoCard();
+  const mini = document.getElementById('admMiniCrono');
+  if(mini && typeof miniCronoHtml === 'function') mini.innerHTML = miniCronoHtml();
 }
 setInterval(cronoTick, 15000);
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) cronoTick(); });
@@ -1572,35 +1830,6 @@ document.addEventListener('keydown', ev=>{
 function cronoNomeBloco(b){
   return b.tipo==='passo' ? `<b>Passo ${esc(b.num||'')}</b> · ${esc(b.titulo)}` : esc(b.titulo);
 }
-function renderCronoEditor(){
-  const blocos = state.cronoDraft || cronoBlocos;
-  return `
-    <div class="history" style="margin-top:20px;">
-      <div class="history-head" id="cronoEditHead">
-        <span>Horários do cronograma</span>
-        <span class="chev">${state.cronoEditOpen?'&#9650;':'&#9660;'}</span>
-      </div>
-      ${state.cronoEditOpen ? `
-        ${blocos.map((b,i)=>`
-          <div class="crono-edit-row">
-            <span class="nome">${cronoNomeBloco(b)}</span>
-            <input type="time" class="crono-time" data-i="${i}" data-campo="inicio" value="${b.inicio}" aria-label="Início">
-            <span style="color:var(--text-dim);">até</span>
-            <input type="time" class="crono-time" data-i="${i}" data-campo="fim" value="${b.fim}" aria-label="Fim">
-          </div>
-        `).join('')}
-        <div style="padding:10px 16px 14px;border-top:1px solid var(--border);">
-          <div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Vale para todos os vendedores, de segunda a sexta. Quem estiver com o site aberto recebe a mudança em até 15 minutos.</div>
-          <button class="confirm-btn" id="cronoSaveBtn" style="margin:0;">Salvar horários</button>
-          <div style="text-align:center;margin-top:8px;">
-            <button class="undo-btn" id="cronoResetBtn">voltar aos horários padrão</button>
-          </div>
-        </div>
-      ` : ''}
-    </div>
-  `;
-}
-
 async function salvarCronograma(blocos){
   const validos = validarBlocos(blocos);
   if(!validos){
@@ -1623,7 +1852,6 @@ async function salvarCronograma(blocos){
   cronoBlocos = validos;
   try{ localStorage.setItem(CRONO_CACHE_KEY, JSON.stringify(validos)); }catch(e){}
   state.cronoDraft = null;
-  state.cronoEditOpen = false;
   render();
   showCronoToast('Cronograma', 'Horários salvos');
 }
@@ -1696,216 +1924,1337 @@ function prodTotalMes(ano, mes){
   return tem ? soma : null;
 }
 
-function renderProducao(){
-  const p = state.prod;
-  if(!p) return `<div class="empty-hint">Carregando produção...</div>`;
-  if(p.erro) return `<div class="fechado-banner" style="border-color:var(--caixa);"><div class="t" style="color:var(--caixa);">Não consegui carregar a produção</div><button class="undo-btn" id="prodRetryBtn" style="margin-top:8px;color:var(--caixa);">tentar de novo</button></div>`;
+/*
+  Painel admin em tela cheia: menu lateral + paginas (ligacoes, metas, producao,
+  vendedores, cronograma). Cada pagina devolve {top, html, bind}.
+*/
+const ICONES = {
+  ligacoes:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  metas:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  producao:'<path d="M4 20h16M7 16v-4M12 16V7M17 16v-7"/>',
+  vendedores:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
+  cronograma:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  sair:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/>',
+  mais:'<path d="M12 5v14M5 12h14"/>',
+  baixar:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'
+};
+const icone = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONES[n]}</svg>`;
+const ADMIN_PAGINAS = [
+  {id:'ligacoes', nome:'Ligações'},
+  {id:'metas', nome:'Metas'},
+  {id:'producao', nome:'Produção'},
+  {id:'vendedores', nome:'Vendedores'},
+  {id:'relatorios', nome:'Relatórios'},
+  {id:'cronograma', nome:'Cronograma'}
+];
+const CORES_PESSOA = ['#C9A84C','#6FA8DC','#5FD39A','#E59866','#B39DDB','#F48FB1','#4DD0E1','#AED581','#FFB74D'];
+const CORES_EQUIPE = ['#C9A84C','#6FA8DC','#5FD39A','#E59866','#B39DDB','#4DD0E1'];
+function iniciais(nome){
+  const p = String(nome).trim().split(/\s+/);
+  return ((p[0]||'')[0]||'').toUpperCase() + (p.length>1 ? p[p.length-1][0].toUpperCase() : '');
+}
+function avatar(nome){
+  let h = 0; for(const c of String(nome)) h = (h*31 + c.charCodeAt(0)) >>> 0;
+  return `<span class="av" style="background:${CORES_PESSOA[h % CORES_PESSOA.length]};">${esc(iniciais(nome))}</span>`;
+}
+function corEquipe(nome){
+  const i = state.prod ? state.prod.equipes.findIndex(e=>e.nome===nome) : -1;
+  return CORES_EQUIPE[(i<0?0:i) % CORES_EQUIPE.length];
+}
+const pct = (a,b) => b>0 ? Math.round(a/b*100) : 0;
 
-  const ano = state.prodAno, hoje = new Date();
-  const anoAtual = hoje.getFullYear(), mesAtual = hoje.getMonth()+1;
+function irParaPagina(id){
+  state.adminTab = id;
+  if((id==='producao' || id==='vendedores') && !state.prod) loadProducao();
+  if(id==='metas' && !state.adminMetas) loadAdminMetas();
+  if(id==='relatorios' && !state.adminRel) loadAdminRelatorios();
+  if(id==='ranking' && !state.ranking) loadRanking();
+  render();
+  window.scrollTo(0,0);
+}
+
+function miniCronoHtml(){
+  const e = cronoEstado();
+  let v, s;
+  if(e.fase==='passo'){ v = `Passo ${esc(e.bloco.num||'')} · ${esc(e.bloco.titulo)}`; s = `até ${e.bloco.fim.replace(/^0/,'')} · faltam ${duracaoLabel(e.restante)}`; }
+  else if(e.fase==='pausa'){ v = esc(e.bloco.titulo); s = `volta às ${e.bloco.fim.replace(/^0/,'')}`; }
+  else if(e.fase==='antes'){ v = 'Antes do início'; s = `começa às ${minHhmm(e.ini)}`; }
+  else if(e.fase==='fim'){ v = 'Dia encerrado'; s = 'hora de fechar os relatórios'; }
+  else if(e.fase==='livre'){ v = 'Pausa no cronograma'; s = `volta às ${minHhmm(e.ateMin)}`; }
+  else { v = 'Fim de semana'; s = 'sem cronograma hoje'; }
+  return `<div class="k">Cronograma · ${e.relogio}</div><div class="v">${v}</div><div class="s">${s}</div>`;
+}
+
+function renderAdmin(app){
+  const pagina = {
+    ligacoes: paginaLigacoes, metas: paginaMetas, producao: paginaProducao,
+    vendedores: paginaVendedores, relatorios: paginaRelatoriosAdmin, cronograma: paginaCronograma,
+    ranking: ()=>paginaRanking(true)
+  }[state.adminTab] || paginaLigacoes;
+  const p = pagina();
+  app.innerHTML = `
+    <div class="adm">
+      <aside class="adm-side">
+        <div class="adm-brand">
+          <img src="logo-icon.png" alt="">
+          <div><div class="n">FBS PRIME</div><div class="t">Painel do gestor</div></div>
+        </div>
+        <nav class="adm-nav">
+          ${ADMIN_PAGINAS.map(pg=>`<button class="${state.adminTab===pg.id?'on':''}" data-pagina="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span></button>`).join('')}
+        </nav>
+        <div class="adm-side-foot">
+          <div class="adm-mini-crono" id="admMiniCrono" data-pagina="cronograma" title="Abrir cronograma">${miniCronoHtml()}</div>
+          <button class="adm-sair" id="exitAdminBtn">${icone('sair')}<span>Sair</span></button>
+        </div>
+      </aside>
+      <main class="adm-main">
+        <div class="adm-top">
+          <div>
+            <div class="eb">${p.top.eb || 'Painel do gestor'}</div>
+            <h1>${p.top.titulo}</h1>
+            ${p.top.sub ? `<div class="sub">${p.top.sub}</div>` : ''}
+          </div>
+          ${p.top.acoes ? `<div class="adm-actions">${p.top.acoes}</div>` : ''}
+        </div>
+        ${p.html}
+      </main>
+    </div>
+    ${state.vendaDrawer ? renderVendaDrawer() : ''}
+  `;
+  app.querySelectorAll('[data-pagina]').forEach(b=>{ b.onclick = ()=>irParaPagina(b.getAttribute('data-pagina')); });
+  document.getElementById('exitAdminBtn').onclick = exitAdmin;
+  if(p.bind) p.bind(app);
+  if(state.vendaDrawer) bindVendaDrawer(app);
+}
+
+// ---------------- Ligacoes ----------------
+function paginaLigacoes(){
+  const rows = state.adminRows || [];
+  const ehDia = state.periodType==='dia';
+  const totalAtendeu = rows.reduce((s,r)=>s+r.atendeu,0);
+  const totalCaixa = rows.reduce((s,r)=>s+r.caixa,0);
+  const total = totalAtendeu + totalCaixa;
+  const comRegistro = rows.filter(r=>r.total>0);
+  const semRegistro = rows.filter(r=>r.total===0);
+  const fechados = rows.filter(r=>r.closed).length;
+  const maxTotal = Math.max(1, ...rows.map(r=>r.total));
+  const metaTime = VENDORES.length * 30;
+
+  const top = {
+    titulo:'Ligações',
+    sub: periodLabel(),
+    acoes: `
+      <div class="seg">
+        <button class="${state.periodType==='dia'?'on':''}" id="periodDia">Dia</button>
+        <button class="${state.periodType==='mes'?'on':''}" id="periodMes">Mês</button>
+        <button class="${state.periodType==='ano'?'on':''}" id="periodAno">Ano</button>
+      </div>
+      ${periodInputHtml()}
+      <button class="btn" id="exportBtn">${icone('baixar')}Exportar CSV</button>`
+  };
+
+  const html = `
+    <div class="kpis">
+      <div class="kpi destaque"><div class="l">Ligações</div><div class="v">${total.toLocaleString('pt-BR')}</div><div class="d">${comRegistro.length} de ${rows.length} vendedores ligaram</div></div>
+      <div class="kpi"><div class="l">Atendidas</div><div class="v" style="color:#5FD39A;">${totalAtendeu.toLocaleString('pt-BR')}</div><div class="d">${pct(totalAtendeu,total)}% das ligações</div></div>
+      <div class="kpi"><div class="l">Caixa postal</div><div class="v" style="color:#E59866;">${totalCaixa.toLocaleString('pt-BR')}</div><div class="d">${pct(totalCaixa,total)}% das ligações</div></div>
+      ${ehDia
+        ? `<div class="kpi"><div class="l">Relatórios fechados</div><div class="v">${fechados}<span style="font-size:18px;color:var(--a-dim);"> / ${rows.length}</span></div><div class="d">${rows.length-fechados ? (rows.length-fechados)+' ainda em aberto' : 'todos fechados'}</div></div>`
+        : `<div class="kpi"><div class="l">Média por vendedor</div><div class="v">${comRegistro.length ? Math.round(total/comRegistro.length).toLocaleString('pt-BR') : 0}</div><div class="d">entre quem registrou ligações</div></div>`}
+    </div>
+
+    <div class="faixa">
+        ${ehDia && state.periodValue===todayKey() ? `
+          <div class="card ritmo"><div class="card-h"><h3>Ritmo do time hoje</h3><span class="hint">meta 30 por vendedor</span></div>
+            <div class="card-b">
+              <div class="n">${total} <span style="font-size:15px;color:var(--a-dim);font-family:Inter,sans-serif;">de ${metaTime} ligações</span></div>
+              <div class="barra"><i style="width:${Math.min(100,pct(total,metaTime))}%;background:var(--a-gold);"></i></div>
+              <div style="font-size:12px;color:var(--a-dim);">${pct(total,metaTime)}% da meta diária do time</div>
+            </div>
+          </div>` : ''}
+        ${ehDia && semRegistro.length ? `
+          <div class="alerta"><div class="t">${semRegistro.length} sem nenhum registro ${state.periodValue===todayKey()?'hoje':'nesse dia'}</div><div class="s">${semRegistro.map(r=>esc(r.vendor)).join(' · ')}</div></div>` : ''}
+        ${renderCronoCard(true)}
+    </div>
+
+    <div class="card">
+        <div class="card-h"><h3>Ranking por vendedor</h3><span class="legend"><span><i style="background:#2F9E64;"></i>atendidas</span><span><i style="background:#C9793D;"></i>caixa postal</span></span></div>
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr>
+              <th>#</th><th>Vendedor</th><th>Distribuição</th>
+              <th class="r">Atend.</th><th class="r">Caixa</th><th class="r">Total</th><th class="r">Taxa</th>
+              ${ehDia ? '<th>Status</th>' : ''}<th>Última ligação</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map((r,i)=>{
+                const status = r.closed ? '<span class="pill ok">Fechado</span>' : (r.total>0 ? '<span class="pill live">Em aberto</span>' : '<span class="pill warn">Sem registro</span>');
+                return `<tr>
+                  <td><span class="pos ${r.total>0 && i<3 ? 'p'+(i+1) : ''}">${r.total>0 ? i+1 : '–'}</span></td>
+                  <td><span class="pessoa">${avatar(r.vendor)}${esc(r.vendor)}</span></td>
+                  <td><div class="barra"><i style="width:${r.atendeu/maxTotal*100}%;background:#2F9E64;"></i><i style="width:${r.caixa/maxTotal*100}%;background:#C9793D;"></i></div></td>
+                  <td class="r">${r.atendeu}</td><td class="r">${r.caixa}</td>
+                  <td class="r"><b>${r.total}</b></td>
+                  <td class="r">${r.total ? pct(r.atendeu,r.total)+'%' : '<span class="mute">—</span>'}</td>
+                  ${ehDia ? `<td>${status}</td>` : ''}
+                  <td class="mute">${r.lastTs ? new Date(r.lastTs).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—'}</td>
+                </tr>`;
+              }).join('') || `<tr><td colspan="9" class="mute" style="text-align:center;padding:26px;">${state.loading ? 'Carregando...' : 'Nenhum dado para o período.'}</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+    </div>`;
+
+  const bind = ()=>{
+    document.getElementById('exportBtn').onclick = exportCsv;
+    document.getElementById('periodDia').onclick = ()=>setPeriodType('dia');
+    document.getElementById('periodMes').onclick = ()=>setPeriodType('mes');
+    document.getElementById('periodAno').onclick = ()=>setPeriodType('ano');
+    document.getElementById('periodValueInput').onchange = (e)=>{ state.periodValue = e.target.value; loadAdminData(); };
+  };
+  return {top, html, bind};
+}
+
+// ---------------- Metas ----------------
+function paginaMetas(){
+  const metas = state.adminMetas;
+  const semana = metas ? (Object.values(metas).find(Boolean)||{}).semana : null;
+  const campos = [
+    {key:'ligacoes', label:'Ligações', metaCampo:'metaLigacoes', progCampo:null},
+    {key:'agendamentos', label:'Agendamentos', metaCampo:'metaAgendamentos', progCampo:null},
+    {key:'comparecimentos', label:'Comparecimentos', metaCampo:'metaComparecimentos', progCampo:'progressoComparecimentos'},
+    {key:'vendas', label:'Vendas', metaCampo:'metaVendas', progCampo:'progressoVendas'}
+  ];
+  let sub = 'Carregando...';
+  if(semana){
+    const ini = new Date(semana+'T12:00:00'), fim = new Date(ini); fim.setDate(fim.getDate()+6);
+    const f = d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+    sub = `Semana de ${f(ini)} a ${f(fim)}`;
+  }
+  const top = {titulo:'Metas da semana', sub};
+  if(!metas) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando metas...</div></div>`};
+
+  const somas = campos.map(c=>{
+    let meta = 0, prog = 0;
+    VENDORES.forEach(v=>{ const d = metas[v] && metas[v][c.key]; if(d){ meta += d.meta; prog += d.progresso; } });
+    return {meta, prog};
+  });
+  const corBarra = r => r>=1 ? '#5FD39A' : (r>=.7 ? 'var(--a-gold)' : '#C9793D');
+
+  const html = `
+    <div class="kpis">
+      ${campos.map((c,i)=>`
+        <div class="kpi ${i===0?'destaque':''}"><div class="l">${c.label} do time</div>
+          <div class="v">${somas[i].prog.toLocaleString('pt-BR')}<span style="font-size:17px;color:var(--a-dim);"> / ${somas[i].meta.toLocaleString('pt-BR')}</span></div>
+          <div class="barra" style="margin-top:10px;min-width:0;"><i style="width:${Math.min(100,pct(somas[i].prog,somas[i].meta))}%;background:${corBarra(somas[i].meta?somas[i].prog/somas[i].meta:0)};"></i></div>
+          <div class="d">${pct(somas[i].prog,somas[i].meta)}% da meta</div>
+        </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Por vendedor</h3><span class="hint">Edite a meta direto na tabela. Comparecimentos e vendas também aceitam o progresso manual.</span></div>
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr><th>Vendedor</th>${campos.map(c=>`<th>${c.label}</th>`).join('')}<th>Semana passada</th></tr></thead>
+          <tbody>
+            ${VENDORES.map(v=>{
+              const m = metas[v];
+              if(!m) return `<tr><td><span class="pessoa">${avatar(v)}${esc(v)}</span></td><td colspan="5" class="mute">sem dados</td></tr>`;
+              const a = m.anterior;
+              return `<tr>
+                <td><span class="pessoa">${avatar(v)}${esc(v)}</span></td>
+                ${campos.map(c=>{
+                  const d = m[c.key] || {meta:1, progresso:0};
+                  const r = d.meta>0 ? d.progresso/d.meta : 0;
+                  return `<td><div class="meta-cel">
+                    <div class="lin">
+                      ${c.progCampo
+                        ? `<input type="number" min="0" value="${d.progresso}" class="admin-meta-input" data-vendor="${esc(v)}" data-campo="${c.progCampo}" title="Progresso">`
+                        : `<b>${d.progresso}</b>`}
+                      <span class="mute">meta <input type="number" min="1" value="${d.meta}" class="admin-meta-input" data-vendor="${esc(v)}" data-campo="${c.metaCampo}" title="Meta"></span>
+                    </div>
+                    <div class="barra"><i style="width:${Math.min(100,r*100)}%;background:${corBarra(r)};"></i></div>
+                  </div></td>`;
+                }).join('')}
+                <td class="mute" style="font-size:12px;white-space:normal;min-width:200px;">${a && a.ligacoes
+                  ? `${a.ligacoes} ligações em ${a.dias} dia(s) · ${a.agendamentos} agend. · ${a.comparecimentos} comp. · ${a.vendas} vendas`
+                  : 'nenhuma ligação registrada'}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  const bind = app=>{
+    app.querySelectorAll('.admin-meta-input').forEach(inp=>{
+      inp.onchange = ()=>adminSaveMeta(inp.getAttribute('data-vendor'), inp.getAttribute('data-campo'), inp.value);
+    });
+  };
+  return {top, html, bind};
+}
+
+// ---------------- Producao ----------------
+// coordenadores da equipe por periodo: {"2025":"Fabrício","2026":"Edmilson","2026-10":"Fabrício"}
+// (chave "AAAA" vale desde janeiro; "AAAA-MM" a partir daquele mes)
+function coordPeriodos(eqp){
+  return Object.entries(eqp.coordenadores||{})
+    .map(([k,nome])=>{ const [a,m] = k.split('-'); return {k, ano:Number(a), mes:Number(m||1), nome}; })
+    .sort((x,y)=>x.ano-y.ano || x.mes-y.mes);
+}
+// quem coordenou no ano, em ordem; quem vinha do ano anterior conta desde janeiro
+function coordDoAno(eqp, ano){
+  const ps = coordPeriodos(eqp);
+  const doAno = ps.filter(x=>x.ano===ano);
+  const antes = ps.filter(x=>x.ano<ano).pop();
+  if(doAno.length && doAno[0].mes===1) return doAno;
+  return antes ? [{...antes, ano, mes:1}, ...doAno] : doAno;
+}
+const mesCurto = m => MESES[m-1].slice(0,3).toLowerCase();
+function coordTexto(eqp, ano){
+  const l = coordDoAno(eqp, ano);
+  if(l.length < 2) return l.length ? l[0].nome : '';
+  return l.map((x,i)=> i===0 ? `${x.nome} até ${mesCurto(l[1].mes-1)}` : `${x.nome} desde ${mesCurto(x.mes)}`).join(' · ');
+}
+const periodoRotulo = x => x.k.includes('-') ? `desde ${mesCurto(x.mes)}/${x.ano}` : String(x.ano);
+
+function paginaProducao(){
+  const p = state.prod;
+  const ano = state.prodAno;
+  const top = {titulo:'Produção FBS', sub:`Ano de ${ano}`};
+  if(!p) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando produção...</div></div>`};
+  if(p.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar a produção</div><button class="btn small" id="prodRetryBtn" style="margin-top:10px;">Tentar de novo</button></div>`,
+    bind:()=>{ document.getElementById('prodRetryBtn').onclick = ()=>{ state.prod = null; render(); loadProducao(); }; }};
+
+  const hoje = new Date(), anoAtual = hoje.getFullYear(), mesAtual = hoje.getMonth()+1;
+  const anos = prodAnos();
+  top.acoes = `
+    <div class="seg">${anos.map(a=>`<button class="${a===ano?'on':''}" data-prod-ano="${a}">${a}</button>`).join('')}</div>
+    <button class="btn gold" id="abrirVendaBtn">${icone('mais')}Registrar venda</button>`;
+
   const equipes = prodEquipesDoAno(ano);
   const totais = MESES.map((_,i)=>prodTotalMes(ano, i+1));
   const totaisAnt = MESES.map((_,i)=>prodTotalMes(ano-1, i+1));
   const totalAno = totais.reduce((s,v)=>s+(v||0),0);
-  // comparacao justa: mesmos meses do ano anterior que ja tem valor neste ano
   const mesesComValor = totais.map((v,i)=>v!==null ? i : -1).filter(i=>i>=0);
   const totalAntMesmo = mesesComValor.reduce((s,i)=>s+(totaisAnt[i]||0),0);
   const temAnt = mesesComValor.some(i=>totaisAnt[i]!==null);
   const variacao = temAnt && totalAntMesmo>0 ? (totalAno/totalAntMesmo - 1)*100 : null;
-  const melhorMes = totais.reduce((b,v,i)=>(v!==null && (b<0 || v>totais[b])) ? i : b, -1);
+  const media = mesesComValor.length ? totalAno/mesesComValor.length : 0;
+  const melhor = totais.reduce((b,v,i)=>(v!==null && (b<0 || v>totais[b])) ? i : b, -1);
   const maxBar = Math.max(1, ...totais.map(v=>v||0), ...totaisAnt.map(v=>v||0));
-  const anos = prodAnos();
   const vendasAno = p.vendas.filter(v=>v.data.slice(0,4)===String(ano));
-  const ativas = p.equipes.filter(e=>e.ativa);
+  const porEquipe = equipes.map(eq=>({eq, total: MESES.reduce((s,_,i)=>{ const c = prodCelula(ano,i+1,eq.nome); return s+(c?c.valor:0); },0)})).filter(x=>x.total>0);
 
-  return `
-    <div class="prod-anos">
-      ${anos.map(a=>`<button class="trocar-btn ${a===ano?'active':''}" data-prod-ano="${a}">${a}</button>`).join('')}
+  const html = `
+    <div class="kpis">
+      <div class="kpi destaque"><div class="l">Produção ${ano}</div><div class="v">${brlCurto(totalAno)}</div><div class="d">${BRL.format(totalAno)}</div></div>
+      <div class="kpi"><div class="l">vs ${ano-1}</div><div class="v ${variacao===null?'':(variacao>=0?'up':'down')}">${variacao===null?'—':(variacao>=0?'+':'')+Math.round(variacao)+'%'}</div><div class="d">${variacao===null?'sem dados para comparar':`${BRL.format(totalAntMesmo)} nos mesmos meses`}</div></div>
+      <div class="kpi"><div class="l">Média mensal</div><div class="v">${brlCurto(media)}</div><div class="d">${mesesComValor.length} ${mesesComValor.length===1?'mês':'meses'} com produção</div></div>
+      <div class="kpi"><div class="l">Melhor mês</div><div class="v">${melhor>=0 ? MESES[melhor] : '—'}</div><div class="d">${melhor>=0 ? BRL.format(totais[melhor]) : 'sem produção'}</div></div>
     </div>
 
-    <div class="tally" style="grid-template-columns:1fr 1fr;">
-      <div class="tally-card">
-        <div class="tally-label">Produção ${ano}</div>
-        <div class="tally-num" style="font-size:22px;color:var(--gold);">${brlCurto(totalAno)}</div>
-        <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">${BRL.format(totalAno)}</div>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="card">
+        <div class="card-h"><h3>Total FBS por mês</h3><span class="legend"><span><i style="background:#26445F;"></i>${ano-1}</span><span><i style="background:var(--a-gold);"></i>${ano}</span></span></div>
+        <div class="chart">
+          ${[.25,.5,.75,1].map(f=>`<div class="gl" style="bottom:${f*100}%;"><span>${brlCurto(maxBar*f)}</span></div>`).join('')}
+          ${MESES.map((m,i)=>`
+            <div class="m">
+              <div class="b ant" style="height:${(totaisAnt[i]||0)/maxBar*100}%;${totaisAnt[i]===null?'visibility:hidden;':''}"></div>
+              <div class="b" style="height:${(totais[i]||0)/maxBar*100}%;${totais[i]===null?'visibility:hidden;':''}"></div>
+              <div class="tip ${i<2?'esq':(i>9?'dir':'')}">${m}<br><b>${ano}: ${totais[i]===null?'—':BRL.format(totais[i])}</b><br>${ano-1}: ${totaisAnt[i]===null?'—':BRL.format(totaisAnt[i])}${totais[i]!==null && totaisAnt[i] ? `<br>${totais[i]>=totaisAnt[i]?'▲':'▼'} ${Math.abs(Math.round((totais[i]/totaisAnt[i]-1)*100))}%` : ''}</div>
+            </div>`).join('')}
+        </div>
+        <div class="chart-x">${MESES.map(m=>`<span>${m.slice(0,3)}</span>`).join('')}</div>
+        <div style="height:12px;"></div>
       </div>
-      <div class="tally-card">
-        <div class="tally-label">vs ${ano-1}</div>
-        <div class="tally-num" style="font-size:22px;color:${variacao===null?'var(--text-dim)':(variacao>=0?'var(--atendeu)':'#E8B4B4')};">${variacao===null?'—':(variacao>=0?'+':'')+Math.round(variacao)+'%'}</div>
-        <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">${variacao===null?'sem dados para comparar':'mesmos meses de '+(ano-1)}</div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="card-h"><h3>Por equipe</h3><span class="hint">${ano}</span></div>
+          <div class="card-b">
+            ${porEquipe.length ? `
+              <div class="share">${porEquipe.map(x=>`<i style="width:${x.total/totalAno*100}%;background:${corEquipe(x.eq.nome)};" title="${esc(x.eq.nome)}"></i>`).join('')}</div>
+              ${porEquipe.map(x=>`
+                <div class="share-row">
+                  <span class="dot" style="background:${corEquipe(x.eq.nome)};"></span>
+                  <span class="nm">${esc(x.eq.nome)}<small>${esc(coordTexto(x.eq, ano) || 'sem coordenador')}</small></span>
+                  <span style="text-align:right;"><b>${brlCurto(x.total)}</b><br><span class="mute" style="font-size:11px;">${pct(x.total,totalAno)}%</span></span>
+                </div>`).join('')}`
+              : '<div class="mute" style="font-size:13px;">Sem produção nesse ano.</div>'}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Últimas vendas</h3><span class="hint">registradas no site</span></div>
+          <div class="card-b">
+            ${vendasAno.slice(0,5).map(v=>`
+              <div class="feed-item">${avatar(v.vendedor)}
+                <span style="min-width:0;">${esc(v.vendedor)}<small>${new Date(v.data+'T12:00:00').toLocaleDateString('pt-BR')}${v.cliente?' · '+esc(v.cliente):''}</small></span>
+                <span class="val">${brlCurto(v.valor)}</span>
+              </div>`).join('') || `<div class="mute" style="font-size:13px;">Nenhuma venda registrada no site em ${ano}. Use <b>Registrar venda</b> no topo.</div>`}
+          </div>
+        </div>
       </div>
     </div>
-    ${melhorMes>=0 ? `<div class="tally-total" style="margin-top:-8px;">Melhor mês: <b>${MESES[melhorMes]}</b> · ${BRL.format(totais[melhorMes])}</div>` : ''}
 
-    <div class="history" style="margin-bottom:16px;">
-      <div class="history-head" style="cursor:default;">
-        <span>Produção mês a mês</span>
-        <button class="undo-btn" id="prodEditBtn" style="font-size:12px;">${state.prodEdit?'concluir edição':'editar valores'}</button>
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h">
+        <h3>Produção mês a mês</h3>
+        <span style="display:flex;align-items:center;gap:14px;">
+          <span class="legend"><span><i style="background:var(--text);"></i>fechado</span><span><i style="background:#5FD39A;"></i>soma das vendas do site</span></span>
+          <button class="btn small ${state.prodEdit?'gold':''}" id="prodEditBtn">${state.prodEdit?'Concluir edição':'Editar valores'}</button>
+        </span>
       </div>
-      ${state.prodEdit ? `<div style="padding:0 14px 10px;font-size:11px;color:var(--text-dim);">Digite o valor fechado do mês em reais. Deixe em branco para usar a soma das vendas registradas no site.</div>` : ''}
-      <div style="overflow-x:auto;">
-        <table class="prod-table">
+      ${state.prodEdit ? `<div class="card-b" style="padding-bottom:6px;font-size:12px;color:var(--a-dim);">Digite o valor fechado do mês em reais (ex.: 1.517.156,10). Deixe em branco para usar a soma das vendas registradas no site.</div>` : ''}
+      <div class="scroll-x">
+        <table class="tbl">
           <thead><tr>
             <th>Mês</th>
-            ${equipes.map(eq=>`<th>${esc(eq.nome)}${(eq.coordenadores||{})[ano] ? `<span class="coord">${esc(eq.coordenadores[ano])}</span>` : ''}</th>`).join('')}
-            <th class="total">Total FBS</th>
+            ${equipes.map(eq=>`<th class="r"><span style="color:${corEquipe(eq.nome)};">●</span> ${esc(eq.nome)}${coordTexto(eq, ano) ? `<span class="coord">${esc(coordTexto(eq, ano))}</span>` : ''}</th>`).join('')}
+            <th class="r">Total FBS</th>
+            <th class="r">vs ${ano-1}</th>
           </tr></thead>
           <tbody>
             ${MESES.map((nome,i)=>{
               const futuro = ano > anoAtual || (ano===anoAtual && i+1 > mesAtual);
-              return `<tr class="${futuro && totais[i]===null ? 'futuro' : ''}">
-                <td>${nome}</td>
+              const atual = ano===anoAtual && i+1===mesAtual;
+              const v = totais[i], va = totaisAnt[i];
+              return `<tr class="${futuro && v===null ? 'futuro' : ''} ${atual?'atual':''}">
+                <td>${nome}${atual?' <span class="pill live" style="margin-left:6px;">mês atual</span>':''}</td>
                 ${equipes.map(eq=>{
                   const c = prodCelula(ano, i+1, eq.nome);
                   if(state.prodEdit){
                     const man = p.manual.find(r=>r.ano===ano && r.mes===i+1 && r.equipe===eq.nome);
-                    return `<td><input class="prod-cell" inputmode="decimal" data-mes="${i+1}" data-equipe="${esc(eq.nome)}" value="${man ? man.valor.toLocaleString('pt-BR') : ''}" placeholder="${c && c.fonte==='vendas' ? brlCurto(c.valor) : '—'}"></td>`;
+                    return `<td class="r"><input class="cel prod-cell" inputmode="decimal" data-mes="${i+1}" data-equipe="${esc(eq.nome)}" value="${man ? man.valor.toLocaleString('pt-BR',{minimumFractionDigits:2}) : ''}" placeholder="${c && c.fonte==='vendas' ? BRL.format(c.valor) : '—'}"></td>`;
                   }
-                  return c ? `<td class="${c.fonte==='vendas'?'auto':''}" title="${BRL.format(c.valor)}">${brlCurto(c.valor)}</td>` : `<td class="vazio">—</td>`;
+                  return c ? `<td class="r ${c.fonte==='vendas'?'auto':''}">${BRL.format(c.valor)}</td>` : `<td class="r mute">—</td>`;
                 }).join('')}
-                <td class="total">${totais[i]===null ? '<span style="color:var(--text-dim);font-weight:400;">—</span>' : brlCurto(totais[i])}</td>
+                <td class="r"><b>${v===null ? '<span class="mute">—</span>' : BRL.format(v)}</b></td>
+                <td class="r">${v!==null && va ? `<span class="${v>=va?'up':'down'}">${v>=va?'+':''}${Math.round((v/va-1)*100)}%</span>` : '<span class="mute">—</span>'}</td>
               </tr>`;
             }).join('')}
           </tbody>
           <tfoot><tr>
-            <td>Total</td>
+            <td>Total ${ano}</td>
             ${equipes.map(eq=>{
               const s = MESES.reduce((acc,_,i)=>{ const c = prodCelula(ano, i+1, eq.nome); return acc + (c ? c.valor : 0); }, 0);
-              return `<td title="${BRL.format(s)}">${s ? brlCurto(s) : '—'}</td>`;
+              return `<td class="r">${s ? BRL.format(s) : '—'}</td>`;
             }).join('')}
-            <td>${brlCurto(totalAno)}</td>
+            <td class="r">${BRL.format(totalAno)}</td>
+            <td class="r">${variacao===null ? '—' : (variacao>=0?'+':'')+Math.round(variacao)+'%'}</td>
           </tr></tfoot>
         </table>
       </div>
-      <div class="prod-legend" style="padding-top:10px;">
-        <span><i style="background:var(--text);"></i>fechado</span>
-        <span><i style="background:var(--atendeu);"></i>soma das vendas do site</span>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h"><h3>Vendas registradas em ${ano}</h3><span class="hint">${vendasAno.length} ${vendasAno.length===1?'venda':'vendas'} · ${BRL.format(vendasAno.reduce((s,v)=>s+v.valor,0))}</span></div>
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr><th>Data</th><th>Vendedor</th><th>Cliente</th><th>Canal</th><th>Equipe</th><th class="r">Valor</th><th></th></tr></thead>
+          <tbody>
+            ${vendasAno.map(v=>`<tr>
+              <td>${new Date(v.data+'T12:00:00').toLocaleDateString('pt-BR')}</td>
+              <td><span class="pessoa">${avatar(v.vendedor)}${esc(v.vendedor)}</span></td>
+              <td>${v.cliente ? esc(v.cliente) : '<span class="mute">—</span>'}</td>
+              <td>${v.canal ? esc(v.canal) : '<span class="mute">—</span>'}</td>
+              <td>${v.equipe ? esc(v.equipe) : '<span class="mute">—</span>'}</td>
+              <td class="r"><b style="color:var(--a-gold);">${BRL.format(v.valor)}</b></td>
+              <td class="r"><button class="link danger" data-venda-del="${v.id}">remover</button></td>
+            </tr>`).join('') || `<tr><td colspan="7" class="mute" style="text-align:center;padding:24px;">Nenhuma venda registrada no site em ${ano}.</td></tr>`}
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <div class="history" style="margin-bottom:16px;">
-      <div class="history-head" style="cursor:default;"><span>Total FBS por mês</span></div>
-      <div class="prod-chart">
-        ${MESES.map((_,i)=>`
-          <div class="col" title="${MESES[i]}: ${totais[i]===null?'—':BRL.format(totais[i])}${totaisAnt[i]!==null?' · '+(ano-1)+': '+BRL.format(totaisAnt[i]):''}">
-            <div class="bars">
-              <div class="bar ant" style="height:${(totaisAnt[i]||0)/maxBar*100}%;${totaisAnt[i]===null?'visibility:hidden;':''}"></div>
-              <div class="bar" style="height:${(totais[i]||0)/maxBar*100}%;${totais[i]===null?'visibility:hidden;':''}"></div>
-            </div>
-          </div>`).join('')}
+    <div class="card">
+      <div class="card-h"><h3>Equipes</h3><span class="hint">Crie uma equipe quando surgir uma nova coordenação. As encerradas continuam no histórico.</span></div>
+      <div class="card-b">
+        <div class="cards-grid">
+          ${p.equipes.map(eq=>{
+            const totalGeral = p.manual.filter(r=>r.equipe===eq.nome).reduce((s,r)=>s+r.valor,0)
+              + p.vendas.filter(v=>v.equipe===eq.nome && !p.manual.some(r=>r.equipe===eq.nome && r.ano===Number(v.data.slice(0,4)) && r.mes===Number(v.data.slice(5,7)))).reduce((s,v)=>s+v.valor,0);
+            return `<div class="pcard">
+              <div class="top">
+                <span class="av" style="background:${corEquipe(eq.nome)};border-radius:12px;">${esc(iniciais(eq.nome))}</span>
+                <div style="flex:1;min-width:0;"><div class="nm">${esc(eq.nome)}</div><div class="meta-l">${eq.ativa ? '<span class="pill live">ativa</span>' : '<span class="pill">encerrada</span>'}</div></div>
+              </div>
+              <div>
+                <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-dim);font-weight:600;margin-bottom:4px;">Coordenação</div>
+                ${coordPeriodos(eq).map(x=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:3px 0;">
+                  <span><span class="mute" style="font-size:12px;">${periodoRotulo(x)}</span> · ${esc(x.nome)}</span>
+                  <button class="link danger" data-coord-del="${esc(eq.nome)}|${esc(x.k)}" title="Remover esse período">×</button>
+                </div>`).join('') || '<div class="mute" style="font-size:12px;">sem coordenador registrado</div>'}
+              </div>
+              <div class="stats" style="grid-template-columns:1fr;"><div><span>Produção total registrada</span><b>${BRL.format(totalGeral)}</b></div></div>
+              ${eq.ativa ? `<div style="display:flex;gap:6px;">
+                <input data-coord-nome="${esc(eq.nome)}" placeholder="Novo coordenador" style="flex:1;min-width:0;padding:7px 9px;font-size:13px;">
+                <select data-coord-mes="${esc(eq.nome)}" style="padding:7px 6px;font-size:13px;">${MESES.map((m,i)=>`<option value="${i+1}" ${i===new Date().getMonth()?'selected':''}>${mesCurto(i+1)}/${new Date().getFullYear()}</option>`).join('')}</select>
+                <button class="btn small" data-coord-salvar="${esc(eq.nome)}">Trocar</button>
+              </div>` : ''}
+              <div class="foot">
+                <span></span>
+                <button class="link ${eq.ativa?'danger':''}" data-equipe-ativa="${esc(eq.nome)}">${eq.ativa?'encerrar equipe':'reativar'}</button>
+              </div>
+            </div>`;
+          }).join('')}
+          <div class="pcard novo">
+            <div class="nm">Nova equipe</div>
+            <input id="novaEquipeNome" placeholder="Nome da equipe">
+            <input id="novaEquipeCoord" placeholder="Coordenador (opcional)">
+            <button class="btn" id="novaEquipeBtn" style="justify-content:center;">${icone('mais')}Adicionar equipe</button>
+          </div>
+        </div>
       </div>
-      <div class="prod-chart-labels">${MESES.map(m=>`<span>${m.slice(0,1)}</span>`).join('')}</div>
-      <div class="prod-legend">
-        <span><i style="background:#2A4D6B;"></i>${ano-1}</span>
-        <span><i style="background:var(--gold);"></i>${ano}</span>
-      </div>
-    </div>
+    </div>`;
 
-    <div class="history" style="margin-bottom:16px;">
-      <div class="history-head" style="cursor:default;"><span>Registrar venda</span></div>
-      <div class="prod-form">
+  const bind = app=>{
+    app.querySelectorAll('[data-prod-ano]').forEach(b=>{ b.onclick = ()=>{ state.prodAno = Number(b.getAttribute('data-prod-ano')); render(); }; });
+    document.getElementById('abrirVendaBtn').onclick = ()=>{ state.vendaDrawer = true; render(); };
+    document.getElementById('prodEditBtn').onclick = ()=>{ state.prodEdit = !state.prodEdit; render(); };
+    app.querySelectorAll('.prod-cell').forEach(inp=>{
+      inp.onchange = ()=>salvarProducaoMes(Number(inp.getAttribute('data-mes')), inp.getAttribute('data-equipe'), inp.value);
+    });
+    app.querySelectorAll('[data-venda-del]').forEach(b=>{ b.onclick = ()=>removerVenda(Number(b.getAttribute('data-venda-del'))); });
+    app.querySelectorAll('[data-coord-salvar]').forEach(b=>{
+      const nome = b.getAttribute('data-coord-salvar');
+      b.onclick = ()=>trocarCoordenador(nome,
+        app.querySelector(`[data-coord-nome="${CSS.escape(nome)}"]`).value,
+        Number(app.querySelector(`[data-coord-mes="${CSS.escape(nome)}"]`).value));
+    });
+    app.querySelectorAll('[data-coord-del]').forEach(b=>{
+      const [nome, k] = b.getAttribute('data-coord-del').split('|');
+      b.onclick = ()=>removerPeriodoCoord(nome, k);
+    });
+    app.querySelectorAll('[data-equipe-ativa]').forEach(b=>{ b.onclick = ()=>alternarEquipe(b.getAttribute('data-equipe-ativa')); });
+    document.getElementById('novaEquipeBtn').onclick = adicionarEquipe;
+  };
+  return {top, html, bind};
+}
+
+function renderVendaDrawer(){
+  const ativas = state.prod ? state.prod.equipes.filter(e=>e.ativa) : [];
+  return `
+    <div class="drawer-bg" id="vendaDrawerBg">
+      <div class="drawer" role="dialog" aria-modal="true" aria-labelledby="vendaDrawerTitulo">
+        <h2 id="vendaDrawerTitulo">Registrar venda</h2>
+        <div class="sub">Entra na produção do mês na hora e é copiada para o Airtable.</div>
         <label for="vendaVendedor">Vendedor</label>
         <select id="vendaVendedor">
           <option value="" disabled selected>Escolha o vendedor</option>
           ${VENDORES.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}
         </select>
+        <label for="vendaValor">Valor da venda (R$)</label>
+        <input id="vendaValor" class="valor-grande" inputmode="decimal" placeholder="400.000" autocomplete="off">
         <div class="linha">
-          <div>
-            <label for="vendaValor">Valor (R$)</label>
-            <input id="vendaValor" inputmode="decimal" placeholder="400.000">
-          </div>
-          <div>
-            <label for="vendaData">Data</label>
-            <input id="vendaData" type="date" value="${todayKey()}">
+          <div><label for="vendaData">Data</label><input id="vendaData" type="date" value="${todayKey()}"></div>
+          <div><label for="vendaEquipe">Equipe</label>
+            <select id="vendaEquipe">${ativas.map(e=>`<option>${esc(e.nome)}</option>`).join('') || '<option value="">(cadastre uma equipe)</option>'}</select>
           </div>
         </div>
         <label for="vendaCliente">Cliente</label>
-        <input id="vendaCliente" placeholder="Nome do cliente">
-        <div class="linha">
-          <div>
-            <label for="vendaCanal">Canal</label>
-            <select id="vendaCanal">
-              <option value="">—</option>
-              ${CANAIS_VENDA.map(c=>`<option>${c}</option>`).join('')}
-            </select>
-          </div>
-          <div>
-            <label for="vendaEquipe">Equipe</label>
-            <select id="vendaEquipe">
-              ${ativas.map(e=>`<option>${esc(e.nome)}</option>`).join('') || '<option value="">(cadastre uma equipe)</option>'}
-            </select>
-          </div>
+        <input id="vendaCliente" placeholder="Nome do cliente" autocomplete="off">
+        <label for="vendaCanal">Canal</label>
+        <select id="vendaCanal"><option value="">—</option>${CANAIS_VENDA.map(c=>`<option>${c}</option>`).join('')}</select>
+        <div class="acoes">
+          <button class="btn" id="vendaCancelarBtn">Cancelar</button>
+          <button class="btn gold" id="vendaSalvarBtn">Registrar venda</button>
         </div>
-        <button class="confirm-btn" id="vendaSalvarBtn" style="margin-top:14px;">Registrar venda</button>
-        <div style="font-size:11px;color:var(--text-dim);margin-top:8px;text-align:center;">A venda entra na produção do mês e é copiada para o Airtable.</div>
       </div>
-    </div>
-
-    <div class="history" style="margin-bottom:16px;">
-      <div class="history-head" style="cursor:default;"><span>Vendas registradas em ${ano} (${vendasAno.length})</span></div>
-      ${vendasAno.length ? vendasAno.map(v=>`
-        <div class="history-item">
-          <span style="min-width:0;">
-            <b>${BRL.format(v.valor)}</b> · ${esc(v.vendedor)}
-            <span style="display:block;color:var(--text-dim);font-size:11px;">${new Date(v.data+'T12:00:00').toLocaleDateString('pt-BR')}${v.cliente?' · '+esc(v.cliente):''}${v.canal?' · '+esc(v.canal):''}${v.equipe?' · '+esc(v.equipe):''}</span>
-          </span>
-          <button class="undo-btn" data-venda-del="${v.id}">remover</button>
-        </div>
-      `).join('') : `<div class="empty-hint">Nenhuma venda registrada no site em ${ano}.</div>`}
-    </div>
-
-    <div class="history" style="margin-bottom:16px;">
-      <div class="history-head" id="prodEquipesHead">
-        <span>Equipes (${p.equipes.length})</span>
-        <span class="chev">${state.prodEquipesOpen?'&#9650;':'&#9660;'}</span>
-      </div>
-      ${state.prodEquipesOpen ? `
-        ${p.equipes.map(eq=>`
-          <div class="history-item">
-            <span style="flex:1;min-width:0;">
-              <b>${esc(eq.nome)}</b>${eq.ativa ? '' : ' <span style="color:var(--text-dim);">· encerrada</span>'}
-              <span style="display:block;color:var(--text-dim);font-size:11px;">${Object.entries(eq.coordenadores||{}).sort().map(([a,n])=>a+': '+esc(n)).join(' · ') || 'sem coordenador registrado'}</span>
-            </span>
-            <button class="undo-btn" data-equipe-coord="${esc(eq.nome)}">coordenador</button>
-            <button class="undo-btn" data-equipe-ativa="${esc(eq.nome)}">${eq.ativa?'encerrar':'reativar'}</button>
-          </div>
-        `).join('')}
-        <div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--border);">
-          <input id="novaEquipeNome" placeholder="Nome da equipe" style="flex:1;margin:0;padding:10px;font-size:14px;">
-          <input id="novaEquipeCoord" placeholder="Coordenador" style="flex:1;margin:0;padding:10px;font-size:14px;">
-        </div>
-        <div style="padding:0 16px 14px;">
-          <button class="confirm-btn" id="novaEquipeBtn" style="margin:0;">Adicionar equipe</button>
-        </div>
-      ` : ''}
-    </div>
-  `;
+    </div>`;
 }
-
-function bindProducao(app){
-  const retry = document.getElementById('prodRetryBtn');
-  if(retry) retry.onclick = ()=>{ state.prod = null; render(); loadProducao(); };
-  if(!state.prod || state.prod.erro) return;
-  app.querySelectorAll('[data-prod-ano]').forEach(b=>{
-    b.onclick = ()=>{ state.prodAno = Number(b.getAttribute('data-prod-ano')); render(); };
-  });
-  document.getElementById('prodEditBtn').onclick = ()=>{ state.prodEdit = !state.prodEdit; render(); };
-  app.querySelectorAll('.prod-cell').forEach(inp=>{
-    inp.onchange = ()=>salvarProducaoMes(Number(inp.getAttribute('data-mes')), inp.getAttribute('data-equipe'), inp.value);
-  });
+function fecharVendaDrawer(){ state.vendaDrawer = false; render(); }
+function bindVendaDrawer(){
+  const bg = document.getElementById('vendaDrawerBg');
+  bg.onclick = e=>{ if(e.target===bg) fecharVendaDrawer(); };
+  document.getElementById('vendaCancelarBtn').onclick = fecharVendaDrawer;
   document.getElementById('vendaSalvarBtn').onclick = registrarVenda;
-  // a equipe padrao da venda e a do vendedor na ultima venda dele (ou a primeira ativa)
   const selV = document.getElementById('vendaVendedor'), selE = document.getElementById('vendaEquipe');
+  // a equipe padrao e a da ultima venda desse vendedor (ou a primeira ativa)
   selV.onchange = ()=>{
-    const ult = state.prod.vendas.find(v=>v.vendedor===selV.value && v.equipe);
+    const ult = state.prod && state.prod.vendas.find(v=>v.vendedor===selV.value && v.equipe);
     if(ult && [...selE.options].some(o=>o.value===ult.equipe)) selE.value = ult.equipe;
   };
-  app.querySelectorAll('[data-venda-del]').forEach(b=>{ b.onclick = ()=>removerVenda(Number(b.getAttribute('data-venda-del'))); });
-  document.getElementById('prodEquipesHead').onclick = ()=>{ state.prodEquipesOpen = !state.prodEquipesOpen; render(); };
-  app.querySelectorAll('[data-equipe-coord]').forEach(b=>{ b.onclick = ()=>editarCoordenador(b.getAttribute('data-equipe-coord')); });
-  app.querySelectorAll('[data-equipe-ativa]').forEach(b=>{ b.onclick = ()=>alternarEquipe(b.getAttribute('data-equipe-ativa')); });
-  const nova = document.getElementById('novaEquipeBtn');
-  if(nova) nova.onclick = adicionarEquipe;
+  setTimeout(()=>selV.focus(), 50);
+}
+document.addEventListener('keydown', ev=>{ if(ev.key==='Escape' && state.vendaDrawer) fecharVendaDrawer(); });
+
+// ---------------- Vendedores ----------------
+function paginaVendedores(){
+  const ano = new Date().getFullYear();
+  const rows = state.adminRows || [];
+  const vendas = state.prod && !state.prod.erro ? state.prod.vendas.filter(v=>v.data.slice(0,4)===String(ano)) : null;
+  const top = {titulo:'Vendedores', sub:`${VENDORES.length} no time · ligações de ${periodLabel().toLowerCase()}`};
+  const html = `
+    <div class="cards-grid">
+      ${VENDORES.map(v=>{
+        const r = rows.find(x=>x.vendor===v) || {total:0, atendeu:0};
+        const vs = vendas ? vendas.filter(x=>x.vendedor===v) : [];
+        return `<div class="pcard">
+          <div class="top">${avatar(v)}
+            <div style="flex:1;min-width:0;"><div class="nm">${esc(v)}</div><div class="meta-l">PIN ${esc(VENDOR_PINS[v]||'')}</div></div>
+          </div>
+          <div class="stats">
+            <div><span>Ligações</span><b>${r.total}</b></div>
+            <div><span>Atend.</span><b>${r.total ? pct(r.atendeu,r.total)+'%' : '—'}</b></div>
+            <div><span>Vendas ${ano}</span><b>${vendas ? (vs.length ? brlCurto(vs.reduce((s,x)=>s+x.valor,0)) : '0') : '…'}</b></div>
+          </div>
+          <div class="foot"><span class="mute" style="font-size:11px;">${vendas && vs.length ? vs.length+(vs.length===1?' venda no site':' vendas no site') : 'vendas registradas no site'}</span><button class="link danger" data-remove="${esc(v)}">remover</button></div>
+        </div>`;
+      }).join('')}
+      <div class="pcard novo">
+        <div class="nm">Novo vendedor</div>
+        <input id="newVendorName" placeholder="Nome completo">
+        <input id="newVendorPin" placeholder="PIN de acesso" inputmode="numeric">
+        <button class="btn" id="addVendorBtn" style="justify-content:center;">${icone('mais')}Adicionar vendedor</button>
+      </div>
+    </div>`;
+  const bind = app=>{
+    document.getElementById('addVendorBtn').onclick = addVendor;
+    app.querySelectorAll('[data-remove]').forEach(btn=>{ btn.onclick = ()=>removeVendor(btn.getAttribute('data-remove')); });
+  };
+  return {top, html, bind};
+}
+
+// ---------------- Cronograma ----------------
+function paginaCronograma(){
+  const blocos = state.cronoDraft || cronoBlocos;
+  const e = cronoEstado();
+  const top = {titulo:'Cronograma diário', sub:'Segunda a sexta · horário de Brasília · vale para todos os vendedores'};
+  const html = `
+    <div class="grid-2">
+      <div class="stack">
+        <div class="card">
+          <div class="card-h"><h3>Como fica o dia</h3><span class="hint">${blocos[0].inicio.replace(/^0/,'')} às ${blocos[blocos.length-1].fim.replace(/^0/,'')}</span></div>
+          <div class="card-b">
+            <div class="timeline">
+              ${blocos.map((b,i)=>`
+                <div class="blk ${b.tipo} ${e.i===i?'atual':''}" style="flex:${hhmmMin(b.fim)-hhmmMin(b.inicio)};" title="${esc(b.titulo)} · ${b.inicio}–${b.fim}">
+                  ${b.tipo==='passo' ? `<b>${esc(b.num||'')}</b>` : `<span>${b.tipo==='cafe'?'☕':'Intervalo'}</span>`}
+                  <span>${b.inicio.replace(/^0/,'')}–${b.fim.replace(/^0/,'')}</span>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Horários</h3><span class="hint">Quem estiver com o site aberto recebe a mudança em até 15 minutos.</span></div>
+          <div class="scroll-x"><table class="tbl">
+            <thead><tr><th>Etapa</th><th>Início</th><th>Fim</th><th class="r">Duração</th></tr></thead>
+            <tbody>
+              ${blocos.map((b,i)=>`<tr>
+                <td style="white-space:normal;min-width:150px;">${b.tipo==='passo' ? `<b style="color:var(--a-gold);">Passo ${esc(b.num||'')}</b> · ${esc(b.titulo)}` : `<span class="mute">${esc(b.titulo)}</span>`}</td>
+                <td><input type="time" class="crono-time" data-i="${i}" data-campo="inicio" value="${b.inicio}" aria-label="Início"></td>
+                <td><input type="time" class="crono-time" data-i="${i}" data-campo="fim" value="${b.fim}" aria-label="Fim"></td>
+                <td class="r mute">${duracaoLabel(Math.max(0, hhmmMin(b.fim)-hhmmMin(b.inicio)))}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table></div>
+          <div class="card-b" style="padding-top:16px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+            <button class="btn ghost" id="cronoResetBtn">Voltar ao padrão</button>
+            <button class="btn gold" id="cronoSaveBtn">Salvar horários</button>
+          </div>
+        </div>
+      </div>
+      <div class="stack">
+        <div>
+          <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-dim);font-weight:600;margin:0 0 8px 2px;">Como o vendedor vê agora</div>
+          ${renderCronoCard(true)}
+        </div>
+      </div>
+    </div>`;
+  const bind = app=>{
+    app.querySelectorAll('.crono-time').forEach(inp=>{
+      inp.onchange = ()=>{
+        state.cronoDraft = (state.cronoDraft || cronoBlocos).map(b=>({...b}));
+        state.cronoDraft[Number(inp.getAttribute('data-i'))][inp.getAttribute('data-campo')] = inp.value;
+        render();
+      };
+    });
+    document.getElementById('cronoSaveBtn').onclick = ()=>salvarCronograma(state.cronoDraft || cronoBlocos);
+    document.getElementById('cronoResetBtn').onclick = ()=>{
+      if(confirm('Voltar todos os horários para o padrão do cronograma (9:30 às 19:00)?')) salvarCronograma(CRONO_PADRAO.map(b=>({...b})));
+    };
+  };
+  return {top, html, bind};
+}
+
+/*
+  Central do vendedor: mesmo layout de tela cheia do admin, com as paginas
+  do vendedor (Hoje = registro de ligacoes, Relatorios = PDFs enviados pelo admin).
+*/
+ICONES.hoje = '<path d="M4 11.5 12 5l8 6.5M6 10v9h12v-9"/>';
+ICONES.relatorios = '<path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/>';
+const CENTRAL_PAGINAS = [
+  {id:'hoje', nome:'Hoje'},
+  {id:'relatorios', nome:'Relatórios'}
+];
+const relUrl = caminho => SUPABASE_URL + '/storage/v1/object/public/relatorios/' + caminho.split('/').map(encodeURIComponent).join('/');
+const relRotulo = r => r.semana ? `Semana ${r.semana}` : 'Fechamento do mês';
+
+function irParaCentral(id){
+  state.centralTab = id;
+  if(id==='relatorios' && !state.relatorios) loadRelatoriosVendedor();
+  if(id==='desempenho' && !state.desemp) loadDesempenho();
+  if(id==='ranking' && !state.ranking) loadRanking();
+  render();
+  window.scrollTo(0,0);
+}
+
+function renderCentral(app, p){
+  const novos = (state.relatorios||[]).filter(r=>!r.visto_em).length;
+  app.innerHTML = `
+    <div class="adm">
+      <aside class="adm-side">
+        <div class="adm-brand">
+          <img src="logo-icon.png" alt="">
+          <div><div class="n">FBS PRIME</div><div class="t">Central do vendedor</div></div>
+        </div>
+        <nav class="adm-nav">
+          ${CENTRAL_PAGINAS.map(pg=>`<button class="${state.centralTab===pg.id?'on':''}" data-central="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span>${pg.id==='relatorios' && novos ? `<span class="badge">${novos}</span>` : ''}</button>`).join('')}
+        </nav>
+        <div class="adm-side-foot">
+          <div class="adm-quem">${avatar(state.vendor)}<span>${esc(state.vendor)}<small>${todayLabel()}</small></span></div>
+          <button class="adm-sair" id="trocarBtn">${icone('sair')}<span>Trocar vendedor</span></button>
+        </div>
+      </aside>
+      <main class="adm-main ${p.estreita ? 'estreita' : ''}">
+        <div class="adm-top">
+          <div>
+            <div class="eb">${p.top.eb || 'Central do vendedor'}</div>
+            <h1>${p.top.titulo}</h1>
+            ${p.top.sub ? `<div class="sub">${p.top.sub}</div>` : ''}
+          </div>
+          ${p.top.acoes ? `<div class="adm-actions">${p.top.acoes}</div>` : ''}
+        </div>
+        ${p.html}
+      </main>
+    </div>
+  `;
+  app.querySelectorAll('[data-central]').forEach(b=>{ b.onclick = ()=>irParaCentral(b.getAttribute('data-central')); });
+  document.getElementById('trocarBtn').onclick = trocarVendedor;
+  if(p.bind) p.bind(app);
+}
+
+// ---------------- Relatorios (vendedor) ----------------
+async function loadRelatoriosVendedor(){
+  const vendor = state.vendor;
+  try{
+    const rows = await sb('relatorios?select=id,ano,mes,semana,titulo,caminho,criado_em,visto_em&vendedor='+eq(vendor)+'&order=ano.desc,mes.desc,semana.desc.nullsfirst', undefined, 1);
+    if(state.vendor !== vendor) return;
+    state.relatorios = rows || [];
+  }catch(e){
+    console.error('Falha ao carregar relatórios', e);
+    if(!state.relatorios) state.relatorios = [];
+    state.relErro = true;
+  }
+  if(state.view==='app') render();
+}
+
+async function abrirRelatorio(id){
+  const r = (state.relatorios||[]).find(x=>x.id===id);
+  if(!r) return;
+  // telas menores nao tem o visualizador ao lado: abre o PDF numa aba nova
+  if(window.matchMedia('(max-width:1180px)').matches) window.open(relUrl(r.caminho), '_blank', 'noopener');
+  state.relAberto = id;
+  if(!r.visto_em){
+    r.visto_em = new Date().toISOString();
+    sb('relatorios?id=eq.'+id+'&visto_em=is.null', {method:'PATCH', prefer:'return=minimal', body:{visto_em: r.visto_em}})
+      .catch(e=>console.error('Falha ao marcar relatório como visto', e));
+  }
+  render();
+}
+
+function paginaRelatoriosVendedor(){
+  const lista = state.relatorios;
+  const top = {titulo:'Meus relatórios', sub:'Os relatórios semanais que o gestor envia para você'};
+  if(!lista) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando relatórios...</div></div>`};
+  if(!lista.length) return {top, html:`<div class="card"><div class="card-b" style="padding:36px;text-align:center;color:var(--a-dim);">${state.relErro ? 'Não consegui carregar seus relatórios agora. Tenta de novo em instantes.' : 'Você ainda não tem relatórios. Quando o gestor enviar, eles aparecem aqui.'}</div></div>`};
+
+  const aberto = lista.find(r=>r.id===state.relAberto) || lista[0];
+  const novos = lista.filter(r=>!r.visto_em).length;
+  top.sub = `${lista.length} relatórios${novos ? ` · <span style="color:var(--a-gold);">${novos} ${novos===1?'novo':'novos'}</span>` : ''}`;
+  const grupos = [];
+  lista.forEach(r=>{
+    const k = r.ano+'-'+r.mes;
+    let g = grupos.find(x=>x.k===k);
+    if(!g){ g = {k, nome:`${MESES[r.mes-1]} de ${r.ano}`, itens:[]}; grupos.push(g); }
+    g.itens.push(r);
+  });
+
+  const html = `
+    <div class="rel-wrap">
+      <div class="card rel-list">
+        ${grupos.map(g=>`
+          <div class="rel-mes">${g.nome}</div>
+          ${g.itens.map(r=>`
+            <button class="rel-item ${r.id===aberto.id?'on':''}" data-rel="${r.id}">
+              <span class="ic">PDF</span>
+              <span style="min-width:0;">${relRotulo(r)}<small>enviado em ${new Date(r.criado_em).toLocaleDateString('pt-BR')}</small></span>
+              ${!r.visto_em ? '<span class="pill ok novo">novo</span>' : ''}
+            </button>`).join('')}
+        `).join('')}
+      </div>
+      <div class="card viewer">
+        <div class="card-h">
+          <h3>${MESES[aberto.mes-1]} · ${relRotulo(aberto)}</h3>
+          <a class="btn small" href="${relUrl(aberto.caminho)}" target="_blank" rel="noopener">${icone('baixar')}Abrir em nova aba</a>
+        </div>
+        <iframe src="${relUrl(aberto.caminho)}#view=FitH" title="Relatório ${esc(relRotulo(aberto))}"></iframe>
+      </div>
+    </div>`;
+  const bind = app=>{
+    app.querySelectorAll('[data-rel]').forEach(b=>{ b.onclick = ()=>abrirRelatorio(Number(b.getAttribute('data-rel'))); });
+    // o primeiro relatorio ja aparece aberto no visualizador: conta como visto
+    if(!aberto.visto_em && !window.matchMedia('(max-width:1180px)').matches) abrirRelatorio(aberto.id);
+  };
+  return {top, html, bind};
+}
+
+// ---------------- Relatorios (admin) ----------------
+const MESES_MIN = MESES.map(m=>m.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase());
+// "Relatório Arthur Lima - Novembro 1.pdf" -> {vendedor, mes, semana}
+function lerNomeRelatorio(nomeArquivo){
+  const base = nomeArquivo.replace(/\.pdf$/i,'');
+  const simples = base.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  const vendedor = VENDORES.find(v=>simples.includes(v.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()))
+    || VENDORES.find(v=>simples.includes(v.split(' ')[0].normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()))
+    || '';
+  const iMes = MESES_MIN.findIndex(m=>simples.includes(m));
+  const num = simples.match(/(\d)\s*$/);
+  const hoje = new Date();
+  return {
+    vendedor,
+    mes: iMes>=0 ? iMes+1 : hoje.getMonth()+1,
+    semana: num ? Number(num[1]) : Math.min(5, Math.ceil(hoje.getDate()/7))
+  };
+}
+const slugNome = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+async function loadAdminRelatorios(){
+  try{
+    const rows = await sb('relatorios?select=id,vendedor,ano,mes,semana,caminho,criado_em,visto_em&order=ano.desc,mes.desc,semana.desc.nullsfirst,vendedor', undefined, 1);
+    state.adminRel = rows || [];
+  }catch(e){
+    console.error('Falha ao carregar relatórios', e);
+    state.adminRel = state.adminRel || [];
+  }
+  if(state.view==='admin') render();
+}
+
+function adicionarArquivosRelatorio(files){
+  const ano = new Date().getFullYear();
+  [...files].filter(f=>/\.pdf$/i.test(f.name)).forEach(f=>{
+    const lido = lerNomeRelatorio(f.name);
+    state.relEnvio.push({file:f, nome:f.name, ano, ...lido, status:''});
+  });
+  render();
+}
+
+async function enviarRelatorios(){
+  const fila = state.relEnvio.filter(x=>x.status!=='ok');
+  if(fila.some(x=>!x.vendedor)){ alert('Escolhe o vendedor de todos os arquivos antes de enviar.'); return; }
+  for(const item of fila){
+    item.status = 'enviando'; render();
+    const caminho = `${item.ano}/${String(item.mes).padStart(2,'0')}/${item.semana ? 'semana-'+item.semana : 'mes'}/${slugNome(item.vendedor)}.pdf`;
+    try{
+      const res = await fetch(SUPABASE_URL + '/storage/v1/object/relatorios/' + caminho, {
+        method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type':'application/pdf', 'x-upsert':'true'}, body:item.file
+      });
+      if(!res.ok) throw new Error('HTTP '+res.status+' '+(await res.text()).slice(0,200));
+      await sb('relatorios?on_conflict=caminho', {
+        method:'POST', prefer:'resolution=merge-duplicates,return=minimal',
+        body:{vendedor:item.vendedor, ano:item.ano, mes:item.mes, semana:item.semana||null, caminho, tamanho:item.file.size,
+              titulo:`Relatório semanal · ${MESES[item.mes-1]} · ${item.semana ? 'Semana '+item.semana : 'Mês'}`,
+              criado_em:new Date().toISOString(), visto_em:null}
+      });
+      item.status = 'ok';
+    }catch(e){
+      console.error('Falha ao enviar relatório', item.nome, e);
+      item.status = 'erro';
+    }
+  }
+  const ok = state.relEnvio.filter(x=>x.status==='ok').length, erro = state.relEnvio.filter(x=>x.status==='erro').length;
+  state.relEnvio = state.relEnvio.filter(x=>x.status!=='ok');
+  await loadAdminRelatorios();
+  showCronoToast('Relatórios', `${ok} ${ok===1?'enviado':'enviados'}${erro ? ` · ${erro} com erro, tenta de novo` : ''}`);
+}
+
+async function removerRelatorio(id){
+  const r = state.adminRel.find(x=>x.id===id);
+  if(!r || !confirm(`Remover o relatório de ${r.vendedor} (${MESES[r.mes-1]} · ${relRotulo(r)})?`)) return;
+  try{
+    await fetch(SUPABASE_URL + '/storage/v1/object/relatorios/' + r.caminho, {method:'DELETE', headers:{apikey: SUPABASE_KEY}});
+    await sb('relatorios?id=eq.'+id, {method:'DELETE'});
+  }catch(e){
+    console.error('Falha ao remover relatório', e);
+    alert('Não foi possível remover o relatório. Tenta de novo.');
+  }
+  await loadAdminRelatorios();
+}
+
+function paginaRelatoriosAdmin(){
+  const top = {titulo:'Relatórios', sub:'Envie os relatórios semanais: cada vendedor vê só os dele na Central do vendedor'};
+  const todos = state.adminRel;
+  const opcoesMes = m => MESES.map((n,i)=>`<option value="${i+1}" ${i+1===m?'selected':''}>${n}</option>`).join('');
+  const html = `
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h"><h3>Enviar relatórios</h3><span class="hint">Pode arrastar vários PDFs de uma vez. O vendedor, o mês e a semana saem do nome do arquivo.</span></div>
+      <div class="card-b">
+        <label class="drop" id="relDrop">
+          <input type="file" id="relFiles" accept="application/pdf" multiple hidden>
+          <b>Arraste os PDFs aqui</b> ou clique para escolher<br><span style="font-size:12px;">ex.: "Relatório Arthur Lima - Novembro 1.pdf"</span>
+        </label>
+        ${state.relEnvio.length ? `
+          <div class="scroll-x" style="margin-top:16px;">
+            <table class="tbl">
+              <thead><tr><th>Arquivo</th><th>Vendedor</th><th>Mês</th><th>Semana</th><th></th></tr></thead>
+              <tbody>
+                ${state.relEnvio.map((x,i)=>`<tr>
+                  <td style="white-space:normal;min-width:200px;">${esc(x.nome)}</td>
+                  <td><select data-env="${i}" data-campo="vendedor"><option value="">— escolha —</option>${VENDORES.map(v=>`<option ${v===x.vendedor?'selected':''}>${esc(v)}</option>`).join('')}</select></td>
+                  <td><select data-env="${i}" data-campo="mes">${opcoesMes(x.mes)}</select></td>
+                  <td><select data-env="${i}" data-campo="semana">${[1,2,3,4,5].map(n=>`<option value="${n}" ${n===x.semana?'selected':''}>Semana ${n}</option>`).join('')}<option value="0" ${!x.semana?'selected':''}>Mês inteiro</option></select></td>
+                  <td class="r">${x.status==='enviando' ? '<span class="pill">enviando…</span>' : x.status==='erro' ? '<span class="pill warn">erro</span>' : `<button class="link danger" data-env-del="${i}">tirar</button>`}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;">
+            <button class="btn ghost" id="relLimparBtn">Limpar</button>
+            <button class="btn gold" id="relEnviarBtn">${icone('mais')}Enviar ${state.relEnvio.length} ${state.relEnvio.length===1?'relatório':'relatórios'}</button>
+          </div>` : ''}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h3>Relatórios enviados</h3><span class="hint">${todos ? `${todos.length} no total · ${todos.filter(r=>!r.visto_em).length} ainda não abertos` : ''}</span></div>
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr><th>Mês</th><th>Semana</th><th>Vendedor</th><th>Enviado em</th><th>Aberto pelo vendedor</th><th></th></tr></thead>
+          <tbody>
+            ${!todos ? `<tr><td colspan="6" class="mute" style="text-align:center;padding:24px;">Carregando...</td></tr>` :
+              todos.map(r=>`<tr>
+                <td>${MESES[r.mes-1]} ${r.ano}</td>
+                <td>${relRotulo(r)}</td>
+                <td><span class="pessoa">${avatar(r.vendedor)}${esc(r.vendedor)}</span></td>
+                <td class="mute">${new Date(r.criado_em).toLocaleDateString('pt-BR')}</td>
+                <td>${r.visto_em ? `<span class="pill ok">aberto em ${new Date(r.visto_em).toLocaleDateString('pt-BR')}</span>` : '<span class="pill">ainda não</span>'}</td>
+                <td class="r"><a class="link" href="${relUrl(r.caminho)}" target="_blank" rel="noopener">ver</a> <button class="link danger" data-rel-del="${r.id}">remover</button></td>
+              </tr>`).join('') || `<tr><td colspan="6" class="mute" style="text-align:center;padding:24px;">Nenhum relatório enviado ainda.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  const bind = app=>{
+    const input = document.getElementById('relFiles'), drop = document.getElementById('relDrop');
+    input.onchange = ()=>adicionarArquivosRelatorio(input.files);
+    drop.ondragover = e=>{ e.preventDefault(); drop.classList.add('over'); };
+    drop.ondragleave = ()=>drop.classList.remove('over');
+    drop.ondrop = e=>{ e.preventDefault(); drop.classList.remove('over'); adicionarArquivosRelatorio(e.dataTransfer.files); };
+    app.querySelectorAll('[data-env]').forEach(sel=>{
+      sel.onchange = ()=>{
+        const item = state.relEnvio[Number(sel.getAttribute('data-env'))], campo = sel.getAttribute('data-campo');
+        item[campo] = campo==='vendedor' ? sel.value : Number(sel.value);
+      };
+    });
+    app.querySelectorAll('[data-env-del]').forEach(b=>{ b.onclick = ()=>{ state.relEnvio.splice(Number(b.getAttribute('data-env-del')),1); render(); }; });
+    const limpar = document.getElementById('relLimparBtn');
+    if(limpar) limpar.onclick = ()=>{ state.relEnvio = []; render(); };
+    const enviar = document.getElementById('relEnviarBtn');
+    if(enviar) enviar.onclick = enviarRelatorios;
+    app.querySelectorAll('[data-rel-del]').forEach(b=>{ b.onclick = ()=>removerRelatorio(Number(b.getAttribute('data-rel-del'))); });
+  };
+  return {top, html, bind};
+}
+
+/*
+  Desempenho e Ranking (Central do Vendedor; o Ranking tambem aparece no admin).
+  Numeros oficiais da semana vem do Airtable (copiados para `metricas_semanais`);
+  ligacoes sempre vem do proprio site. Uma semana oficial conta no mes em que comeca,
+  igual aos relatorios. Dias sem semana oficial ainda (semana em andamento) usam o
+  que o site sabe: agendamentos marcados no "Agendou?" e vendas registradas no admin.
+*/
+ICONES.desempenho = '<path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/>';
+ICONES.ranking = '<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 3M17 6h3a3 3 0 0 1-3 3"/>';
+CENTRAL_PAGINAS.splice(1, 0, {id:'desempenho', nome:'Desempenho'}, {id:'ranking', nome:'Ranking'});
+ADMIN_PAGINAS.splice(3, 0, {id:'ranking', nome:'Ranking'});
+
+const METAS_FIXAS = {
+  semana: {ligacoes:150, agendamentos:5, comparecimentos:2, vendas:1},
+  mes:    {ligacoes:600, agendamentos:20, comparecimentos:7, vendas:1}
+};
+// no ranking de 2026 a primeira coluna (abril) e o acumulado de janeiro a abril
+const RANKING_ACUMULADO = {2026: 4};
+
+const dKey = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const dDe = k => new Date(k+'T12:00:00');
+function somaDias(k, n){ const d = dDe(k); d.setDate(d.getDate()+n); return dKey(d); }
+const dataCurta = k => dDe(k).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+
+// "26/10-02/11/2026 (FECHADA)", "17-23/08/2026", "10-16/08" -> {ini, fim} (AAAA-MM-DD)
+function lerSemana(rotulo, anoPadrao){
+  const t = String(rotulo).replace(/\(.*?\)/g,'').trim();
+  let m = t.match(/^(\d{1,2})\/(\d{1,2})\s*-\s*(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?/);
+  if(m){
+    const ano = Number(m[5]||anoPadrao), viraAno = Number(m[2]) > Number(m[4]);
+    return {ini: dKey(new Date(ano-(viraAno?1:0), m[2]-1, Number(m[1]))), fim: dKey(new Date(ano, m[4]-1, Number(m[3])))};
+  }
+  m = t.match(/^(\d{1,2})\s*-\s*(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?/);
+  if(m){
+    const ano = Number(m[4]||anoPadrao);
+    return {ini: dKey(new Date(ano, m[3]-1, Number(m[1]))), fim: dKey(new Date(ano, m[3]-1, Number(m[2])))};
+  }
+  return null;
+}
+
+async function loadDesempenho(){
+  const desde = somaDias(todayKey(), -150);
+  try{
+    const [dias, metricas, vendas] = await Promise.all([
+      rpc('ligacoes_diarias', {p_desde: desde}, 1),
+      sb('metricas_semanais?select=vendedor,semana,agendamentos,comparecimentos,vendas,receita,cards_parados,zero_comentario,negocios_ativos,dias_atividade', undefined, 1),
+      sb('vendas?select=vendedor,data,valor', undefined, 1)
+    ]);
+    const ano = new Date().getFullYear();
+    state.desemp = {
+      desde,
+      dias: dias || [],
+      semanas: (metricas||[]).map(m=>({...m, ...(lerSemana(m.semana, ano)||{})})).filter(m=>m.ini),
+      vendas: (vendas||[]).map(v=>({...v, valor:Number(v.valor)}))
+    };
+  }catch(e){
+    console.error('Falha ao carregar desempenho', e);
+    state.desemp = {erro:true};
+  }
+  render();
+}
+
+// Numeros de um vendedor num intervalo de dias [ini, fim]
+function desempenhoPeriodo(vendedor, ini, fim, opts){
+  const D = state.desemp;
+  const dias = D.dias.filter(x=>x.vendedor===vendedor && x.dia>=ini && x.dia<=fim);
+  const r = {
+    ligacoes: dias.reduce((s,x)=>s+x.total,0),
+    atendidas: dias.reduce((s,x)=>s+x.atendidas,0),
+    diasTrabalhados: dias.filter(x=>x.total>0).length,
+    agendamentos:0, comparecimentos:0, vendas:0, receita:0, cardsParados:null, semanasOficiais:[]
+  };
+  // semanas oficiais que comecam dentro do periodo
+  const oficiais = D.semanas.filter(s=>s.vendedor===vendedor && s.ini>=ini && s.ini<=fim).sort((a,b)=>a.ini<b.ini?-1:1);
+  oficiais.forEach(s=>{
+    r.agendamentos += s.agendamentos||0; r.comparecimentos += s.comparecimentos||0;
+    r.vendas += s.vendas||0; r.receita += Number(s.receita||0);
+  });
+  if(oficiais.length) r.cardsParados = oficiais[oficiais.length-1].cards_parados;
+  r.semanasOficiais = oficiais;
+  // dias que nenhuma semana oficial cobre: usa o que o site registrou
+  const coberto = k => D.semanas.some(s=>s.vendedor===vendedor && k>=s.ini && k<=s.fim);
+  dias.filter(x=>!coberto(x.dia)).forEach(x=>{ r.agendamentos += x.agendamentos; });
+  D.vendas.filter(v=>v.vendedor===vendedor && v.data>=ini && v.data<=fim && !coberto(v.data)).forEach(v=>{ r.vendas += 1; r.receita += v.valor; });
+  if(opts && opts.comparecimentosSemanaAtual) r.comparecimentos += opts.comparecimentosSemanaAtual;
+  return r;
+}
+
+function inicioSemana(k){ const d = dDe(k); const dia = d.getDay(); d.setDate(d.getDate() + (dia===0 ? -6 : 1-dia)); return dKey(d); }
+function fimMes(k){ const d = dDe(k); return dKey(new Date(d.getFullYear(), d.getMonth()+1, 0)); }
+
+// Frases da leitura automatica, no estilo dos relatorios semanais
+function leituraAutomatica(v, mes, semana, time, diasUteisRestantes){
+  const bem = [], atencao = [], cruzada = [];
+  const M = METAS_FIXAS.mes, S = METAS_FIXAS.semana;
+  if(semana){
+    const nomeSem = `Na semana ${dataCurta(semana.ini)} a ${dataCurta(semana.fim)}`;
+    const batidas = ['ligacoes','agendamentos','comparecimentos','vendas'].filter(k=>(semana.r[k]||0) >= S[k]);
+    if(batidas.length===4) bem.push(`${nomeSem} você bateu as quatro metas semanais.`);
+    else if(batidas.length) bem.push(`${nomeSem} você bateu ${batidas.length} de 4 metas: ${batidas.map(k=>({ligacoes:'ligações',agendamentos:'agendamentos',comparecimentos:'comparecimentos',vendas:'vendas'}[k])).join(', ')}.`);
+    if(semana.r.ligacoes < S.ligacoes) atencao.push(`${nomeSem} foram <b>${semana.r.ligacoes} ligações</b>; a meta é ${S.ligacoes} (30 por dia).`);
+    if(semana.r.agendamentos < S.agendamentos) atencao.push(`Agendamentos da semana: <b>${semana.r.agendamentos} de ${S.agendamentos}</b>. Lembre: 1 agendamento por dia.`);
+  }
+  if(mes.vendas >= M.vendas) bem.push(`Você já vendeu no mês: <b>${mes.vendas} ${mes.vendas===1?'venda':'vendas'}${mes.receita ? ' · '+BRL.format(mes.receita) : ''}</b>.`);
+  else atencao.push(`Você ainda não vendeu neste mês. A meta do time é <b>ninguém zerado</b>${diasUteisRestantes ? ` — faltam ${diasUteisRestantes} dias úteis` : ''}.`);
+  if(mes.agendamentos >= M.agendamentos) bem.push(`Meta de agendamentos do mês batida: <b>${mes.agendamentos}</b> de ${M.agendamentos}.`);
+  if(mes.comparecimentos >= M.comparecimentos) bem.push(`Meta de comparecimentos do mês batida: <b>${mes.comparecimentos}</b> de ${M.comparecimentos}.`);
+  if(mes.cardsParados != null && time.cardsParados != null && mes.cardsParados > Math.max(30, time.cardsParados*1.3))
+    atencao.push(`<b>${mes.cardsParados} cards parados</b> na última semana fechada (média do time: ${Math.round(time.cardsParados)}). Negócio parado precisa de movimento ou ir para o controle de qualidade.`);
+
+  if(mes.agendamentos > 0 && mes.ligacoes > 0){
+    const lpa = Math.round(mes.ligacoes / mes.agendamentos);
+    const lpaTime = time.agendamentos ? Math.round(time.ligacoes / time.agendamentos) : null;
+    cruzada.push(`Neste mês você precisou de <b>${lpa} ligações para cada agendamento</b>${lpaTime ? ` (time: ${lpaTime})` : ''}: ${mes.ligacoes} ligações → ${mes.agendamentos} agendamentos → ${mes.comparecimentos} comparecimentos → ${mes.vendas} ${mes.vendas===1?'venda':'vendas'}.`);
+  }else if(mes.ligacoes > 0){
+    cruzada.push(`Neste mês: ${mes.ligacoes} ligações e nenhum agendamento ainda. Pela média da FBS, 600 ligações geram 20 agendamentos, 7 comparecimentos e 1 venda.`);
+  }
+  if(mes.agendamentos >= 3 && mes.semanasOficiais.length){
+    const taxa = Math.round(mes.comparecimentos / mes.agendamentos * 100);
+    const taxaTime = time.agendamentos ? Math.round(time.comparecimentos / time.agendamentos * 100) : null;
+    cruzada.push(`Agendamento → comparecimento: <b>${taxa}%</b>${taxaTime!==null ? ` (time: ${taxaTime}%)` : ''}.${taxaTime!==null && taxa < taxaTime-10 ? ' Confirme a visita na véspera para trazer mais gente à loja.' : ''}`);
+  }
+  if(diasUteisRestantes > 0 && mes.ligacoes < M.ligacoes){
+    const falta = M.ligacoes - mes.ligacoes;
+    cruzada.push(`Para fechar as ${M.ligacoes} ligações do mês faltam <b>${falta}</b>: cerca de ${Math.ceil(falta/diasUteisRestantes)} por dia útil.`);
+  }
+  return {bem, atencao, cruzada};
+}
+
+function diasUteisEntre(iniK, fimK){
+  let n = 0; for(let k=iniK; k<=fimK; k=somaDias(k,1)){ const d = dDe(k).getDay(); if(d!==0 && d!==6) n++; }
+  return n;
+}
+
+function paginaDesempenho(){
+  const top = {titulo:'Meu desempenho', sub:'Metas fixas da FBS: 150 ligações, 5 agendamentos, 2 comparecimentos e 1 venda por semana'};
+  const D = state.desemp;
+  if(!D) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando seu desempenho...</div></div>`};
+  if(D.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar seus números agora</div><button class="btn small" id="desRetry" style="margin-top:10px;">Tentar de novo</button></div>`,
+    bind:()=>{ document.getElementById('desRetry').onclick = ()=>{ state.desemp = null; render(); loadDesempenho(); }; }};
+
+  const v = state.vendor, hoje = todayKey();
+  const iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje);
+  const iniSem = inicioSemana(hoje);
+  const compSemana = state.metas && state.metas.comparecimentos ? state.metas.comparecimentos.progresso : 0;
+  const temOficialSemana = D.semanas.some(s=>s.vendedor===v && hoje>=s.ini && hoje<=s.fim);
+  const mes = desempenhoPeriodo(v, iniMes, hoje, {comparecimentosSemanaAtual: temOficialSemana ? 0 : compSemana});
+  const M = METAS_FIXAS.mes;
+  const diasUteisRestantes = diasUteisEntre(somaDias(hoje,1), fimM);
+
+  // media do time no mes (vendedores ativos)
+  const doTime = VENDORES.map(x=>desempenhoPeriodo(x, iniMes, hoje));
+  const time = {
+    ligacoes: doTime.reduce((s,x)=>s+x.ligacoes,0), agendamentos: doTime.reduce((s,x)=>s+x.agendamentos,0),
+    comparecimentos: doTime.reduce((s,x)=>s+x.comparecimentos,0),
+    cardsParados: (()=>{ const c = doTime.map(x=>x.cardsParados).filter(x=>x!=null); return c.length ? c.reduce((a,b)=>a+b,0)/c.length : null; })()
+  };
+  const zerados = VENDORES.filter((x,i)=>doTime[i].vendas===0).length;
+
+  // semanas: as 8 ultimas oficiais do vendedor + a semana em andamento
+  const oficiais = D.semanas.filter(s=>s.vendedor===v).sort((a,b)=>a.ini<b.ini?1:-1).slice(0,8).reverse();
+  const linhas = oficiais.map(s=>({ini:s.ini, fim:s.fim, oficial:true, r:{
+    ligacoes: D.dias.filter(x=>x.vendedor===v && x.dia>=s.ini && x.dia<=s.fim).reduce((a,x)=>a+x.total,0),
+    agendamentos:s.agendamentos||0, comparecimentos:s.comparecimentos||0, vendas:s.vendas||0, receita:Number(s.receita||0), cardsParados:s.cards_parados
+  }}));
+  const ultimaOficial = linhas[linhas.length-1];
+  // semana em andamento: do dia seguinte a ultima semana oficial (ou da segunda-feira) ate domingo
+  if(!temOficialSemana){
+    const iniAnd = ultimaOficial && ultimaOficial.fim >= iniSem ? somaDias(ultimaOficial.fim, 1) : iniSem;
+    const fimAnd = somaDias(iniSem, 6);
+    if(iniAnd <= hoje){
+      const r = desempenhoPeriodo(v, iniAnd, fimAnd, {comparecimentosSemanaAtual: compSemana});
+      linhas.push({ini:iniAnd, fim:fimAnd, oficial:false, r});
+    }
+  }
+  const leitura = leituraAutomatica(v, mes, ultimaOficial, time, diasUteisRestantes);
+  const maxLig = Math.max(METAS_FIXAS.semana.ligacoes, ...linhas.map(l=>l.r.ligacoes));
+  const corMeta = (x, meta) => x>=meta ? '#5FD39A' : (x>=meta*.7 ? 'var(--a-gold)' : '#E59866');
+  const funil = [
+    {l:'Ligações', v:mes.ligacoes}, {l:'Atendidas', v:mes.atendidas}, {l:'Agendamentos', v:mes.agendamentos},
+    {l:'Comparecimentos', v:mes.comparecimentos}, {l:'Vendas', v:mes.vendas}
+  ];
+  top.sub = `${MESES[Number(hoje.slice(5,7))-1]} de ${hoje.slice(0,4)} · ${diasUteisRestantes} ${diasUteisRestantes===1?'dia útil restante':'dias úteis restantes'}`;
+
+  const blocoLeitura = (titulo, cor, fundo, itens) => itens.length ? `
+    <div style="border-left:3px solid ${cor};background:${fundo};border-radius:0 12px 12px 0;padding:13px 16px;">
+      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:${cor};font-weight:700;margin-bottom:6px;">${titulo}</div>
+      ${itens.map(t=>`<div style="font-size:13px;line-height:1.55;margin-top:4px;">${t}</div>`).join('')}
+    </div>` : '';
+
+  const html = `
+    <div class="kpis">
+      ${[
+        {l:'Ligações no mês', v:mes.ligacoes, m:M.ligacoes},
+        {l:'Agendamentos', v:mes.agendamentos, m:M.agendamentos},
+        {l:'Comparecimentos', v:mes.comparecimentos, m:M.comparecimentos},
+        {l:'Vendas', v:mes.vendas, m:M.vendas, extra: mes.receita ? BRL.format(mes.receita) : ''}
+      ].map((k,i)=>`
+        <div class="kpi ${i===3 && k.v>=k.m ? 'destaque' : ''}"><div class="l">${k.l}</div>
+          <div class="v">${k.v.toLocaleString('pt-BR')}<span style="font-size:17px;color:var(--a-dim);"> / ${k.m}</span></div>
+          <div class="barra" style="margin-top:10px;min-width:0;"><i style="width:${Math.min(100,pct(k.v,k.m))}%;background:${corMeta(k.v,k.m)};"></i></div>
+          <div class="d">${k.v>=k.m ? 'meta do mês batida' : `faltam ${k.m-k.v}`}${k.extra ? ' · '+k.extra : ''}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="card">
+        <div class="card-h"><h3>Leitura do mês</h3><span class="hint">gerada a partir dos seus números</span></div>
+        <div class="card-b" style="display:flex;flex-direction:column;gap:12px;">
+          ${blocoLeitura('O que foi bem', '#5FD39A', 'rgba(47,158,100,.10)', leitura.bem)}
+          ${blocoLeitura('Ponto de atenção', '#F0A3A3', 'rgba(139,58,58,.14)', leitura.atencao)}
+          ${blocoLeitura('Leitura cruzada', 'var(--a-gold)', 'var(--a-gold-soft)', leitura.cruzada)}
+          ${!leitura.bem.length && !leitura.atencao.length && !leitura.cruzada.length ? '<div class="mute" style="font-size:13px;">Ainda não há números suficientes neste mês.</div>' : ''}
+        </div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <div class="card-h"><h3>Funil do mês</h3><span class="hint">ligação até a venda</span></div>
+          <div class="card-b">
+            ${funil.map((f,i)=>`
+              <div style="margin-top:${i?10:0}px;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+                  <span>${f.l}</span>
+                  <span><b>${f.v.toLocaleString('pt-BR')}</b>${i ? `<span class="mute" style="font-size:11px;"> · ${funil[i-1].v ? pct(f.v, funil[i-1].v)+'%' : '—'}</span>` : ''}</span>
+                </div>
+                <div class="barra" style="min-width:0;height:10px;"><i style="width:${funil[0].v ? Math.max(f.v?2:0, f.v/funil[0].v*100) : 0}%;background:${['#6FA8DC','#5FD39A','var(--a-gold)','#E59866','#B39DDB'][i]};"></i></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Time no mês</h3></div>
+          <div class="card-b" style="font-size:13px;line-height:1.7;">
+            <div>${VENDORES.length - zerados} de ${VENDORES.length} vendedores já venderam</div>
+            <div class="mute">Meta do time: ninguém zerado no mês.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h"><h3>Ligações por semana</h3><span class="legend"><span><i style="background:var(--a-gold);"></i>ligações</span><span><i style="background:transparent;border-top:2px dashed #5FD39A;border-radius:0;height:0;vertical-align:3px;"></i>meta 150</span></span></div>
+      <div class="chart" style="height:200px;">
+        <div class="gl" style="bottom:${METAS_FIXAS.semana.ligacoes/maxLig*100}%;border-top:2px dashed rgba(95,211,154,.7);"><span style="color:#5FD39A;">150</span></div>
+        ${linhas.map(l=>`
+          <div class="m">
+            <div class="b" style="height:${l.r.ligacoes/maxLig*100}%;${l.oficial?'':'opacity:.55;'}"></div>
+            <div class="tip">${dataCurta(l.ini)} a ${dataCurta(l.fim)}${l.oficial?'':' (em andamento)'}<br><b>${l.r.ligacoes} ligações</b><br>${l.r.agendamentos} agend. · ${l.r.comparecimentos} comp. · ${l.r.vendas} vendas</div>
+          </div>`).join('')}
+      </div>
+      <div class="chart-x">${linhas.map(l=>`<span>${dataCurta(l.ini)}</span>`).join('')}</div>
+      <div style="height:10px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h3>Semana a semana</h3><span class="hint">semanas fechadas com os números oficiais do relatório</span></div>
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr><th>Semana</th><th class="r">Ligações</th><th class="r">Agend.</th><th class="r">Comp.</th><th class="r">Vendas</th><th class="r">Receita</th><th class="r">Cards parados</th><th>Metas</th></tr></thead>
+          <tbody>
+            ${[...linhas].reverse().map(l=>{
+              const S = METAS_FIXAS.semana;
+              const batidas = ['ligacoes','agendamentos','comparecimentos','vendas'].filter(k=>(l.r[k]||0)>=S[k]).length;
+              const cel = (k)=>`<td class="r" style="color:${corMeta(l.r[k]||0, S[k])};">${l.r[k]||0}</td>`;
+              return `<tr>
+                <td>${dataCurta(l.ini)} a ${dataCurta(l.fim)} ${l.oficial ? '' : '<span class="pill live" style="margin-left:6px;">em andamento</span>'}</td>
+                ${cel('ligacoes')}${cel('agendamentos')}${cel('comparecimentos')}${cel('vendas')}
+                <td class="r">${l.r.receita ? BRL.format(l.r.receita) : '<span class="mute">—</span>'}</td>
+                <td class="r">${l.r.cardsParados!=null ? l.r.cardsParados : '<span class="mute">—</span>'}</td>
+                <td>${l.oficial ? `<span class="pill ${batidas===4?'ok':(batidas>=2?'':'warn')}">${batidas} de 4</span>` : '<span class="mute">—</span>'}</td>
+              </tr>`;
+            }).join('') || `<tr><td colspan="8" class="mute" style="text-align:center;padding:24px;">Sem semanas registradas ainda.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  return {top, html};
+}
+
+// ---------------- Ranking ----------------
+async function loadRanking(){
+  try{
+    const [hist, vendas] = await Promise.all([
+      sb('ranking_historico?select=vendedor,ano,mes,valor,ativo', undefined, 1),
+      sb('vendas?select=vendedor,data,valor', undefined, 1)
+    ]);
+    state.ranking = {
+      hist: (hist||[]).map(r=>({...r, valor:Number(r.valor)})),
+      vendas: (vendas||[]).map(v=>({...v, valor:Number(v.valor)}))
+    };
+  }catch(e){
+    console.error('Falha ao carregar ranking', e);
+    state.ranking = {erro:true};
+  }
+  render();
+}
+
+function montarRanking(ano){
+  const R = state.ranking, hoje = new Date();
+  const mesAtual = ano===hoje.getFullYear() ? hoje.getMonth()+1 : 12;
+  const hist = R.hist.filter(r=>r.ano===ano);
+  const mesesHist = [...new Set(hist.filter(r=>r.mes).map(r=>r.mes))].sort((a,b)=>a-b);
+  const primeiro = mesesHist.length ? mesesHist[0] : 1;
+  const ultimoHist = mesesHist.length ? mesesHist[mesesHist.length-1] : 0;
+  const meses = []; for(let m=primeiro; m<=mesAtual; m++) meses.push(m);
+  const vendasAno = R.vendas.filter(v=>v.data.slice(0,4)===String(ano));
+  const nomes = new Set([...hist.filter(r=>r.ativo).map(r=>r.vendedor), ...VENDORES]);
+  const ativos = [...nomes].map(nome=>{
+    const valores = meses.map(m=>{
+      if(m <= ultimoHist){ const h = hist.find(r=>r.vendedor===nome && r.mes===m); return h ? h.valor : null; }
+      const vs = vendasAno.filter(v=>v.vendedor===nome && Number(v.data.slice(5,7))===m);
+      if(vs.length) return vs.reduce((s,v)=>s+v.valor,0);
+      return VENDORES.includes(nome) ? 0 : null;
+    });
+    const total = valores.reduce((s,x)=>s+(x||0),0);
+    // media: meses em que estava no time (o mes atual so conta se ja vendeu)
+    const mesesConta = valores.filter((x,i)=>x!==null && (meses[i]<mesAtual || x>0)).length;
+    return {nome, valores, total, media: mesesConta ? total/mesesConta : 0, ativoHoje: VENDORES.includes(nome)};
+  }).filter(x=>x.total>0 || x.ativoHoje).sort((a,b)=>b.total-a.total);
+  const sairam = hist.filter(r=>!r.ativo).sort((a,b)=>b.valor-a.valor);
+  const totalSairam = sairam.reduce((s,r)=>s+r.valor,0);
+  const totalAno = ativos.reduce((s,x)=>s+x.total,0) + totalSairam;
+  const iAtual = meses.indexOf(mesAtual);
+  const totalMesAtual = iAtual>=0 ? ativos.reduce((s,x)=>s+(x.valores[iAtual]||0),0) : 0;
+  const venderamMes = iAtual>=0 ? ativos.filter(x=>x.ativoHoje && (x.valores[iAtual]||0)>0).length : 0;
+  return {meses, ativos, sairam, totalSairam, totalAno, mesAtual, totalMesAtual, venderamMes, iAtual};
+}
+
+function paginaRanking(modoAdmin){
+  const ano = new Date().getFullYear();
+  const top = {eb: modoAdmin ? 'Painel do gestor' : 'Central do vendedor', titulo:`Ranking anual ${ano}`, sub:'Produção em reais · atualizado a cada venda registrada'};
+  const R = state.ranking;
+  if(!R) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando ranking...</div></div>`};
+  if(R.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar o ranking agora</div><button class="btn small" id="rkRetry" style="margin-top:10px;">Tentar de novo</button></div>`,
+    bind:()=>{ document.getElementById('rkRetry').onclick = ()=>{ state.ranking = null; render(); loadRanking(); }; }};
+  const k = montarRanking(ano);
+  const max = Math.max(1, ...k.ativos.map(x=>x.total));
+  const eu = modoAdmin ? null : state.vendor;
+  const minhaPos = eu ? k.ativos.findIndex(x=>x.nome===eu) : -1;
+  const rotuloMes = m => (RANKING_ACUMULADO[ano]===m ? 'até ' : '') + MESES[m-1].slice(0,3);
+  const medalha = i => i<3 ? `<span class="pos p${i+1}" style="display:inline-flex;width:26px;height:26px;border-radius:50%;align-items:center;justify-content:center;background:${['rgba(231,199,102,.18)','rgba(200,209,220,.16)','rgba(213,154,106,.18)'][i]};">${i+1}</span>` : `<span class="pos">${i+1}</span>`;
+
+  const html = `
+    <div class="kpis">
+      <div class="kpi destaque"><div class="l">Total vendido em ${ano}</div><div class="v">${brlCurto(k.totalAno)}</div><div class="d">${BRL.format(k.totalAno)}</div></div>
+      <div class="kpi"><div class="l">${MESES[k.mesAtual-1]}</div><div class="v">${brlCurto(k.totalMesAtual)}</div><div class="d">${BRL.format(k.totalMesAtual)}</div></div>
+      <div class="kpi"><div class="l">Já venderam no mês</div><div class="v">${k.venderamMes}<span style="font-size:17px;color:var(--a-dim);"> / ${VENDORES.length}</span></div><div class="d">meta do time: ninguém zerado</div></div>
+      ${eu && minhaPos>=0 ? `<div class="kpi"><div class="l">Sua posição</div><div class="v">${minhaPos+1}º</div><div class="d">${BRL.format(k.ativos[minhaPos].total)} no ano</div></div>`
+        : `<div class="kpi"><div class="l">Líder do ano</div><div class="v" style="font-size:22px;">${k.ativos[0] ? esc(k.ativos[0].nome.split(' ')[0]) : '—'}</div><div class="d">${k.ativos[0] ? BRL.format(k.ativos[0].total) : ''}</div></div>`}
+    </div>
+
+    <div class="card rk-tabela" style="margin-bottom:18px;">
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr>
+            <th>#</th><th>Vendedor</th>
+            ${k.meses.map(m=>`<th class="r" ${m===k.mesAtual?'style="color:var(--a-gold);"':''}>${rotuloMes(m)}</th>`).join('')}
+            <th class="r">Total</th><th class="r">Média/mês</th>
+          </tr></thead>
+          <tbody>
+            ${k.ativos.map((x,i)=>`<tr ${x.nome===eu?'style="background:var(--a-gold-soft);"':''}>
+              <td>${medalha(i)}</td>
+              <td><span class="pessoa">${avatar(x.nome)}<b>${esc(x.nome)}</b>${x.nome===eu?' <span class="pill ok">você</span>':''}</span></td>
+              ${x.valores.map((val,j)=>`<td class="r ${val===null?'mute':''}" ${k.meses[j]===k.mesAtual?'style="color:var(--a-gold);font-weight:700;"':''}>${val===null ? '—' : (val ? brlCurto(val) : '0')}</td>`).join('')}
+              <td class="r" style="min-width:150px;"><b style="color:var(--a-gold);">${BRL.format(x.total)}</b><div class="barra" style="min-width:0;height:5px;margin-top:5px;"><i style="width:${x.total/max*100}%;background:var(--a-gold);"></i></div></td>
+              <td class="r mute">${x.media ? brlCurto(x.media) : '—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rk-lista" style="display:none;margin-bottom:18px;">
+      ${k.ativos.map((x,i)=>`
+        <div class="pcard" style="margin-bottom:10px;${x.nome===eu?'border-color:rgba(201,168,76,.6);':''}">
+          <div class="top">${medalha(i)}${avatar(x.nome)}
+            <div style="flex:1;min-width:0;"><div class="nm">${esc(x.nome)}</div><div class="meta-l">${MESES[k.mesAtual-1]}: ${brlCurto(k.iAtual>=0 ? (x.valores[k.iAtual]||0) : 0)}</div></div>
+            <b style="color:var(--a-gold);">${brlCurto(x.total)}</b>
+          </div>
+          <div class="barra" style="min-width:0;height:6px;"><i style="width:${x.total/max*100}%;background:var(--a-gold);"></i></div>
+        </div>`).join('')}
+    </div>
+
+    ${k.sairam.length ? `
+      <div class="card" style="border-style:dashed;border-color:rgba(201,168,76,.4);">
+        <div class="card-h"><h3 style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--a-gold);">Produção de vendedores que já saíram da FBS</h3><b class="serif" style="font-size:20px;">${BRL.format(k.totalSairam)}</b></div>
+        <div class="card-b" style="font-size:13px;color:var(--a-dim);">${k.sairam.map(r=>`${esc(r.vendedor)} ${BRL.format(r.valor)}`).join(' · ')}</div>
+      </div>` : ''}
+    <div style="font-size:11px;color:var(--a-mute);margin-top:12px;">${RANKING_ACUMULADO[ano] ? `"até ${MESES[RANKING_ACUMULADO[ano]-1].slice(0,3).toLowerCase()}" soma a produção de janeiro a ${MESES[RANKING_ACUMULADO[ano]-1].toLowerCase()}. ` : ''}O total do ano inclui a produção de quem saiu.</div>`;
+  return {top, html};
 }
 
 async function salvarProducaoMes(mes, equipe, texto){
@@ -1951,6 +3300,7 @@ async function registrarVenda(){
     return;
   }
   state.prodAno = Number(data.slice(0,4));
+  state.vendaDrawer = false;
   await loadProducao();
   launchConfetti(false);
   showCronoToast('Venda registrada', `${esc(vendedor)} · ${BRL.format(valor)}`);
@@ -1987,14 +3337,7 @@ async function adicionarEquipe(){
   await loadProducao();
 }
 
-async function editarCoordenador(nome){
-  const eqp = state.prod.equipes.find(e=>e.nome===nome);
-  const ano = state.prodAno;
-  const atual = (eqp.coordenadores||{})[ano] || '';
-  const novo = prompt(`Coordenador da ${nome} em ${ano} (deixe vazio para tirar):`, atual);
-  if(novo === null) return;
-  const coordenadores = {...(eqp.coordenadores||{})};
-  if(novo.trim()) coordenadores[ano] = novo.trim(); else delete coordenadores[ano];
+async function salvarCoordenadores(nome, coordenadores){
   try{
     await sb('equipes?nome='+eq(nome), {method:'PATCH', prefer:'return=minimal', body:{coordenadores}});
   }catch(e){
@@ -2003,6 +3346,24 @@ async function editarCoordenador(nome){
     return;
   }
   await loadProducao();
+}
+// novo coordenador a partir de um mes do ano atual (janeiro vira a chave do ano)
+async function trocarCoordenador(nome, coord, mes){
+  coord = (coord||'').trim();
+  if(!coord){ alert('Digita o nome do novo coordenador.'); return; }
+  const ano = new Date().getFullYear();
+  const chave = mes===1 ? String(ano) : `${ano}-${String(mes).padStart(2,'0')}`;
+  if(!confirm(`${coord} passa a coordenar a ${nome} a partir de ${MESES[mes-1].toLowerCase()} de ${ano}?`)) return;
+  const eqp = state.prod.equipes.find(e=>e.nome===nome);
+  await salvarCoordenadores(nome, {...(eqp.coordenadores||{}), [chave]: coord});
+}
+async function removerPeriodoCoord(nome, chave){
+  const eqp = state.prod.equipes.find(e=>e.nome===nome);
+  const x = coordPeriodos(eqp).find(p=>p.k===chave);
+  if(!x || !confirm(`Tirar ${x.nome} (${periodoRotulo(x)}) da coordenação da ${nome}?`)) return;
+  const coordenadores = {...(eqp.coordenadores||{})};
+  delete coordenadores[chave];
+  await salvarCoordenadores(nome, coordenadores);
 }
 
 async function alternarEquipe(nome){
@@ -2080,6 +3441,8 @@ function renderCallModal(){
 
 function render(pulse){
   const app = document.getElementById('app');
+  // admin e central do vendedor usam o layout de tela cheia
+  document.body.classList.toggle('modo-admin', state.view==='admin' || state.view==='app');
 
   if(state.view === 'loading'){
     app.innerHTML = `<p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p><h1>Carregando...</h1>`;
@@ -2152,219 +3515,7 @@ function render(pulse){
   }
 
   if(state.view === 'admin'){
-    const abas = `
-      <div class="admin-tabs">
-        <button class="trocar-btn ${state.adminTab==='ligacoes'?'active':''}" id="tabLigacoes">Ligações</button>
-        <button class="trocar-btn ${state.adminTab==='producao'?'active':''}" id="tabProducao">Produção</button>
-      </div>`;
-    const bindAbas = ()=>{
-      document.getElementById('tabLigacoes').onclick = ()=>{ state.adminTab = 'ligacoes'; render(); };
-      document.getElementById('tabProducao').onclick = ()=>{
-        state.adminTab = 'producao';
-        if(!state.prod) loadProducao();
-        render();
-      };
-    };
-
-    if(state.adminTab === 'producao'){
-      app.innerHTML = `
-        <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
-        <h1>Painel administrativo</h1>
-        ${abas}
-        <div class="vendor-row">
-          <div>
-            <div class="vendor-name">Produção FBS</div>
-            <div class="vendor-date">Ano de ${state.prodAno}</div>
-          </div>
-          <button class="trocar-btn" id="exitAdminBtn">sair</button>
-        </div>
-        ${renderProducao()}
-      `;
-      document.getElementById('exitAdminBtn').onclick = exitAdmin;
-      bindAbas();
-      bindProducao(app);
-      return;
-    }
-
-    const rows = state.adminRows || [];
-    const totalAtendeu = rows.reduce((s,r)=>s+r.atendeu,0);
-    const totalCaixa = rows.reduce((s,r)=>s+r.caixa,0);
-    const totalGeral = totalAtendeu + totalCaixa;
-    const semRegistro = rows.filter(r=>r.total===0);
-    const maxTotal = Math.max(1, ...rows.map(r=>r.total));
-
-    app.innerHTML = `
-      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
-      <h1>Painel administrativo</h1>
-      ${abas}
-
-      <div class="vendor-row">
-        <div>
-          <div class="vendor-name">Ranking de ligações</div>
-          <div class="vendor-date">${periodLabel()}</div>
-        </div>
-        <button class="trocar-btn" id="exitAdminBtn">sair</button>
-      </div>
-
-      ${renderCronoCard(true)}
-
-      <div class="picker-card" style="padding:14px 16px;margin-bottom:16px;">
-        <p class="tally-label" style="margin-bottom:8px;">Período</p>
-        <div style="display:flex;gap:8px;margin-bottom:4px;">
-          <button class="trocar-btn ${state.periodType==='dia'?'active':''}" id="periodDia" style="flex:1;">Dia</button>
-          <button class="trocar-btn ${state.periodType==='mes'?'active':''}" id="periodMes" style="flex:1;">Mês</button>
-          <button class="trocar-btn ${state.periodType==='ano'?'active':''}" id="periodAno" style="flex:1;">Ano</button>
-        </div>
-        ${periodInputHtml()}
-      </div>
-
-      <div class="tally" style="grid-template-columns:1fr 1fr 1fr;">
-        <div class="tally-card">
-          <div class="tally-label">Total</div>
-          <div class="tally-num" style="font-size:28px;color:var(--text);">${totalGeral}</div>
-        </div>
-        <div class="tally-card">
-          <div class="tally-label">Atendidas</div>
-          <div class="tally-num tally-atendeu" style="font-size:28px;">${totalAtendeu}</div>
-        </div>
-        <div class="tally-card">
-          <div class="tally-label">Caixa postal</div>
-          <div class="tally-num tally-caixa" style="font-size:28px;">${totalCaixa}</div>
-        </div>
-      </div>
-
-      ${(state.periodType==='dia' && semRegistro.length) ? `
-        <div class="fechado-banner" style="border-color:var(--fechar);">
-          <div class="t" style="color:#E8B4B4;">${semRegistro.length} sem nenhum registro hoje</div>
-          <div class="s">${semRegistro.map(r=>r.vendor).join(', ')}</div>
-        </div>
-      ` : ''}
-
-      <div class="history" style="margin-bottom:16px;">
-        <div class="history-head" style="cursor:default;">
-          <span>Ranking por vendedor</span>
-        </div>
-        ${rows.map(r=>{
-          const pctAtendeu = maxTotal ? (r.atendeu/maxTotal*100) : 0;
-          const pctCaixa = maxTotal ? (r.caixa/maxTotal*100) : 0;
-          const status = state.periodType==='dia' ? (r.closed ? 'Fechado' : (r.total>0 ? 'Em aberto' : 'Sem registro')) : '';
-          const statusColor = r.closed ? 'var(--gold)' : (r.total>0 ? 'var(--text-dim)' : '#E8B4B4');
-          return `
-            <div style="padding:12px 16px;border-top:1px solid var(--border);">
-              <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
-                <span style="font-weight:600;">${r.vendor}</span>
-                <span style="color:var(--text-dim);">${r.total}${status?` · <span style="color:${statusColor};">${status}</span>`:''}</span>
-              </div>
-              <div style="height:10px;border-radius:6px;background:var(--panel-2);overflow:hidden;display:flex;">
-                <div style="width:${pctAtendeu}%;background:var(--atendeu);"></div>
-                <div style="width:${pctCaixa}%;background:var(--caixa);"></div>
-              </div>
-              ${r.lastTs ? `<div style="font-size:12px;color:var(--text-dim);margin-top:4px;">última ligação: ${new Date(r.lastTs).toLocaleString('pt-BR')}</div>` : ''}
-            </div>
-          `;
-        }).join('')}
-      </div>
-
-      <button class="fechar-btn" id="exportBtn" style="border-color:var(--gold);color:var(--gold);">Baixar CSV do período</button>
-
-      <div class="history" style="margin-top:20px;">
-        <div class="history-head" style="cursor:default;">
-          <span>Gerenciar vendedores (${VENDORES.length})</span>
-        </div>
-        ${VENDORES.map(v=>`
-          <div class="history-item">
-            <span>${v} <span style="color:var(--text-dim);">· PIN ${VENDOR_PINS[v]}</span></span>
-            <button class="undo-btn" data-remove="${v}">remover</button>
-          </div>
-        `).join('')}
-        <div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--border);">
-          <input id="newVendorName" placeholder="Nome" style="flex:2;margin:0;padding:10px;font-size:14px;">
-          <input id="newVendorPin" placeholder="PIN" style="flex:1;margin:0;padding:10px;font-size:14px;">
-        </div>
-        <div style="padding:0 16px 14px;">
-          <button class="confirm-btn" id="addVendorBtn" style="margin:0;">Adicionar vendedor</button>
-        </div>
-      </div>
-
-      <div class="history" style="margin-top:20px;">
-        <div class="history-head" style="cursor:default;">
-          <span>Metas da semana${state.adminMetas ? ' · ' + (Object.values(state.adminMetas).find(Boolean)?.semana || '') : ''}</span>
-        </div>
-        ${!state.adminMetas ? `<div class="empty-hint">Carregando metas...</div>` :
-          VENDORES.map(v=>{
-            const m = state.adminMetas[v];
-            if(!m) return `<div class="history-item"><span>${v}</span><span style="color:var(--text-dim);">sem dados</span></div>`;
-            const campos = [
-              {key:'agendamentos', label:'Agendamentos', metaCampo:'metaAgendamentos', progCampo:null},
-              {key:'comparecimentos', label:'Comparecimentos', metaCampo:'metaComparecimentos', progCampo:'progressoComparecimentos'},
-              {key:'vendas', label:'Vendas', metaCampo:'metaVendas', progCampo:'progressoVendas'},
-              {key:'ligacoes', label:'Ligações', metaCampo:'metaLigacoes', progCampo:null}
-            ];
-            // resultado da semana anterior, pro admin avaliar antes de ajustar a meta
-            const a = m.anterior;
-            const resumoAnterior = a ? (a.ligacoes
-              ? `Semana passada: ${a.ligacoes} ligações em ${a.dias} dia(s) (${Math.round(a.ligacoes/Math.max(1,a.dias))}/dia) · ${a.agendamentos} agend. · ${a.comparecimentos} comp. · ${a.vendas} vendas`
-              : 'Semana passada: nenhuma ligação registrada') : '';
-            return `
-              <div style="padding:12px 16px;border-top:1px solid var(--border);">
-                <div style="font-weight:600;font-size:14px;margin-bottom:${resumoAnterior ? 2 : 8}px;">${v}</div>
-                ${resumoAnterior ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">${resumoAnterior}</div>` : ''}
-                ${campos.map(c=>{
-                  const d = m[c.key] || {meta:1, progresso:0};
-                  return `
-                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:12px;">
-                      <span style="flex:1;color:var(--text-dim);">${c.label}</span>
-                      <span style="color:var(--text-dim);">meta</span>
-                      <input type="number" min="1" value="${d.meta}" class="admin-meta-input" data-vendor="${v}" data-campo="${c.metaCampo}" style="width:52px;margin:0;padding:6px;font-size:12px;">
-                      ${c.progCampo ? `
-                        <span style="color:var(--text-dim);">progresso</span>
-                        <input type="number" min="0" value="${d.progresso}" class="admin-meta-input" data-vendor="${v}" data-campo="${c.progCampo}" style="width:52px;margin:0;padding:6px;font-size:12px;">
-                      ` : `<span style="color:var(--text-dim);width:100px;text-align:right;">${d.progresso} (automático)</span>`}
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            `;
-          }).join('')
-        }
-      </div>
-
-      ${renderCronoEditor()}
-    `;
-    document.getElementById('exitAdminBtn').onclick = exitAdmin;
-    bindAbas();
-    document.getElementById('cronoEditHead').onclick = ()=>{
-      state.cronoEditOpen = !state.cronoEditOpen;
-      if(!state.cronoEditOpen) state.cronoDraft = null;
-      render();
-    };
-    app.querySelectorAll('.crono-time').forEach(inp=>{
-      inp.onchange = ()=>{
-        state.cronoDraft = (state.cronoDraft || cronoBlocos).map(b=>({...b}));
-        state.cronoDraft[Number(inp.getAttribute('data-i'))][inp.getAttribute('data-campo')] = inp.value;
-      };
-    });
-    const cronoSaveBtn = document.getElementById('cronoSaveBtn');
-    if(cronoSaveBtn) cronoSaveBtn.onclick = ()=>salvarCronograma(state.cronoDraft || cronoBlocos);
-    const cronoResetBtn = document.getElementById('cronoResetBtn');
-    if(cronoResetBtn) cronoResetBtn.onclick = ()=>{
-      if(confirm('Voltar todos os horários para o padrão do cronograma (9:30 às 19:00)?')) salvarCronograma(CRONO_PADRAO.map(b=>({...b})));
-    };
-    document.getElementById('exportBtn').onclick = exportCsv;
-    document.getElementById('periodDia').onclick = ()=>setPeriodType('dia');
-    document.getElementById('periodMes').onclick = ()=>setPeriodType('mes');
-    document.getElementById('periodAno').onclick = ()=>setPeriodType('ano');
-    document.getElementById('periodValueInput').onchange = (e)=>{
-      state.periodValue = e.target.value;
-      loadAdminData();
-    };
-    document.getElementById('addVendorBtn').onclick = addVendor;
-    app.querySelectorAll('[data-remove]').forEach(btn=>{
-      btn.onclick = ()=>removeVendor(btn.getAttribute('data-remove'));
-    });
-    app.querySelectorAll('.admin-meta-input').forEach(inp=>{
-      inp.onchange = ()=>adminSaveMeta(inp.getAttribute('data-vendor'), inp.getAttribute('data-campo'), inp.value);
-    });
+    renderAdmin(app);
     return;
   }
 
@@ -2373,22 +3524,20 @@ function render(pulse){
   const total = state.calls.length;
   const disabled = !!state.closed;
 
-  app.innerHTML = `
-    <h2 class="sr-only">Registro de ligações do dia para ${state.vendor}</h2>
-    <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
-    <h1>Registro de ligações</h1>
+  if(state.centralTab !== 'hoje'){
+    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false)}[state.centralTab];
+    if(pagina){ renderCentral(app, pagina()); return; }
+  }
 
-    <div class="vendor-row">
-      <div>
-        <div class="vendor-name">${state.vendor}</div>
-        <div class="vendor-date">${todayLabel()}</div>
-      </div>
-      <button class="trocar-btn" id="trocarBtn">trocar</button>
-    </div>
-
+  const corpoHoje = `
+    <h2 class="sr-only">Registro de ligações do dia para ${esc(state.vendor)}</h2>
+    <div class="hoje">
+    <div class="hoje-info">
     ${renderCronoCard(false)}
 
     ${renderMetasPanel()}
+    </div>
+    <div class="hoje-reg">
 
     ${state.pendentes.length ? state.pendentes.map(p=>`
       <div class="fechado-banner" style="border-color:var(--caixa);text-align:left;">
@@ -2451,11 +3600,17 @@ function render(pulse){
         }
       </div>
     </div>
+    </div>
+    </div>
 
     ${renderCallModal()}
   `;
+  renderCentral(app, {
+    top:{eb:'Central do vendedor', titulo:`Olá, ${esc(state.vendor.split(' ')[0])}`, sub: todayLabel()},
+    html: corpoHoje,
+    estreita: true
+  });
 
-  document.getElementById('trocarBtn').onclick = trocarVendedor;
   const retryLoadBtn = document.getElementById('retryLoadBtn');
   if(retryLoadBtn) retryLoadBtn.onclick = ()=>loadVendorData(state.vendor);
   document.getElementById('historyHead').onclick = ()=>{ state.historyOpen = !state.historyOpen; render(); };

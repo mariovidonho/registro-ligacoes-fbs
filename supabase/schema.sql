@@ -318,6 +318,145 @@ drop trigger if exists vendas_airtable on public.vendas;
 create trigger vendas_airtable after insert on public.vendas
   for each row execute function public.enviar_venda_airtable();
 
+-- ---------------------------------------------------------------------------
+-- Relatórios (Central do Vendedor): PDFs enviados pelo admin, um por
+-- vendedor/semana. O arquivo fica no Storage (pasta pública "relatorios");
+-- esta tabela guarda de quem é, a qual semana pertence e quando foi aberto.
+-- ---------------------------------------------------------------------------
+create table if not exists public.relatorios (
+  id        bigint generated always as identity primary key,
+  vendedor  text not null,
+  ano       int  not null,
+  mes       int  not null check (mes between 1 and 12),
+  semana    int,            -- 1..5; vazio = relatório do mês
+  titulo    text not null,
+  caminho   text not null unique,  -- caminho do arquivo dentro do bucket
+  tamanho   int,
+  criado_em timestamptz not null default now(),
+  visto_em  timestamptz      -- primeira vez que o vendedor abriu
+);
+create index if not exists relatorios_vendedor_idx on public.relatorios (vendedor, ano, mes);
+alter table public.relatorios enable row level security;
+drop policy if exists "site" on public.relatorios;
+create policy "site" on public.relatorios for all to anon using (true) with check (true);
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('relatorios', 'relatorios', true, 20971520, array['application/pdf'])
+on conflict (id) do nothing;
+drop policy if exists "relatorios leitura" on storage.objects;
+drop policy if exists "relatorios envio"   on storage.objects;
+drop policy if exists "relatorios remocao" on storage.objects;
+create policy "relatorios leitura" on storage.objects for select to anon using (bucket_id = 'relatorios');
+create policy "relatorios envio"   on storage.objects for insert to anon with check (bucket_id = 'relatorios');
+create policy "relatorios remocao" on storage.objects for delete to anon using (bucket_id = 'relatorios');
+
+-- ---------------------------------------------------------------------------
+-- Desempenho (Central do Vendedor)
+-- ---------------------------------------------------------------------------
+
+-- Ligações agregadas por vendedor e dia (fuso de São Paulo) desde uma data.
+create or replace function public.ligacoes_diarias(p_desde date)
+returns table (vendedor text, dia date, total int, atendidas int, agendamentos int)
+language sql stable as $$
+  select l.vendedor, public.dia_sp(l.ts),
+         count(*)::int,
+         (count(*) filter (where l.tipo = 'atendeu'))::int,
+         (count(*) filter (where lower(l.agendou) = 'sim'))::int
+  from public.ligacoes l
+  where public.dia_sp(l.ts) >= p_desde
+  group by 1, 2
+$$;
+
+-- Cópia da tabela "Metricas por Vendedor" do Airtable (números oficiais da
+-- semana, lançados no fechamento dos relatórios). Atualizada de hora em hora
+-- pela função abaixo; o site só lê.
+create table if not exists public.metricas_semanais (
+  airtable_id     text primary key,
+  vendedor        text not null,
+  semana          text not null,   -- rótulo do Airtable, ex.: "26/10-02/11/2026 (FECHADA)"
+  agendamentos    int,
+  comparecimentos int,
+  vendas          int,
+  receita         numeric(14,2),
+  cards_parados   int,
+  zero_comentario int,
+  negocios_ativos int,
+  dias_atividade  int,
+  atualizado_em   timestamptz not null default now()
+);
+alter table public.metricas_semanais enable row level security;
+drop policy if exists "leitura" on public.metricas_semanais;
+create policy "leitura" on public.metricas_semanais for select to anon using (true);
+
+create extension if not exists http with schema extensions;
+
+create or replace function public.sync_airtable_metricas()
+returns int language plpgsql security definer set search_path = public, extensions as $$
+declare
+  v_token  text;
+  v_offset text;
+  v_resp   extensions.http_response;
+  v_json   jsonb;
+  r        jsonb;
+  f        jsonb;
+  n        int := 0;
+begin
+  select decrypted_secret into v_token from vault.decrypted_secrets where name = 'airtable_token';
+  if v_token is null then return -1; end if;
+  loop
+    v_resp := extensions.http((
+      'GET',
+      'https://api.airtable.com/v0/appjgrhsM4izs8ilX/tblEPH9i2xLXGhIfe?pageSize=100' || coalesce('&offset=' || v_offset, ''),
+      array[extensions.http_header('Authorization', 'Bearer ' || v_token)],
+      null, null)::extensions.http_request);
+    if v_resp.status <> 200 then
+      raise exception 'Airtable respondeu HTTP %: %', v_resp.status, left(v_resp.content, 300);
+    end if;
+    v_json := v_resp.content::jsonb;
+    for r in select * from jsonb_array_elements(v_json->'records') loop
+      f := r->'fields';
+      continue when coalesce(f->>'Vendedor', '') = '' or coalesce(f->>'Semana', '') = '';
+      insert into public.metricas_semanais as m (airtable_id, vendedor, semana, agendamentos, comparecimentos, vendas,
+             receita, cards_parados, zero_comentario, negocios_ativos, dias_atividade, atualizado_em)
+      values (r->>'id', trim(f->>'Vendedor'), trim(f->>'Semana'),
+              round((f->>'Agendamentos')::numeric), round((f->>'Comparecimentos')::numeric), round((f->>'Vendas')::numeric),
+              (f->>'Receita')::numeric, round((f->>'Cards Parados')::numeric), round((f->>'Zero Comentario')::numeric),
+              round((f->>'Negocios Ativos')::numeric), round((f->>'Dias com Atividade CRM')::numeric), now())
+      on conflict (airtable_id) do update set
+        vendedor = excluded.vendedor, semana = excluded.semana, agendamentos = excluded.agendamentos,
+        comparecimentos = excluded.comparecimentos, vendas = excluded.vendas, receita = excluded.receita,
+        cards_parados = excluded.cards_parados, zero_comentario = excluded.zero_comentario,
+        negocios_ativos = excluded.negocios_ativos, dias_atividade = excluded.dias_atividade, atualizado_em = now();
+      n := n + 1;
+    end loop;
+    v_offset := v_json->>'offset';
+    exit when v_offset is null;
+  end loop;
+  -- o que sumiu do Airtable some daqui também
+  delete from public.metricas_semanais where atualizado_em < now();
+  return n;
+end
+$$;
+
+create extension if not exists pg_cron;
+select cron.schedule('sync-airtable-metricas', '7 * * * *', 'select public.sync_airtable_metricas()');
+
+-- Ranking anual de vendas por vendedor. Guarda o histórico que veio da
+-- imagem do ranking (abril a outubro/2026); de novembro em diante o site soma
+-- as vendas registradas no admin. mes = 4 em 2026 é o acumulado até abril;
+-- mes nulo = só o total do ano (produção de quem saiu).
+create table if not exists public.ranking_historico (
+  vendedor text not null,
+  ano      int  not null,
+  mes      int  check (mes between 1 and 12),
+  valor    numeric(14,2) not null,
+  ativo    boolean not null default true
+);
+create unique index if not exists ranking_historico_uk on public.ranking_historico (vendedor, ano, coalesce(mes, 0));
+alter table public.ranking_historico enable row level security;
+drop policy if exists "site" on public.ranking_historico;
+create policy "site" on public.ranking_historico for all to anon using (true) with check (true);
+
 -- Lista inicial de vendedores (a mesma que está no site)
 insert into public.vendedores (nome, pin) values
   ('Arthur Lima', '1098'), ('Wellington Augusto', '1111'), ('Rayane Castro', '1095'),
