@@ -890,13 +890,37 @@
   .at-hoje{width:100%;background:var(--a-gold-soft);border:1px solid rgba(201,168,76,.45);border-radius:12px;color:var(--a-gold);font:600 13px Inter,sans-serif;padding:10px 14px;margin-bottom:12px;cursor:pointer;text-align:left;}
   .at-drawer{width:min(620px,100%);}
   .at-resultado{margin-top:16px;border-top:1px solid var(--a-line);padding-top:14px;}
-  .at-tela{position:fixed;inset:0;z-index:70;background:radial-gradient(120% 90% at 50% 0%,#1B3A54 0%,#0F2437 48%,#091622 100%);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
-  .at-tela-c{max-width:620px;}
-  .at-eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
-  .at-h{font-family:Fraunces,Georgia,serif;font-size:clamp(26px,4vw,40px);font-weight:600;margin-top:10px;line-height:1.15;}
-  .at-s{color:var(--a-dim);font-size:16px;margin-top:8px;}
-  .at-ok{font-family:Fraunces,Georgia,serif;font-size:clamp(52px,9vw,88px);font-weight:600;color:#5FD39A;line-height:1.1;margin-top:8px;}
-  .at-spin{width:58px;height:58px;border-radius:50%;border:4px solid rgba(255,255,255,.12);border-top-color:var(--a-gold);margin:0 auto 22px;animation:at-gira 1s linear infinite;}
+  .at-spin{flex:none;display:inline-block;width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:var(--a-gold);animation:at-gira 1s linear infinite;}
+  .at-etapas{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .at-etapas i{flex:0 1 44px;height:1px;background:var(--a-line);}
+  .at-etapa-b{display:flex;align-items:center;gap:9px;background:none;border:none;color:var(--a-dim);cursor:pointer;font:600 14px Inter,sans-serif;padding:4px 0;}
+  .at-etapa-b span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--a-line);font-size:12px;}
+  .at-etapa-b.on{color:var(--text);}
+  .at-etapa-b.on span{background:var(--a-gold);border-color:var(--a-gold);color:#241D0B;}
+  .at-etapa-c{display:none;}
+  .at-etapa-c.on{display:block;}
+  #atPops{position:fixed;top:16px;right:16px;z-index:65;display:flex;flex-direction:column;gap:10px;width:min(340px,calc(100vw - 32px));pointer-events:none;}
+  .at-pop{pointer-events:auto;background:#14293D;border:1px solid rgba(201,168,76,.5);border-radius:14px;padding:14px 16px;box-shadow:0 12px 32px rgba(0,0,0,.45);color:var(--text);font:400 14px Inter,sans-serif;}
+  .at-pop-l{display:flex;align-items:center;gap:12px;}
+  .at-pop b{font-weight:600;display:block;}
+  .at-pop small{display:block;font-size:12px;color:#9FB2C4;margin-top:2px;}
+  .at-pop .link{margin-top:6px;}
+  .at-pop.res{border-color:rgba(95,211,154,.6);text-align:center;}
+  .at-pop-eb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#C9A84C;font-weight:700;}
+  .at-pop-ok{font-size:38px;font-weight:600;color:#5FD39A;line-height:1.15;}
+  .at-pop-t{font-weight:600;}
+  .at-pop-p{margin-top:12px;}
+  .at-pop-priv{margin-top:8px;font-size:12px;background:rgba(255,255,255,.06);border-radius:8px;padding:7px 9px;}
+  .at-pop-a{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .at-pop.res .at-pop-a{justify-content:center;}
+  body.at-cheia .adm{grid-template-columns:minmax(0,1fr);}
+  body.at-cheia .adm-side,body.at-cheia .adm-top,body.at-cheia #cronoToast{display:none!important;}
+  body.at-cheia .adm-main{width:100%;max-width:1240px;margin:0 auto;padding:22px clamp(16px,4vw,48px) 24px;}
+  body.at-cheia .at-guarda input,body.at-cheia .at-guarda select,body.at-cheia .at-fixo{font-size:17px;padding:11px 14px;}
+  body.at-cheia .at-guarda .at-r{font-size:12px;}
+  .at-cheia-topo{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;}
+  .at-marca{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
+  .at-cheia-nome{font-size:clamp(24px,3.4vw,34px);font-weight:600;margin-top:2px;}
   @keyframes at-gira{to{transform:rotate(360deg)}}
   @media (max-width:860px){
     .at-duas,.at-ops,.at-ops.tres{grid-template-columns:minmax(0,1fr);}
@@ -1322,7 +1346,7 @@ let state = {
   pinsAbertos: null,     // quais PINs estao revelados na tela
   relUrls: null,         // links temporarios dos PDFs de relatorio
   at: {lista:null, tabelas:null, tabUrls:null, tabelaId:null, sub:'clientes', subGestor:'aprovacao', fichaId:null, passo:null, busca:'', filtroV:'', filtroS:'',
-       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, emLoja:null, emLojaDesde:0, proposta:false, drawerId:null}
+       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, espera:{}, etapa:'dados', etapaDe:null, cheia:false, drawerId:null}
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -3054,6 +3078,7 @@ async function assinarRelatorios(caminhos){
 const relRotulo = r => r.semana ? `Semana ${r.semana}` : 'Fechamento do mês';
 
 function irParaCentral(id){
+  if(state.centralTab==='atendimentos' && state.at.fichaId && id!=='atendimentos') atSalvar(true);
   state.centralTab = id;
   if(id==='relatorios' && !state.relatorios) loadRelatoriosVendedor();
   if(id==='desempenho' && !state.desemp) loadDesempenho();
@@ -4460,7 +4485,7 @@ function atBip(){
 setInterval(async ()=>{
   atTicks++;
   if(document.hidden || !sessao || !state.at.lista) return;
-  const espera = state.view==='app' && state.at.emLoja;
+  const espera = state.view==='app' && Object.keys(state.at.espera).length;
   const gestor = state.view==='admin';
   if(!espera && !(gestor && atTicks%2===0) && !(state.view==='app' && atTicks%10===0)) return;
   const mudou = await loadAtendimentos(true);
@@ -4474,11 +4499,11 @@ setInterval(async ()=>{
     const badge = document.querySelector('[data-pagina="atendimentos"] .badge');
     if(badge) badge.textContent = atPendGestor();
   }
+  if(state.view==='app'){ atSincEspera(); atPintarPops(); }
   if(!mudou) return;
   const digitando = document.activeElement && ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName);
-  if(espera) render();
-  else if(gestor && state.adminTab==='atendimentos' && !state.at.drawerId && !digitando) render();
-  else if(state.view==='app' && state.centralTab==='atendimentos' && !state.at.fichaId && !digitando) render();
+  if(gestor && state.adminTab==='atendimentos' && !state.at.drawerId && !digitando) render();
+  else if(state.view==='app' && state.centralTab==='atendimentos' && !digitando) render();
 }, 3000);
 
 function atErroTexto(e){
@@ -4506,7 +4531,7 @@ async function atBuscar(){
   }catch(e){ n.erro = atErroTexto(e); }
   render();
 }
-async function atAbrir(){
+async function atAbrir(cheia){
   atLerNovo();
   const n = state.at.novo, dig = n.tel.replace(/\D/g,'');
   n.erro = '';
@@ -4523,7 +4548,9 @@ async function atAbrir(){
     state.at.lista = null;
     await loadAtendimentos(true);
     state.at.fichaId = id; state.at.passo = null; state.at.sub = 'clientes';
+    if(cheia) atEntrarCheia();
     render();
+    window.scrollTo(0,0);
   }catch(e){
     const m = String(e.message||'').match(/CLIENTE_DE:([^"]+)/);
     n.erro = m ? `Este cliente já é de ${m[1]}. Use o modo ajuda.` : atErroTexto(e);
@@ -4550,7 +4577,7 @@ function htmlNovo(){
       <div class="at-chips">${AT_CANAIS.map(c=>`<button class="at-chip ${n.canal===c[0]?'on':''}" data-at-canal="${esc(c[0])}">${c[1]}</button>`).join('')}</div>
       <label class="at-lgpd"><input type="checkbox" id="atLgpd" ${n.lgpd?'checked':''}><span>O cliente autorizou a FBS Prime a guardar estes dados para fazer o atendimento e a simulação.</span></label>
       ${n.erro ? `<div class="lg-erro" style="margin:10px 0 0;">${esc(n.erro)}</div>` : ''}
-      <div style="text-align:right;margin-top:14px;"><button class="btn gold" id="atAbrir">Abrir ficha</button></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:14px;"><button class="btn" id="atAbrir">Abrir ficha</button><button class="btn gold" id="atAbrirCheia">Abrir em tela cheia</button></div>
     </div></div>`;
 }
 const VENDORES_LOGIN = () => VENDORES;
@@ -4577,49 +4604,59 @@ async function atSalvar(silencioso){
 const atSimNao = (id, v) => `<select id="${id}" style="width:100%;"><option value="" ${v==null?'selected':''}>—</option><option value="sim" ${v===true?'selected':''}>Sim</option><option value="nao" ${v===false?'selected':''}>Não</option></select>`;
 const atCampo = (rot, id, val, extra) => `<div><label class="at-r" for="${id}">${rot}</label><input id="${id}" value="${esc(val==null?'':val)}" style="width:100%;" ${extra||''}></div>`;
 function htmlFicha(a){
-  const c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}];
-  const visitas = state.at.lista.filter(x=>x.cliente_id===a.cliente_id).sort((x,y)=>x.criado_em<y.criado_em?-1:1);
+  const A = state.at, c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}], cheia = A.cheia;
+  if(A.etapaDe !== a.id){ A.etapa = 'dados'; A.etapaDe = a.id; }
+  const et = A.etapa;
+  const visitas = A.lista.filter(x=>x.cliente_id===a.cliente_id).sort((x,y)=>x.criado_em<y.criado_em?-1:1);
   const nVisita = visitas.findIndex(x=>x.id===a.id)+1;
-  const P = state.at.passo;
   const htmlProj = i => { const p = proj[i]||{}; const cp = (rot,k) => atCampo(rot,`p${i}_${k}`,p[k]); return `
     <div class="card"><div class="card-h"><h3>Projeção ${i+1}</h3></div><div class="card-b at-grade">
       ${cp('Crédito','credito')}${cp('Entrada','entrada')}${cp('Parcelas','parcelas')}${cp('Prazo','prazo')}${cp('Renda','renda')}${cp('Documentação','documentacao')}${cp('Custo final','custo_final')}${cp('Outros','outros')}
     </div></div>`; };
+  // recados internos nunca aparecem na tela cheia, que fica virada para o cliente
   const avisos = [];
-  if(a.situacao==='reprovado') avisos.push(`<div class="alerta" style="margin-bottom:14px;"><div class="t">Aprovação não liberada${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}</div>${a.aprovacao_motivo?`<div class="s">${esc(a.aprovacao_motivo)}</div>`:''}</div>`);
-  if(a.situacao==='aprovado') avisos.push(`<div class="at-aviso verde" style="margin:0 0 14px;">Aprovado${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}.${a.resposta_cliente?` Resposta do cliente: <b>${esc(a.resposta_cliente)}</b>.`:''}${a.retorno_em?` Retorno: <b>${atQuando(a.retorno_em)}</b>.`:''}</div>`);
-  if(a.situacao==='aprovacao_agendada') avisos.push(`<div class="at-aviso roxo" style="margin:0 0 14px;">Aprovação marcada para <b>${atQuando(a.aprovacao_em)}</b>.</div>`);
-  if(a.venda_status) avisos.push(`<div class="at-aviso" style="margin:0 0 14px;">Venda de <b>${atDin(a.venda_valor)}</b>: ${({aguardando:'aguardando confirmação do representante',confirmada:'confirmada',recusada:'recusada pelo representante'})[a.venda_status]}.</div>`);
-  const passo = P ? htmlPasso(a) : '';
+  if(!cheia){
+    if(a.situacao==='reprovado') avisos.push(`<div class="alerta" style="margin-bottom:14px;"><div class="t">Aprovação não liberada${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}</div>${a.aprovacao_motivo?`<div class="s">${esc(a.aprovacao_motivo)}</div>`:''}</div>`);
+    if(a.situacao==='aprovado') avisos.push(`<div class="at-aviso verde" style="margin:0 0 14px;">Aprovado${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}.${a.resposta_cliente?` Resposta do cliente: <b>${esc(a.resposta_cliente)}</b>.`:''}${a.retorno_em?` Retorno: <b>${atQuando(a.retorno_em)}</b>.`:''}${!a.proposta_em && !(a.id in A.espera) ? ' <button class="link" id="atGerarAviso">Gerar proposta</button>' : ''}</div>`);
+    if(a.situacao==='aprovacao_agendada') avisos.push(`<div class="at-aviso roxo" style="margin:0 0 14px;">Aprovação marcada para <b>${atQuando(a.aprovacao_em)}</b>.</div>`);
+    if(a.venda_status) avisos.push(`<div class="at-aviso" style="margin:0 0 14px;">Venda de <b>${atDin(a.venda_valor)}</b>: ${({aguardando:'aguardando confirmação do representante',confirmada:'confirmada',recusada:'recusada pelo representante'})[a.venda_status]}.</div>`);
+  }
+  const passo = A.passo && !cheia ? htmlPasso(a) : '';
+  const podeEnviar = ['em_atendimento','vai_voltar','reprovado'].includes(a.situacao);
+  let barra;
+  if(et==='dados') barra = `${cheia ? '' : '<button class="btn" data-at-sub="tabelas">Ver tabelas</button>'}<button class="btn" id="atSalvar">Salvar</button>${cheia ? '' : '<button class="btn" id="atFinalizar">Finalizar</button>'}<button class="btn gold" data-etapa="proj">Continuar para projeções</button>`;
+  else barra = `<button class="btn" data-etapa="dados">Voltar aos dados</button>${cheia ? '' : '<button class="btn" data-at-sub="tabelas">Ver tabelas</button>'}<button class="btn" id="atSalvar">Salvar</button>${cheia ? (podeEnviar ? '<button class="btn gold" id="atEnviarLoja">Enviar para aprovação</button>' : '') : '<button class="btn gold" id="atFinalizar">Finalizar atendimento</button>'}`;
   return `
     <div class="at-guarda" data-k="f${a.id}">
-    <button class="link" id="atVoltar" style="margin-bottom:10px;">← Meus clientes</button>
-    ${a.situacao==='aprovacao_loja' && !state.at.emLoja ? '<div class="at-aviso roxo" style="margin:0 0 14px;">Aguardando aprovação com o cliente na loja. <button class="link" id="atRetomar">Voltar para a tela do cliente</button></div>' : ''}
+    ${cheia ? `<div class="at-cheia-topo"><div><div class="at-marca">FBS Prime</div><div class="at-cheia-nome serif">${esc(c.nome)}</div></div><button class="btn small" id="atSairCheia">Sair da tela cheia</button></div>` : '<button class="link" id="atVoltar" style="margin-bottom:10px;">← Meus clientes</button>'}
     ${avisos.join('')}
     ${passo}
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-h"><h3>Dados do cliente</h3><span class="hint">${nVisita}ª visita · ${atQuando(a.criado_em)} · Canal: ${esc(atCanalNome(c.canal))}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</span></div>
-      <div class="card-b at-grade">
-        ${atCampo('Nome','fNome',c.nome)}
-        <div><label class="at-r">Telefone</label><div class="at-fixo">${atTel(c.telefone)}</div></div>
-        ${atCampo('Telefone 2','fTel2',c.telefone2,'inputmode="tel"')}
-        ${atCampo('Bem de interesse','fBem',a.bem)}
-        ${atCampo('Valor do crédito','fCredito',atNum(a.credito),'inputmode="decimal"')}
-        ${atCampo('Valor da renda','fRenda',atNum(a.renda),'inputmode="decimal"')}
-        ${atCampo('Valor da entrada','fEntrada',atNum(a.entrada),'inputmode="decimal"')}
-        ${atCampo('Valor das parcelas','fParcela',atNum(a.parcela),'inputmode="decimal"')}
-        <div><label class="at-r" for="fRestricao">Restrição no nome</label>${atSimNao('fRestricao',a.restricao)}</div>${atCampo('Valor da restrição','fRestricaoV',atNum(a.restricao_valor),'inputmode="decimal"')}
-        <div><label class="at-r" for="fFgts">FGTS</label>${atSimNao('fFgts',a.fgts)}</div>${atCampo('Valor do FGTS','fFgtsV',atNum(a.fgts_valor),'inputmode="decimal"')}
-        <div><label class="at-r" for="fAluguel">Aluguel</label>${atSimNao('fAluguel',a.aluguel)}</div>${atCampo('Valor do aluguel','fAluguelV',atNum(a.aluguel_valor),'inputmode="decimal"')}
+    <div class="at-etapas">
+      <button class="at-etapa-b ${et==='dados'?'on':''}" data-etapa="dados"><span>1</span>Dados do cliente</button>
+      <i></i>
+      <button class="at-etapa-b ${et==='proj'?'on':''}" data-etapa="proj"><span>2</span>Projeções</button>
+    </div>
+    <div class="at-etapa-c ${et==='dados'?'on':''}">
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-h"><h3>Dados do cliente</h3>${cheia ? '' : `<span class="hint">${nVisita}ª visita · ${atQuando(a.criado_em)} · Canal: ${esc(atCanalNome(c.canal))}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</span>`}</div>
+        <div class="card-b at-grade">
+          ${atCampo('Nome','fNome',c.nome)}
+          <div><label class="at-r">Telefone</label><div class="at-fixo">${atTel(c.telefone)}</div></div>
+          ${atCampo('Telefone 2','fTel2',c.telefone2,'inputmode="tel"')}
+          ${atCampo('Bem de interesse','fBem',a.bem)}
+          ${atCampo('Valor do crédito','fCredito',atNum(a.credito),'inputmode="decimal"')}
+          ${atCampo('Valor da renda','fRenda',atNum(a.renda),'inputmode="decimal"')}
+          ${atCampo('Valor da entrada','fEntrada',atNum(a.entrada),'inputmode="decimal"')}
+          ${atCampo('Valor das parcelas','fParcela',atNum(a.parcela),'inputmode="decimal"')}
+          <div><label class="at-r" for="fRestricao">Restrição no nome</label>${atSimNao('fRestricao',a.restricao)}</div>${atCampo('Valor da restrição','fRestricaoV',atNum(a.restricao_valor),'inputmode="decimal"')}
+          <div><label class="at-r" for="fFgts">FGTS</label>${atSimNao('fFgts',a.fgts)}</div>${atCampo('Valor do FGTS','fFgtsV',atNum(a.fgts_valor),'inputmode="decimal"')}
+          <div><label class="at-r" for="fAluguel">Aluguel</label>${atSimNao('fAluguel',a.aluguel)}</div>${atCampo('Valor do aluguel','fAluguelV',atNum(a.aluguel_valor),'inputmode="decimal"')}
+        </div>
       </div>
+      ${visitas.length>1 && !cheia ? `<div class="card"><div class="card-h"><h3>Histórico de visitas</h3></div><div class="card-b">${visitas.map((v,i)=>`<div class="at-linha-h"><button class="link" data-at-ficha="${v.id}">${i+1}ª visita · ${atQuando(v.criado_em)}</button>${atPill(v.situacao)}</div>`).join('')}</div></div>` : ''}
     </div>
-    <div class="at-duas">${htmlProj(0)}${htmlProj(1)}</div>
-    ${visitas.length>1 ? `<div class="card" style="margin-top:14px;"><div class="card-h"><h3>Histórico de visitas</h3></div><div class="card-b">${visitas.map((v,i)=>`<div class="at-linha-h"><button class="link" data-at-ficha="${v.id}">${i+1}ª visita · ${atQuando(v.criado_em)}</button>${atPill(v.situacao)}</div>`).join('')}</div></div>` : ''}
-    <div class="at-barra">
-      <button class="btn" data-at-sub="tabelas">Ver tabelas</button>
-      <button class="btn" id="atSalvar">Salvar</button>
-      <button class="btn gold" id="atFinalizar">Finalizar atendimento</button>
-    </div>
+    <div class="at-etapa-c ${et==='proj'?'on':''}"><div class="at-duas at-proj">${htmlProj(0)}${htmlProj(1)}</div></div>
+    <div class="at-barra">${barra}</div>
     </div>`;
 }
 function htmlPasso(a){
@@ -4653,49 +4690,93 @@ async function atAcao(fn, msg){
 const atIso = id => { const v = (document.getElementById(id)||{}).value; return v ? new Date(v).toISOString() : null; };
 function bindFicha(app){
   const id = state.at.fichaId, g = x => document.getElementById(x);
-  g('atVoltar').onclick = async ()=>{ if(await atSalvar(true)){ state.at.fichaId = null; state.at.passo = null; render(); } };
+  if(g('atVoltar')) g('atVoltar').onclick = async ()=>{ if(await atSalvar(true)){ state.at.fichaId = null; state.at.passo = null; render(); } };
   g('atSalvar').onclick = ()=>atSalvar(false);
-  if(g('atRetomar')) g('atRetomar').onclick = ()=>{ state.at.emLoja = id; state.at.emLojaDesde = Date.now(); state.at.proposta = false; render(); };
-  g('atFinalizar').onclick = async ()=>{
+  if(g('atCheia')) g('atCheia').onclick = ()=>{ atEntrarCheia(); render(); window.scrollTo(0,0); };
+  if(g('atSairCheia')) g('atSairCheia').onclick = ()=>{ atSairCheia(); render(); window.scrollTo(0,0); };
+  if(g('atEnviarLoja')) g('atEnviarLoja').onclick = ()=>atEnviarLoja(id);
+  if(g('atGerarAviso')) g('atGerarAviso').onclick = ()=>{ state.at.espera[id] = Date.now(); render(); };
+  app.querySelectorAll('[data-etapa]').forEach(b=>{ b.onclick = ()=>{ atSalvar(true); state.at.etapa = b.getAttribute('data-etapa'); render(); window.scrollTo(0,0); }; });
+  if(g('atFinalizar')) g('atFinalizar').onclick = async ()=>{
     const d = atColetar();
     if(!d.bem || !d.credito){ alert('Preenche o bem de interesse e o valor do crédito antes de finalizar.'); return; }
     if(await atSalvar(true)){ state.at.passo = 'fim'; render(); window.scrollTo(0,0); }
   };
   app.querySelectorAll('[data-at-passo]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); state.at.passo = b.getAttribute('data-at-passo') || null; render(); }; });
   app.querySelectorAll('[data-at-ficha]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); state.at.fichaId = Number(b.getAttribute('data-at-ficha')); state.at.passo = null; render(); window.scrollTo(0,0); }; });
-  if(g('atLoja')) g('atLoja').onclick = async ()=>{
-    try{ await rpc('pedir_aprovacao', {p_id:id, p_quando:null}); state.at.emLoja = id; state.at.emLojaDesde = Date.now(); state.at.proposta = false; state.at.passo = null; await loadAtendimentos(true); render(); }
-    catch(e){ alert(atErroTexto(e)); }
-  };
+  if(g('atLoja')) g('atLoja').onclick = ()=>atEnviarLoja(id);
   if(g('atOkVoltar')) g('atOkVoltar').onclick = ()=>{ const q = atIso('atQuando'); if(!q){ alert('Escolhe o dia e a hora.'); return; } atAcao(()=>rpc('finalizar_atendimento',{p_id:id,p_situacao:'vai_voltar',p_retorno:q,p_motivo:null}),'Retorno agendado'); };
   if(g('atOkAgendar')) g('atOkAgendar').onclick = ()=>{ const q = atIso('atQuando'); if(!q){ alert('Escolhe o dia e a hora.'); return; } atAcao(()=>rpc('pedir_aprovacao',{p_id:id,p_quando:q}),'Enviado para aprovação'); };
   if(g('atOkNao')) g('atOkNao').onclick = ()=>{ const m = g('atMotivo').value.trim(); if(!m){ alert('Escreve o motivo.'); return; } atAcao(()=>rpc('finalizar_atendimento',{p_id:id,p_situacao:'nao_volta',p_retorno:null,p_motivo:m}),'Atendimento finalizado'); };
   if(g('atOkVenda')) g('atOkVenda').onclick = ()=>{ const v = parseBRL(g('atVValor').value), d = g('atVData').value; if(!v || !d){ alert('Preenche o valor e a data.'); return; } atAcao(()=>rpc('registrar_fechamento',{p_id:id,p_valor:v,p_data:d}),'Venda enviada para confirmação'); };
 }
 
-// ---------------- Tela virada para o cliente ----------------
-function htmlTelaCliente(){
-  const a = (state.at.lista||[]).find(x=>x.id===state.at.emLoja);
-  if(!a) return '';
-  const nome = esc(a.clientes.nome), credito = atDin(a.credito);
-  let m;
-  if(state.at.proposta) m = `<div class="at-spin"></div><div class="at-eb">Proposta enviada ao financeiro</div><div class="at-h">Gerando a proposta de ${nome}</div><div style="margin:12px 0 22px;"><span class="pill ok">Status: em andamento</span></div><button class="btn gold" id="atCadVenda">Concluir e cadastrar a venda</button>`;
-  else if(a.situacao==='aprovado') m = `<div class="at-eb">FBS Prime · Análise de crédito</div><div class="at-ok">Aprovado</div><div class="at-h">Proposta em nome de ${nome}</div><div class="at-s">Crédito de ${credito}</div><div style="font-size:18px;margin:22px 0 16px;">Podemos gerar a proposta?</div><button class="btn" id="atAindaNao" style="margin-right:8px;">Ainda não</button><button class="btn gold" id="atGerar">Sim, gerar proposta</button>`;
-  else if(a.situacao==='reprovado') m = `<div class="at-eb">FBS Prime · Análise de crédito</div><div class="at-h">Precisamos confirmar mais alguns dados com você</div><div class="at-s">Seu consultor vai conversar com você agora.</div><button class="btn" id="atFecharTela" style="margin-top:22px;">Voltar</button>`;
-  else {
-    const passou5 = Date.now() - state.at.emLojaDesde > 5*60*1000;
-    m = `<div class="at-spin"></div><div class="at-eb">FBS Prime · Análise de crédito</div><div class="at-h">Analisando a proposta de ${nome}</div><div class="at-s">Crédito de ${credito} · Aguarde um instante</div>${passou5 ? '<button class="link" id="atDesistir" style="margin-top:26px;">agendar a aprovação para depois</button>' : ''}`;
-  }
-  return `<div class="at-tela"><div class="at-tela-c">${m}</div></div>`;
+// ---------------- Tela cheia e aviso de aprovacao ----------------
+function atEntrarCheia(){
+  state.at.cheia = true;
+  const el = document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen().catch(()=>{}); // no iPhone fica so o modo sem menu
 }
-function bindTelaCliente(){
-  const g = x => document.getElementById(x), id = state.at.emLoja;
-  const volta = passo => { state.at.emLoja = null; state.at.proposta = false; state.at.fichaId = id; state.at.passo = passo; render(); };
-  if(g('atGerar')) g('atGerar').onclick = async ()=>{ try{ await rpc('marcar_proposta',{p_id:id}); state.at.proposta = true; render(); }catch(e){ alert(atErroTexto(e)); } };
-  if(g('atAindaNao')) g('atAindaNao').onclick = ()=>volta('fim');
-  if(g('atFecharTela')) g('atFecharTela').onclick = ()=>volta(null);
-  if(g('atCadVenda')) g('atCadVenda').onclick = ()=>volta('fechou');
-  if(g('atDesistir')) g('atDesistir').onclick = ()=>volta('agendar');
+function atSairCheia(){
+  state.at.cheia = false;
+  if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+}
+document.addEventListener('fullscreenchange', ()=>{ if(!document.fullscreenElement && state.at.cheia){ state.at.cheia = false; render(); } });
+async function atEnviarLoja(id){
+  const d = atColetar();
+  if(!d.bem || !d.credito){ alert('Preenche o bem de interesse e o valor do crédito antes de enviar.'); return; }
+  if(!await atSalvar(true)) return;
+  try{ await rpc('pedir_aprovacao', {p_id:id, p_quando:null}); state.at.passo = null; await loadAtendimentos(true); render(); }
+  catch(e){ alert(atErroTexto(e)); }
+}
+function atSincEspera(){
+  const E = state.at.espera, L = state.at.lista;
+  if(!L) return;
+  L.forEach(a=>{ if(a.situacao==='aprovacao_loja' && !(a.id in E)) E[a.id] = Date.now(); });
+  Object.keys(E).forEach(id=>{ const a = L.find(x=>x.id===Number(id)); if(!a || !['aprovacao_loja','aprovado','reprovado'].includes(a.situacao)) delete E[id]; });
+}
+function atPopHtml(a){
+  const cheia = state.at.cheia, nome = esc(a.clientes.nome), credito = atDin(a.credito), id = a.id;
+  if(a.situacao==='aprovacao_loja'){
+    const passou5 = Date.now() - state.at.espera[id] > 5*60*1000;
+    return `<div class="at-pop"><div class="at-pop-l"><span class="at-spin"></span><div style="min-width:0;"><b>${cheia ? 'Analisando sua proposta' : 'Aguardando aprovação'}</b><small>${nome} · ${credito}</small>${passou5 ? `<button class="link" data-pop="agendar" data-id="${id}">agendar para depois</button>` : ''}</div></div></div>`;
+  }
+  if(a.situacao==='aprovado' && !a.proposta_em)
+    return `<div class="at-pop res"><div class="at-pop-eb">Análise de crédito</div><div class="at-pop-ok serif">Aprovado</div><div class="at-pop-t">Proposta em nome de ${nome}</div><small>Crédito de ${credito}</small><div class="at-pop-p">Podemos gerar a proposta?</div><div class="at-pop-a"><button class="btn small" data-pop="fechar" data-id="${id}">Ainda não</button><button class="btn small gold" data-pop="gerar" data-id="${id}">Sim, gerar proposta</button></div></div>`;
+  if(a.situacao==='aprovado')
+    return `<div class="at-pop"><div class="at-pop-l"><span class="at-spin"></span><div style="min-width:0;"><b>Proposta enviada ao financeiro</b><small>${nome} · em andamento</small></div></div><div class="at-pop-a"><button class="btn small" data-pop="fechar" data-id="${id}">Fechar aviso</button><button class="btn small gold" data-pop="venda" data-id="${id}">Concluir e cadastrar venda</button></div></div>`;
+  return `<div class="at-pop"><div class="at-pop-t">Precisamos confirmar mais alguns dados com você</div><small>${nome}</small>${!cheia && a.aprovacao_motivo ? `<div class="at-pop-priv">Só você vê: ${esc(a.aprovacao_motivo)}</div>` : ''}<div class="at-pop-a"><button class="btn small" data-pop="fechar" data-id="${id}">Entendi</button></div></div>`;
+}
+let atPopsUltimo = '';
+function atPintarPops(){
+  let box = document.getElementById('atPops');
+  if(!box){
+    box = document.createElement('div');
+    box.id = 'atPops';
+    box.setAttribute('aria-live', 'polite');
+    box.onclick = e=>{ const b = e.target.closest('[data-pop]'); if(b) atPopAcao(b.getAttribute('data-pop'), Number(b.getAttribute('data-id'))); };
+    document.body.appendChild(box);
+  }
+  const L = state.at.lista || [];
+  const html = state.view!=='app' ? '' : Object.keys(state.at.espera).map(id=>L.find(x=>x.id===Number(id))).filter(Boolean).map(atPopHtml).join('');
+  if(html === atPopsUltimo) return; // mesmo conteudo: nao reinicia a animacao
+  atPopsUltimo = html;
+  box.innerHTML = html;
+}
+async function atPopAcao(acao, id){
+  const A = state.at;
+  if(acao==='fechar'){ delete A.espera[id]; render(); return; }
+  if(acao==='gerar'){
+    try{ await rpc('marcar_proposta', {p_id:id}); await loadAtendimentos(true); render(); }
+    catch(e){ console.error(e); alert(atErroTexto(e)); }
+    return;
+  }
+  // agendar e cadastrar venda sao coisas do vendedor: saem da tela do cliente
+  atSairCheia();
+  if(A.fichaId && A.fichaId!==id) await atSalvar(true);
+  A.fichaId = id; A.passo = acao==='venda' ? 'fechou' : 'agendar'; state.centralTab = 'atendimentos';
+  render();
+  window.scrollTo(0,0);
 }
 
 // ---------------- Tabelas ----------------
@@ -4760,13 +4841,12 @@ function paginaAtendimentosVendedor(){
   const A = state.at;
   const top = {titulo:'Atendimentos', sub:'Suas fichas, clientes e tabelas'};
   if(!A.lista) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando...</div></div>`};
-  const tela = htmlTelaCliente();
   const aberta = A.fichaId ? A.lista.find(x=>x.id===A.fichaId) : null;
   if(aberta){
     top.titulo = esc(aberta.clientes.nome);
     top.sub = `Ficha de atendimento · ${esc(aberta.vendedor)}`;
-    top.acoes = atPill(aberta.situacao);
-    return {top, html: htmlFicha(aberta) + tela, bind: app=>{ bindFicha(app); app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); A.fichaId = null; A.passo = null; A.sub = b.getAttribute('data-at-sub'); if(!A.tabelas) loadTabelas(); render(); }; }); bindTelaCliente(); }};
+    top.acoes = `<span style="display:flex;align-items:center;gap:10px;">${atPill(aberta.situacao)}<button class="btn small" id="atCheia">Abrir em tela cheia</button></span>`;
+    return {top, html: htmlFicha(aberta), bind: app=>{ bindFicha(app); app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); A.fichaId = null; A.passo = null; A.sub = b.getAttribute('data-at-sub'); if(!A.tabelas) loadTabelas(); render(); }; }); }};
   }
   top.acoes = `<div class="seg">${[['clientes','Meus clientes'],['novo','Novo atendimento'],['tabelas','Tabelas']].map(s=>`<button class="${A.sub===s[0]?'on':''}" data-at-sub="${s[0]}">${s[1]}</button>`).join('')}</div>`;
   let html;
@@ -4777,7 +4857,8 @@ function paginaAtendimentosVendedor(){
     app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = ()=>{ atLerNovoSeguro(); A.sub = b.getAttribute('data-at-sub'); if(A.sub==='tabelas' && !A.tabelas) loadTabelas(); render(); }; });
     if(A.sub==='novo'){
       document.getElementById('atBuscar').onclick = atBuscar;
-      document.getElementById('atAbrir').onclick = atAbrir;
+      document.getElementById('atAbrir').onclick = ()=>atAbrir(false);
+      document.getElementById('atAbrirCheia').onclick = ()=>atAbrir(true);
       app.querySelectorAll('[data-at-modo]').forEach(b=>{ b.onclick = ()=>{ atLerNovo(); A.novo.modo = b.getAttribute('data-at-modo'); render(); }; });
       app.querySelectorAll('[data-at-canal]').forEach(b=>{ b.onclick = ()=>{ atLerNovo(); A.novo.canal = b.getAttribute('data-at-canal'); render(); }; });
     }
@@ -4787,9 +4868,8 @@ function paginaAtendimentosVendedor(){
       busca.oninput = ()=>{ A.busca = busca.value; document.getElementById('atLista').innerHTML = htmlListaClientes(); bindLista(app); };
       bindLista(app);
     }
-    bindTelaCliente();
   };
-  return {top, html: html + tela, bind};
+  return {top, html, bind};
 }
 const atLerNovoSeguro = () => { if(document.getElementById('atTel')) atLerNovo(); };
 function atGrupos(){
@@ -4932,6 +5012,9 @@ render = function(pulse){
     g.querySelectorAll('input[id],select[id]').forEach(e=>{ if(e.id in v) e.value = v[e.id]; });
   });
   if(ativo){ const e = document.getElementById(ativo); if(e && e.closest('.at-guarda')) e.focus(); }
+  document.body.classList.toggle('at-cheia', !!(state.view==='app' && state.centralTab==='atendimentos' && A.cheia && A.fichaId));
+  if(state.view==='app') atSincEspera();
+  atPintarPops();
 };
 function renderFichaDrawer(){
   const a = state.at.lista.find(x=>x.id===state.at.drawerId);
