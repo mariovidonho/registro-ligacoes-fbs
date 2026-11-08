@@ -1151,6 +1151,7 @@ async function addVendor(){
   await loadVendorList();
   if(state.adminRows) await loadAdminData();
   else render();
+  loadCoordenadores();
   showCronoToast('Vendedores', `${esc(name)} cadastrado. No primeiro acesso, ele cria o PIN de 6 números.`);
 }
 
@@ -1178,11 +1179,17 @@ async function redefinirPin(nome){
     alert('Não foi possível redefinir o PIN. Tenta de novo.');
     return;
   }
+  await loadCoordenadores();
   showCronoToast('Acesso', `PIN provisório definido para ${esc(nome)}`);
 }
 
 async function loadCoordenadores(){
-  try{ state.coords = await rpc('admin_coordenadores', {}, 1) || []; }
+  try{
+    const [coords, pins] = await Promise.all([rpc('admin_coordenadores', {}, 1), rpc('admin_ver_pins', {}, 1)]);
+    state.coords = coords || [];
+    state.pins = {};
+    (pins||[]).forEach(x=>{ state.pins[x.papel+'|'+x.nome] = x.pin; });
+  }
   catch(e){ console.error('Falha ao carregar coordenadores', e); state.coords = []; }
   if(state.view==='admin') render();
 }
@@ -1257,6 +1264,8 @@ let state = {
   login: {papel:'vendedor', nome:'', nomes:null, erro:'', enviando:false},
   perfilAcesso: null,    // {papel, nome, equipe, trocar_pin} de quem esta logado
   coords: null,          // coordenadores (so o representante carrega)
+  pins: null,            // PINs visiveis ao representante
+  pinsAbertos: null,     // quais PINs estao revelados na tela
   relUrls: null          // links temporarios dos PDFs de relatorio
 };
 
@@ -1648,6 +1657,14 @@ async function adminSaveMeta(vendor, campo, valor){
 }
 
 const trocarVendedor = sairDoSistema;
+
+// PIN mascarado no cartao; o representante clica para ver
+function campoPin(nome, papel){
+  const pin = (state.pins||{})[papel+'|'+nome];
+  if(!pin) return '<span class="mute" style="font-size:12px;">PIN: redefina para ver</span>';
+  const k = papel+'|'+nome, aberto = (state.pinsAbertos||{})[k];
+  return `<span style="font-size:12px;color:var(--a-dim);">PIN: <b style="color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:.08em;">${aberto ? esc(pin) : '••••••'}</b> <button class="link" data-ver-pin="${esc(k)}">${aberto ? 'ocultar' : 'ver'}</button></span>`;
+}
 
 function periodInputHtml(){
   if(state.periodType==='dia'){
@@ -2789,6 +2806,7 @@ function paginaVendedores(){
             <button class="link" data-perfil="${esc(v)}">editar perfil</button>
           </div>
           ${(VENDOR_PERFIL[v]||{}).frase ? `<div style="font-size:12px;color:var(--a-dim);font-style:italic;">“${esc(VENDOR_PERFIL[v].frase)}”</div>` : ''}
+          <div>${campoPin(v, 'vendedor')}</div>
           <div class="stats">
             <div><span>Ligações</span><b>${r.total}</b></div>
             <div><span>Atend.</span><b>${r.total ? pct(r.atendeu,r.total)+'%' : '—'}</b></div>
@@ -2812,6 +2830,7 @@ function paginaVendedores(){
     <div class="cards-grid">
       ${(state.coords||[]).map(c=>`<div class="pcard">
         <div class="top">${avatar(c.nome)}<div style="flex:1;min-width:0;"><div class="nm">${esc(c.nome)}</div><div class="meta-l">Equipe ${esc(c.equipe||'—')}${c.trocar_pin ? ' · aguardando 1º acesso' : ''}</div></div></div>
+        <div>${campoPin(c.nome, 'coordenador')}</div>
         <div class="foot"><span></span><span><button class="link" data-pin="${esc(c.nome)}">redefinir PIN</button> <button class="link danger" data-coord-rem="${esc(c.nome)}">remover</button></span></div>
       </div>`).join('')}
       <div class="pcard novo">
@@ -2826,6 +2845,11 @@ function paginaVendedores(){
     document.getElementById('addVendorBtn').onclick = addVendor;
     document.getElementById('addCoordBtn').onclick = addCoordenador;
     app.querySelectorAll('[data-pin]').forEach(b=>{ b.onclick = ()=>redefinirPin(b.getAttribute('data-pin')); });
+    app.querySelectorAll('[data-ver-pin]').forEach(b=>{ b.onclick = ()=>{
+      const k = b.getAttribute('data-ver-pin');
+      state.pinsAbertos = {...(state.pinsAbertos||{}), [k]: !(state.pinsAbertos||{})[k]};
+      render();
+    }; });
     app.querySelectorAll('[data-coord-rem]').forEach(b=>{ b.onclick = ()=>removeCoordenador(b.getAttribute('data-coord-rem')); });
     app.querySelectorAll('[data-equipe-de]').forEach(sel=>{
       sel.onchange = async ()=>{
@@ -4569,7 +4593,7 @@ function renderNovoPin(app){
       <main class="lg-form">
         <div class="lg-card">
           <h1>Crie seu novo PIN</h1>
-          <div class="sub">${esc(P.nome.split(' ')[0])}, para proteger os dados dos clientes, seu acesso agora usa um PIN de <b style="color:var(--text);">6 números</b>. Só você vai saber: nem o gestor consegue ver.</div>
+          <div class="sub">${esc(P.nome.split(' ')[0])}, para proteger os dados dos clientes, seu acesso agora usa um PIN de <b style="color:var(--text);">6 números</b>.</div>
           <label class="lg-rotulo" for="npPin">Novo PIN</label>
           <input id="npPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="6 números">
           <label class="lg-rotulo" for="npPin2">Repita o PIN</label>

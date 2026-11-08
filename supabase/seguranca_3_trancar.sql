@@ -81,7 +81,113 @@ end
 $$;
 revoke all on function public.sync_airtable_metricas() from public, anon, authenticated;
 
--- PINs não ficam mais em texto no banco: o login usa só a versão criptografada
+-- PINs visíveis para o representante: cifrados, numa tabela sem acesso direto, lidos só por admin_ver_pins()
+do $$
+begin
+  if not exists (select 1 from vault.secrets where name = 'pins_chave') then
+    perform vault.create_secret(encode(extensions.gen_random_bytes(32), 'hex'), 'pins_chave', 'Chave que cifra os PINs visíveis ao representante');
+  end if;
+end
+$$;
+create table if not exists public.pins_visiveis (
+  nome          text not null,
+  papel         text not null,
+  pin_cifrado   bytea not null,
+  atualizado_em timestamptz not null default now(),
+  primary key (nome, papel)
+);
+alter table public.pins_visiveis enable row level security;
+
+create or replace function public.guardar_pin(p_nome text, p_papel text, p_pin text) returns void
+language sql security definer set search_path = public, extensions as $$
+  insert into public.pins_visiveis (nome, papel, pin_cifrado)
+  values (p_nome, p_papel, extensions.pgp_sym_encrypt(p_pin, (select decrypted_secret from vault.decrypted_secrets where name = 'pins_chave')))
+  on conflict (nome, papel) do update set pin_cifrado = excluded.pin_cifrado, atualizado_em = now()
+$$;
+revoke all on function public.guardar_pin(text, text, text) from public, anon, authenticated;
+
+create or replace function public.admin_ver_pins()
+returns table (nome text, papel text, pin text)
+language plpgsql stable security definer set search_path = public, extensions as $$
+begin
+  perform public.exigir_rep();
+  return query
+    select p.nome, p.papel, extensions.pgp_sym_decrypt(p.pin_cifrado, (select decrypted_secret from vault.decrypted_secrets where name = 'pins_chave'))
+    from public.pins_visiveis p;
+end
+$$;
+revoke all on function public.admin_ver_pins() from public, anon;
+grant execute on function public.admin_ver_pins() to authenticated;
+
+create or replace function public.trocar_meu_pin(p_novo text) returns void
+language plpgsql security definer set search_path = public, extensions, auth as $$
+declare r public.perfis;
+begin
+  if p_novo !~ '^[0-9]{6}$' then raise exception 'O PIN precisa ter 6 números'; end if;
+  select * into r from public.perfis where user_id = auth.uid();
+  update auth.users set encrypted_password = extensions.crypt('fbs-' || p_novo, extensions.gen_salt('bf')), updated_at = now()
+   where id = auth.uid();
+  update public.perfis set trocar_pin = false where user_id = auth.uid();
+  perform public.guardar_pin(r.nome, r.papel, p_novo);
+end
+$$;
+
+create or replace function public.admin_criar_vendedor(p_nome text, p_pin text, p_equipe text) returns void
+language plpgsql security definer set search_path = public as $$
+declare v_id uuid;
+begin
+  perform public.exigir_rep();
+  if p_pin !~ '^[0-9]{4,6}$' then raise exception 'O PIN provisório precisa ter de 4 a 6 números'; end if;
+  insert into public.vendedores (nome, equipe) values (trim(p_nome), p_equipe);
+  v_id := public.criar_login(public.email_login(trim(p_nome)), 'fbs-' || p_pin);
+  insert into public.perfis (user_id, papel, nome, equipe, trocar_pin) values (v_id, 'vendedor', trim(p_nome), p_equipe, true);
+  perform public.guardar_pin(trim(p_nome), 'vendedor', p_pin);
+end
+$$;
+
+create or replace function public.admin_criar_coordenador(p_nome text, p_pin text, p_equipe text) returns void
+language plpgsql security definer set search_path = public as $$
+declare v_id uuid;
+begin
+  perform public.exigir_rep();
+  if p_pin !~ '^[0-9]{4,6}$' then raise exception 'O PIN provisório precisa ter de 4 a 6 números'; end if;
+  v_id := public.criar_login(public.email_login(trim(p_nome)), 'fbs-' || p_pin);
+  insert into public.perfis (user_id, papel, nome, equipe, trocar_pin) values (v_id, 'coordenador', trim(p_nome), p_equipe, true);
+  perform public.guardar_pin(trim(p_nome), 'coordenador', p_pin);
+end
+$$;
+
+create or replace function public.admin_redefinir_pin(p_nome text, p_pin text) returns void
+language plpgsql security definer set search_path = public, extensions, auth as $$
+declare r record;
+begin
+  perform public.exigir_rep();
+  if p_pin !~ '^[0-9]{4,6}$' then raise exception 'O PIN provisório precisa ter de 4 a 6 números'; end if;
+  update auth.users set encrypted_password = extensions.crypt('fbs-' || p_pin, extensions.gen_salt('bf')), updated_at = now()
+   where id in (select user_id from public.perfis where nome = p_nome and papel in ('vendedor', 'coordenador'));
+  update public.perfis set trocar_pin = true where nome = p_nome and papel in ('vendedor', 'coordenador');
+  for r in select papel from public.perfis where nome = p_nome and papel in ('vendedor', 'coordenador') loop
+    perform public.guardar_pin(p_nome, r.papel, p_pin);
+  end loop;
+end
+$$;
+
+create or replace function public.admin_remover_acesso(p_nome text, p_papel text) returns void
+language plpgsql security definer set search_path = public, auth as $$
+begin
+  perform public.exigir_rep();
+  if p_papel not in ('vendedor', 'coordenador') then raise exception 'Papel inválido'; end if;
+  delete from auth.users where id in (select user_id from public.perfis where nome = p_nome and papel = p_papel);
+  delete from public.pins_visiveis where nome = p_nome and papel = p_papel;
+  if p_papel = 'vendedor' then delete from public.vendedores where nome = p_nome; end if;
+end
+$$;
+
+-- traz os PINs de quem ainda não trocou, e só depois tira o texto puro da tabela de vendedores
+select public.guardar_pin(v.nome, 'vendedor', v.pin)
+from public.vendedores v
+join public.perfis p on p.nome = v.nome and p.papel = 'vendedor' and p.trocar_pin
+where v.pin is not null;
 update public.vendedores set pin = null;
 
 select count(*) as regras_abertas from pg_policies where policyname = 'site';
