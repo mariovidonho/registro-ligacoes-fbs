@@ -848,6 +848,60 @@
     .lg-form{align-items:flex-start;padding:24px 18px 40px;}
   }
 
+  /* ---- Atendimentos ---- */
+  .pill.roxo{color:#C9B8F0;border-color:rgba(179,157,219,.5);background:rgba(179,157,219,.12);}
+  .at-r{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--a-dim);font-weight:600;margin-bottom:6px;}
+  .at-tit{font-size:13px;font-weight:600;margin-bottom:8px;}
+  body.modo-admin .mute{color:var(--a-mute);}
+  .at-estreito{max-width:640px;}
+  .at-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+  .at-duas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+  .at-duas .at-grade{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .at-fixo{background:var(--a-card-2);border:1px solid var(--a-line);border-radius:10px;padding:9px 12px;font-size:14px;min-height:39px;}
+  .at-ops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .at-ops.tres{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .at-op{background:var(--a-card-2);border:1px solid var(--a-line);border-radius:12px;padding:13px 14px;color:var(--text);text-align:left;cursor:pointer;font:500 14px Inter,sans-serif;}
+  .at-op span{display:block;font-size:12px;font-weight:400;color:var(--a-dim);margin-top:2px;}
+  .at-op b{font-weight:600;}
+  .at-op:hover{border-color:#2C4C68;}
+  .at-op.on{border-color:var(--a-gold);background:var(--a-gold-soft);}
+  .at-op:disabled{opacity:.45;cursor:not-allowed;}
+  .at-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .at-chip{background:var(--a-card-2);border:1px solid var(--a-line);border-radius:999px;padding:8px 14px;color:var(--text);cursor:pointer;font:500 13px Inter,sans-serif;}
+  .at-chip.on{border-color:var(--a-gold);color:var(--a-gold);background:var(--a-gold-soft);}
+  .at-lgpd{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:13px;color:var(--a-dim);line-height:1.45;cursor:pointer;}
+  body.modo-admin .at-lgpd input{width:auto;margin-top:2px;padding:0;}
+  .at-aviso{margin-top:10px;font-size:13px;color:var(--a-dim);background:var(--a-card-2);border-radius:10px;padding:9px 12px;line-height:1.45;}
+  .at-aviso b{color:var(--text);}
+  .at-aviso.roxo{background:rgba(179,157,219,.12);color:#C9B8F0;}
+  .at-aviso.verde{background:rgba(47,158,100,.13);color:#5FD39A;}
+  .at-passo{border-color:rgba(201,168,76,.55);margin-bottom:14px;}
+  .at-barra{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;background:linear-gradient(transparent,#0A1520 30%);padding:18px 0 8px;margin-top:6px;}
+  .at-cli{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;border-top:1px solid rgba(29,56,80,.6);padding:12px 20px;color:var(--text);text-align:left;cursor:pointer;font:500 14px Inter,sans-serif;flex-wrap:wrap;}
+  .at-cli:hover{background:rgba(255,255,255,.03);}
+  .at-cli b{font-weight:600;}
+  .at-cli small{display:block;font-size:12px;font-weight:400;color:var(--a-dim);margin-top:2px;}
+  .at-linha-h{display:flex;justify-content:space-between;align-items:center;padding:6px 0;}
+  .at-apr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0;border-top:1px solid rgba(29,56,80,.6);font-size:14px;}
+  .at-apr:first-child{border-top:none;}
+  .at-apr b{font-weight:600;}
+  .at-apr small{display:block;font-size:12px;color:var(--a-dim);margin-top:2px;}
+  .at-envio{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end;}
+  .at-hoje{width:100%;background:var(--a-gold-soft);border:1px solid rgba(201,168,76,.45);border-radius:12px;color:var(--a-gold);font:600 13px Inter,sans-serif;padding:10px 14px;margin-bottom:12px;cursor:pointer;text-align:left;}
+  .at-drawer{width:min(620px,100%);}
+  .at-resultado{margin-top:16px;border-top:1px solid var(--a-line);padding-top:14px;}
+  .at-tela{position:fixed;inset:0;z-index:70;background:radial-gradient(120% 90% at 50% 0%,#1B3A54 0%,#0F2437 48%,#091622 100%);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+  .at-tela-c{max-width:620px;}
+  .at-eb{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
+  .at-h{font-family:Fraunces,Georgia,serif;font-size:clamp(26px,4vw,40px);font-weight:600;margin-top:10px;line-height:1.15;}
+  .at-s{color:var(--a-dim);font-size:16px;margin-top:8px;}
+  .at-ok{font-family:Fraunces,Georgia,serif;font-size:clamp(52px,9vw,88px);font-weight:600;color:#5FD39A;line-height:1.1;margin-top:8px;}
+  .at-spin{width:58px;height:58px;border-radius:50%;border:4px solid rgba(255,255,255,.12);border-top-color:var(--a-gold);margin:0 auto 22px;animation:at-gira 1s linear infinite;}
+  @keyframes at-gira{to{transform:rotate(360deg)}}
+  @media (max-width:860px){
+    .at-duas,.at-ops,.at-ops.tres{grid-template-columns:minmax(0,1fr);}
+  }
+
   /* ---- Minha meta ---- */
   .mm-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
   .mm-progresso{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start;}
@@ -1266,7 +1320,9 @@ let state = {
   coords: null,          // coordenadores (so o representante carrega)
   pins: null,            // PINs visiveis ao representante
   pinsAbertos: null,     // quais PINs estao revelados na tela
-  relUrls: null          // links temporarios dos PDFs de relatorio
+  relUrls: null,         // links temporarios dos PDFs de relatorio
+  at: {lista:null, tabelas:null, tabUrls:null, tabelaId:null, sub:'clientes', subGestor:'aprovacao', fichaId:null, passo:null, busca:'', filtroV:'', filtroS:'',
+       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, emLoja:null, emLojaDesde:0, proposta:false, drawerId:null}
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -2262,6 +2318,7 @@ function irParaPagina(id){
   if(id==='ranking' && !state.ranking) loadRanking();
   if(id==='campanhas' && !state.camp) loadCampanhas();
   if(id==='metas'){ if(!state.mp) loadMetasPessoais(); if(!state.desemp) loadDesempenho(); }
+  if(id==='atendimentos' && !state.at.lista) loadAtendimentos();
   render();
   window.scrollTo(0,0);
 }
@@ -2283,7 +2340,7 @@ function renderAdmin(app){
   const pagina = {
     ligacoes: paginaLigacoes, metas: paginaMetas, producao: paginaProducao,
     vendedores: paginaVendedores, relatorios: paginaRelatoriosAdmin, cronograma: paginaCronograma,
-    ranking: ()=>paginaRanking(true), campanhas: paginaCampanhasAdmin
+    ranking: ()=>paginaRanking(true), campanhas: paginaCampanhasAdmin, atendimentos: paginaAtendimentosGestor
   }[state.adminTab] || paginaLigacoes;
   const p = pagina();
   // coordenador nao ve o que e geral da empresa (producao e cadastros)
@@ -2296,7 +2353,7 @@ function renderAdmin(app){
           <div><div class="n">FBS PRIME</div><div class="t">${ehRep() ? 'Painel do representante' : 'Painel do coordenador'}</div></div>
         </div>
         <nav class="adm-nav">
-          ${paginasVisiveis.map(pg=>`<button class="${state.adminTab===pg.id?'on':''}" data-pagina="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span></button>`).join('')}
+          ${paginasVisiveis.map(pg=>`<button class="${state.adminTab===pg.id?'on':''}" data-pagina="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span>${pg.id==='atendimentos' && state.at.lista && atPendGestor() ? `<span class="badge">${atPendGestor()}</span>` : ''}</button>`).join('')}
         </nav>
         <div class="adm-side-foot">
           <div class="adm-mini-crono" id="admMiniCrono" data-pagina="cronograma" title="Abrir cronograma">${miniCronoHtml()}</div>
@@ -2323,6 +2380,7 @@ function renderAdmin(app){
   if(state.vendaDrawer) bindVendaDrawer(app);
   if(state.perfil){ app.insertAdjacentHTML('beforeend', renderPerfilDrawer()); bindPerfilDrawer(); }
   if(state.campForm){ app.insertAdjacentHTML('beforeend', renderCampanhaDrawer()); bindCampanhaDrawer(); }
+  if(state.at.drawerId){ app.insertAdjacentHTML('beforeend', renderFichaDrawer()); bindFichaDrawer(); }
 }
 
 // ---------------- Ligacoes ----------------
@@ -3002,6 +3060,7 @@ function irParaCentral(id){
   if(id==='ranking' && !state.ranking) loadRanking();
   if(id==='campanhas' && !state.camp) loadCampanhas();
   if(id==='minhameta'){ if(!state.mp) loadMetasPessoais(); if(!state.desemp) loadDesempenho(); }
+  if(id==='atendimentos' && !state.at.lista) loadAtendimentos();
   render();
   window.scrollTo(0,0);
 }
@@ -3016,7 +3075,7 @@ function renderCentral(app, p){
           <div><div class="n">FBS PRIME</div><div class="t">Central do vendedor</div></div>
         </div>
         <nav class="adm-nav">
-          ${CENTRAL_PAGINAS.map(pg=>`<button class="${state.centralTab===pg.id?'on':''}" data-central="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span>${pg.id==='relatorios' && novos ? `<span class="badge">${novos}</span>` : ''}</button>`).join('')}
+          ${CENTRAL_PAGINAS.map(pg=>`<button class="${state.centralTab===pg.id?'on':''}" data-central="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span>${pg.id==='relatorios' && novos ? `<span class="badge">${novos}</span>` : ''}${pg.id==='atendimentos' && state.at.lista && atRetornosHoje().length ? `<span class="badge">${atRetornosHoje().length}</span>` : ''}</button>`).join('')}
         </nav>
         <div class="adm-side-foot">
           <button class="adm-quem" id="perfilBtn" title="Editar meu perfil">${avatar(state.vendor)}<span>${esc(state.vendor)}<small>${esc((VENDOR_PERFIL[state.vendor]||{}).frase || 'editar meu perfil')}</small></span></button>
@@ -4331,6 +4390,594 @@ function bindMetasIndividuais(app){
   };
 }
 
+/*
+  Atendimentos: a ficha que antes ficava no papel. Um cliente (pelo telefone) tem
+  varias visitas, cada uma com duas projecoes. O vendedor abre e finaliza; aprovacao
+  e com representante/coordenador; venda fechada aguarda a confirmacao do representante.
+  Toda gravacao passa por funcoes no banco, que conferem o papel de quem chama.
+*/
+ICONES.atendimentos = '<path d="M9 3h6v3H9zM7 5H5v16h14V5h-2M8.5 12h7M8.5 16h4.5"/>';
+CENTRAL_PAGINAS.splice(1, 0, {id:'atendimentos', nome:'Atendimentos'});
+ADMIN_PAGINAS.splice(1, 0, {id:'atendimentos', nome:'Atendimentos'});
+const AT_SITUACOES = {
+  em_atendimento:['Em atendimento','ok'], aprovacao_loja:['Aprovação na loja','roxo'], aprovacao_agendada:['Aprovação agendada','roxo'],
+  aprovado:['Aprovado','live'], reprovado:['Reprovado','warn'], vai_voltar:['Vai voltar','live'], nao_volta:['Não vai voltar',''], fechou:['Fechou','ok']
+};
+const AT_CANAIS = [['Lead - Trafego Pago','Tráfego pago'],['TikTok','TikTok'],['Facebook','Facebook'],['Indicação','Indicação'],['Outro','Outro']];
+const atCanalNome = c => (AT_CANAIS.find(x=>x[0]===c)||[0,c||'—'])[1];
+const atPill = s => { const x = AT_SITUACOES[s]||[s,'']; return `<span class="pill ${x[1]}">${x[0]}</span>`; };
+const atTel = t => { const d = String(t||''); return d.length>=10 ? `(${d.slice(0,2)}) ${d.slice(2,-4)}-${d.slice(-4)}` : d; };
+const atQuando = t => t ? new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+const atDin = v => v==null || v==='' ? '—' : BRL.format(Number(v));
+const atNum = v => v==null ? '' : Number(v).toLocaleString('pt-BR');
+const atNovoVazio = () => ({tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''});
+const atHojeKey = () => todayKey();
+function atRetornosHoje(){
+  return ((state.at.lista)||[]).filter(a=>a.retorno_em && dayKey(new Date(a.retorno_em))===atHojeKey() && !['fechou','nao_volta'].includes(a.situacao));
+}
+const atLoja = () => (state.at.lista||[]).filter(a=>a.situacao==='aprovacao_loja');
+const atAgendadas = () => (state.at.lista||[]).filter(a=>a.situacao==='aprovacao_agendada').sort((a,b)=>a.aprovacao_em<b.aprovacao_em?-1:1);
+const atVendasPend = () => (state.at.lista||[]).filter(a=>a.venda_status==='aguardando');
+const atPendGestor = () => atLoja().length + atAgendadas().length + (ehRep() ? atVendasPend().length : 0);
+
+async function loadAtendimentos(silencioso){
+  try{
+    const rows = await sb('atendimentos?select=*,clientes(id,nome,telefone,telefone2,canal,vendedor)&order=atualizado_em.desc&limit=2000', undefined, silencioso?0:1);
+    const mudou = JSON.stringify(rows) !== JSON.stringify(state.at.lista);
+    state.at.lista = rows || [];
+    if(!silencioso) render();
+    return mudou;
+  }catch(e){
+    console.error('Falha ao carregar atendimentos', e);
+    if(!state.at.lista) state.at.lista = [];
+    if(!silencioso) render();
+    return false;
+  }
+}
+async function loadTabelas(){
+  try{
+    const rows = await sb('tabelas?select=*&order=administradora,criado_em.desc', undefined, 1);
+    state.at.tabelas = rows || [];
+    if(state.at.tabelas.length){
+      const res = await fetch(SUPABASE_URL + '/storage/v1/object/sign/tabelas', {
+        method:'POST', headers:{...(await cabecalhoAuth()), 'Content-Type':'application/json'},
+        body: JSON.stringify({expiresIn:21600, paths: state.at.tabelas.map(t=>t.caminho)})
+      });
+      if(res.ok){ state.at.tabUrls = {}; (await res.json()).forEach(x=>{ if(x.signedURL) state.at.tabUrls[x.path] = SUPABASE_URL+'/storage/v1'+x.signedURL; }); }
+    }
+  }catch(e){ console.error('Falha ao carregar tabelas', e); state.at.tabelas = state.at.tabelas || []; }
+  render();
+}
+
+// acompanha em tempo real: tela do cliente a cada 3s, painel a cada 6s, vendedor a cada 30s
+let atTicks = 0, atLojaIds = null;
+function atBip(){
+  try{
+    const c = new (window.AudioContext||window.webkitAudioContext)(), o = c.createOscillator(), g = c.createGain();
+    o.frequency.value = 880; g.gain.value = .12; o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+.35);
+  }catch(e){}
+}
+setInterval(async ()=>{
+  atTicks++;
+  if(document.hidden || !sessao || !state.at.lista) return;
+  const espera = state.view==='app' && state.at.emLoja;
+  const gestor = state.view==='admin';
+  if(!espera && !(gestor && atTicks%2===0) && !(state.view==='app' && atTicks%10===0)) return;
+  const mudou = await loadAtendimentos(true);
+  if(gestor){
+    const ids = atLoja().map(a=>a.id);
+    if(atLojaIds){
+      const novo = atLoja().find(a=>!atLojaIds.includes(a.id));
+      if(novo){ atBip(); showCronoToast('Aprovação na loja', `${esc(novo.clientes.nome)} · ${esc(novo.vendedor)}`); }
+    }
+    atLojaIds = ids;
+    const badge = document.querySelector('[data-pagina="atendimentos"] .badge');
+    if(badge) badge.textContent = atPendGestor();
+  }
+  if(!mudou) return;
+  const digitando = document.activeElement && ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName);
+  if(espera) render();
+  else if(gestor && state.adminTab==='atendimentos' && !state.at.drawerId && !digitando) render();
+  else if(state.view==='app' && state.centralTab==='atendimentos' && !state.at.fichaId && !digitando) render();
+}, 3000);
+
+function atErroTexto(e){
+  const m = String(e && e.message || '');
+  const q = m.match(/"message":"([^"]+)"/);
+  return q ? q[1] : 'Não foi possível concluir. Verifica sua conexão e tenta de novo.';
+}
+
+// ---------------- Abertura ----------------
+function atLerNovo(){
+  const n = state.at.novo, g = id => document.getElementById(id);
+  if(g('atTel')) n.tel = g('atTel').value;
+  if(g('atNome')) n.nome = g('atNome').value;
+  if(g('atTitular')) n.titular = g('atTitular').value;
+  if(g('atLgpd')) n.lgpd = g('atLgpd').checked;
+}
+async function atBuscar(){
+  atLerNovo();
+  const n = state.at.novo, dig = n.tel.replace(/\D/g,'');
+  n.erro = ''; n.achado = null;
+  if(dig.length < 10){ n.erro = 'Digita o telefone com DDD.'; render(); return; }
+  try{
+    n.achado = await rpc('buscar_telefone', {p_telefone:dig});
+    if(n.achado.existe && !n.achado.meu){ n.modo = 'ajuda'; n.titular = n.achado.titular; }
+  }catch(e){ n.erro = atErroTexto(e); }
+  render();
+}
+async function atAbrir(){
+  atLerNovo();
+  const n = state.at.novo, dig = n.tel.replace(/\D/g,'');
+  n.erro = '';
+  const conhecido = n.achado && n.achado.existe;
+  if(dig.length < 10) n.erro = 'Digita o telefone com DDD.';
+  else if(!conhecido && !n.nome.trim()) n.erro = 'Digita o nome do cliente.';
+  else if(n.modo==='ajuda' && !n.titular) n.erro = 'Escolhe qual colega você está ajudando.';
+  else if(!n.canal && !conhecido) n.erro = 'Escolhe de onde veio este cliente.';
+  else if(!n.lgpd) n.erro = 'Falta a autorização do cliente para o uso dos dados.';
+  if(n.erro){ render(); return; }
+  try{
+    const id = await rpc('abrir_atendimento', {p_telefone:dig, p_nome:n.nome, p_canal:n.canal, p_titular: n.modo==='ajuda' ? n.titular : null, p_lgpd:true});
+    state.at.novo = atNovoVazio();
+    state.at.lista = null;
+    await loadAtendimentos(true);
+    state.at.fichaId = id; state.at.passo = null; state.at.sub = 'clientes';
+    render();
+  }catch(e){
+    const m = String(e.message||'').match(/CLIENTE_DE:([^"]+)/);
+    n.erro = m ? `Este cliente já é de ${m[1]}. Use o modo ajuda.` : atErroTexto(e);
+    if(m){ n.modo = 'ajuda'; n.titular = m[1].trim(); }
+    render();
+  }
+}
+function htmlNovo(){
+  const n = state.at.novo, ach = n.achado, eu = state.vendor;
+  const colegaDono = ach && ach.existe && !ach.meu;
+  return `
+    <div class="card at-estreito"><div class="card-b" style="padding-top:18px;">
+      <label class="at-r" for="atTel">Telefone do cliente</label>
+      <div style="display:flex;gap:8px;"><input id="atTel" inputmode="tel" value="${esc(n.tel)}" placeholder="(11) 99999-0000" style="flex:1;min-width:0;"><button class="btn" id="atBuscar">Buscar</button></div>
+      ${ach ? `<div class="at-aviso ${colegaDono?'roxo':''}">${!ach.existe ? 'Cliente novo.' : (ach.meu ? `Este cliente já veio: <b>${esc(ach.nome)}</b>. A ficha entra no histórico dele.` : `Este cliente é de <b>${esc(ach.titular)}</b>. Só dá para abrir em modo ajuda.`)}</div>` : ''}
+      ${!(ach && ach.existe) ? `<label class="at-r" for="atNome" style="margin-top:14px;">Nome do cliente</label><input id="atNome" value="${esc(n.nome)}" placeholder="Nome completo" style="width:100%;">` : ''}
+      <div class="at-r" style="margin-top:16px;">Este cliente é seu?</div>
+      <div class="at-ops">
+        <button class="at-op ${n.modo==='meu'?'on':''}" data-at-modo="meu" ${colegaDono?'disabled':''}><b>Sim, é meu cliente</b><span>Abre a ficha no seu nome</span></button>
+        <button class="at-op ${n.modo==='ajuda'?'on':''}" data-at-modo="ajuda"><b>Modo ajuda</b><span>Você está ajudando um colega</span></button>
+      </div>
+      ${n.modo==='ajuda' ? `<label class="at-r" for="atTitular" style="margin-top:12px;">Qual colega?</label><select id="atTitular" style="width:100%;" ${colegaDono?'disabled':''}><option value="">Escolha</option>${VENDORES_LOGIN().filter(v=>v!==eu).map(v=>`<option ${v===n.titular?'selected':''}>${esc(v)}</option>`).join('')}</select>` : ''}
+      <div class="at-r" style="margin-top:16px;">De onde veio este cliente?</div>
+      <div class="at-chips">${AT_CANAIS.map(c=>`<button class="at-chip ${n.canal===c[0]?'on':''}" data-at-canal="${esc(c[0])}">${c[1]}</button>`).join('')}</div>
+      <label class="at-lgpd"><input type="checkbox" id="atLgpd" ${n.lgpd?'checked':''}><span>O cliente autorizou a FBS Prime a guardar estes dados para fazer o atendimento e a simulação.</span></label>
+      ${n.erro ? `<div class="lg-erro" style="margin:10px 0 0;">${esc(n.erro)}</div>` : ''}
+      <div style="text-align:right;margin-top:14px;"><button class="btn gold" id="atAbrir">Abrir ficha</button></div>
+    </div></div>`;
+}
+const VENDORES_LOGIN = () => VENDORES;
+
+// ---------------- Ficha ----------------
+function atColetar(){
+  const v = id => (document.getElementById(id)||{}).value || '';
+  const din = id => { const n = parseBRL(v(id)); return Number.isNaN(n) ? null : n; };
+  const bool = id => v(id)==='' ? null : v(id)==='sim';
+  const proj = i => { const o = {}; ['credito','entrada','parcelas','prazo','renda','documentacao','custo_final','outros'].forEach(k=>{ o[k] = v(`p${i}_${k}`).trim(); }); return o; };
+  return {nome:v('fNome'), telefone2:v('fTel2'), bem:v('fBem').trim(), credito:din('fCredito'), renda:din('fRenda'), entrada:din('fEntrada'), parcela:din('fParcela'),
+    restricao:bool('fRestricao'), restricao_valor:din('fRestricaoV'), fgts:bool('fFgts'), fgts_valor:din('fFgtsV'), aluguel:bool('fAluguel'), aluguel_valor:din('fAluguelV'),
+    projecoes:[proj(0), proj(1)]};
+}
+async function atSalvar(silencioso){
+  if(!document.getElementById('fNome')) return true;
+  try{
+    await rpc('salvar_ficha', {p_id:state.at.fichaId, p:atColetar()});
+    if(!silencioso) showCronoToast('Ficha', 'Salva');
+    await loadAtendimentos(true);
+    return true;
+  }catch(e){ console.error('Falha ao salvar ficha', e); alert(atErroTexto(e)); return false; }
+}
+const atSimNao = (id, v) => `<select id="${id}" style="width:100%;"><option value="" ${v==null?'selected':''}>—</option><option value="sim" ${v===true?'selected':''}>Sim</option><option value="nao" ${v===false?'selected':''}>Não</option></select>`;
+const atCampo = (rot, id, val, extra) => `<div><label class="at-r" for="${id}">${rot}</label><input id="${id}" value="${esc(val==null?'':val)}" style="width:100%;" ${extra||''}></div>`;
+function htmlFicha(a){
+  const c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}];
+  const visitas = state.at.lista.filter(x=>x.cliente_id===a.cliente_id).sort((x,y)=>x.criado_em<y.criado_em?-1:1);
+  const nVisita = visitas.findIndex(x=>x.id===a.id)+1;
+  const P = state.at.passo;
+  const htmlProj = i => { const p = proj[i]||{}; const cp = (rot,k) => atCampo(rot,`p${i}_${k}`,p[k]); return `
+    <div class="card"><div class="card-h"><h3>Projeção ${i+1}</h3></div><div class="card-b at-grade">
+      ${cp('Crédito','credito')}${cp('Entrada','entrada')}${cp('Parcelas','parcelas')}${cp('Prazo','prazo')}${cp('Renda','renda')}${cp('Documentação','documentacao')}${cp('Custo final','custo_final')}${cp('Outros','outros')}
+    </div></div>`; };
+  const avisos = [];
+  if(a.situacao==='reprovado') avisos.push(`<div class="alerta" style="margin-bottom:14px;"><div class="t">Aprovação não liberada${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}</div>${a.aprovacao_motivo?`<div class="s">${esc(a.aprovacao_motivo)}</div>`:''}</div>`);
+  if(a.situacao==='aprovado') avisos.push(`<div class="at-aviso verde" style="margin:0 0 14px;">Aprovado${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}.${a.resposta_cliente?` Resposta do cliente: <b>${esc(a.resposta_cliente)}</b>.`:''}${a.retorno_em?` Retorno: <b>${atQuando(a.retorno_em)}</b>.`:''}</div>`);
+  if(a.situacao==='aprovacao_agendada') avisos.push(`<div class="at-aviso roxo" style="margin:0 0 14px;">Aprovação marcada para <b>${atQuando(a.aprovacao_em)}</b>.</div>`);
+  if(a.venda_status) avisos.push(`<div class="at-aviso" style="margin:0 0 14px;">Venda de <b>${atDin(a.venda_valor)}</b>: ${({aguardando:'aguardando confirmação do representante',confirmada:'confirmada',recusada:'recusada pelo representante'})[a.venda_status]}.</div>`);
+  const passo = P ? htmlPasso(a) : '';
+  return `
+    <div class="at-guarda" data-k="f${a.id}">
+    <button class="link" id="atVoltar" style="margin-bottom:10px;">← Meus clientes</button>
+    ${a.situacao==='aprovacao_loja' && !state.at.emLoja ? '<div class="at-aviso roxo" style="margin:0 0 14px;">Aguardando aprovação com o cliente na loja. <button class="link" id="atRetomar">Voltar para a tela do cliente</button></div>' : ''}
+    ${avisos.join('')}
+    ${passo}
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-h"><h3>Dados do cliente</h3><span class="hint">${nVisita}ª visita · ${atQuando(a.criado_em)} · Canal: ${esc(atCanalNome(c.canal))}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</span></div>
+      <div class="card-b at-grade">
+        ${atCampo('Nome','fNome',c.nome)}
+        <div><label class="at-r">Telefone</label><div class="at-fixo">${atTel(c.telefone)}</div></div>
+        ${atCampo('Telefone 2','fTel2',c.telefone2,'inputmode="tel"')}
+        ${atCampo('Bem de interesse','fBem',a.bem)}
+        ${atCampo('Valor do crédito','fCredito',atNum(a.credito),'inputmode="decimal"')}
+        ${atCampo('Valor da renda','fRenda',atNum(a.renda),'inputmode="decimal"')}
+        ${atCampo('Valor da entrada','fEntrada',atNum(a.entrada),'inputmode="decimal"')}
+        ${atCampo('Valor das parcelas','fParcela',atNum(a.parcela),'inputmode="decimal"')}
+        <div><label class="at-r" for="fRestricao">Restrição no nome</label>${atSimNao('fRestricao',a.restricao)}</div>${atCampo('Valor da restrição','fRestricaoV',atNum(a.restricao_valor),'inputmode="decimal"')}
+        <div><label class="at-r" for="fFgts">FGTS</label>${atSimNao('fFgts',a.fgts)}</div>${atCampo('Valor do FGTS','fFgtsV',atNum(a.fgts_valor),'inputmode="decimal"')}
+        <div><label class="at-r" for="fAluguel">Aluguel</label>${atSimNao('fAluguel',a.aluguel)}</div>${atCampo('Valor do aluguel','fAluguelV',atNum(a.aluguel_valor),'inputmode="decimal"')}
+      </div>
+    </div>
+    <div class="at-duas">${htmlProj(0)}${htmlProj(1)}</div>
+    ${visitas.length>1 ? `<div class="card" style="margin-top:14px;"><div class="card-h"><h3>Histórico de visitas</h3></div><div class="card-b">${visitas.map((v,i)=>`<div class="at-linha-h"><button class="link" data-at-ficha="${v.id}">${i+1}ª visita · ${atQuando(v.criado_em)}</button>${atPill(v.situacao)}</div>`).join('')}</div></div>` : ''}
+    <div class="at-barra">
+      <button class="btn" data-at-sub="tabelas">Ver tabelas</button>
+      <button class="btn" id="atSalvar">Salvar</button>
+      <button class="btn gold" id="atFinalizar">Finalizar atendimento</button>
+    </div>
+    </div>`;
+}
+function htmlPasso(a){
+  const P = state.at.passo;
+  const quando = (id,rot) => `<label class="at-r" for="${id}">${rot}</label><input id="${id}" type="datetime-local" style="width:100%;max-width:280px;">`;
+  const rodape = (idOk, txt) => `<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;"><button class="btn" data-at-passo="fim">Voltar</button><button class="btn gold" id="${idOk}">${txt}</button></div>`;
+  let corpo;
+  if(P==='fim') corpo = `
+    <div class="at-r">O cliente está na loja e quer aprovação agora?</div>
+    <div class="at-ops" style="margin-bottom:14px;"><button class="at-op" id="atLoja"><b>Enviar para aprovação agora</b><span>Cliente ainda na loja</span></button></div>
+    <div class="at-r">O cliente fechou?</div>
+    <div class="at-ops"><button class="at-op" data-at-passo="fechou"><b>Sim, fechou</b><span>Registrar a venda</span></button></div>
+    <div class="at-r" style="margin-top:14px;">Não fechou</div>
+    <div class="at-ops tres"><button class="at-op" data-at-passo="voltar"><b>Vai voltar</b><span>Informe o dia do retorno</span></button><button class="at-op" data-at-passo="agendar"><b>Vai para aprovação</b><span>Informe o dia e a hora</span></button><button class="at-op" data-at-passo="naovolta"><b>Não vai voltar</b><span>Informe o motivo</span></button></div>
+    <div style="text-align:right;margin-top:10px;"><button class="link" data-at-passo="">cancelar</button></div>`;
+  if(P==='voltar') corpo = quando('atQuando','Dia e hora do retorno') + rodape('atOkVoltar','Salvar');
+  if(P==='agendar') corpo = quando('atQuando','Dia e hora da aprovação') + rodape('atOkAgendar','Enviar para aprovação');
+  if(P==='naovolta') corpo = `<label class="at-r" for="atMotivo">Motivo</label><input id="atMotivo" style="width:100%;" placeholder="Por que o cliente não vai voltar?">` + rodape('atOkNao','Salvar');
+  if(P==='fechou') corpo = `<div class="at-duas"><div><label class="at-r" for="atVValor">Valor da venda (R$)</label><input id="atVValor" inputmode="decimal" value="${atNum(a.credito)}" style="width:100%;"></div><div><label class="at-r" for="atVData">Data</label><input id="atVData" type="date" value="${todayKey()}" style="width:100%;"></div></div><div style="font-size:12px;color:var(--a-dim);margin-top:8px;">A venda vai para o representante confirmar antes de entrar no ranking e nas campanhas.</div>` + rodape('atOkVenda','Registrar venda');
+  return `<div class="card at-passo"><div class="card-h"><h3>Finalizar atendimento</h3></div><div class="card-b">${corpo}</div></div>`;
+}
+async function atAcao(fn, msg){
+  try{
+    await fn();
+    state.at.passo = null; state.at.fichaId = null;
+    await loadAtendimentos(true);
+    render();
+    if(msg) showCronoToast('Atendimento', msg);
+  }catch(e){ console.error(e); alert(atErroTexto(e)); }
+}
+const atIso = id => { const v = (document.getElementById(id)||{}).value; return v ? new Date(v).toISOString() : null; };
+function bindFicha(app){
+  const id = state.at.fichaId, g = x => document.getElementById(x);
+  g('atVoltar').onclick = async ()=>{ if(await atSalvar(true)){ state.at.fichaId = null; state.at.passo = null; render(); } };
+  g('atSalvar').onclick = ()=>atSalvar(false);
+  if(g('atRetomar')) g('atRetomar').onclick = ()=>{ state.at.emLoja = id; state.at.emLojaDesde = Date.now(); state.at.proposta = false; render(); };
+  g('atFinalizar').onclick = async ()=>{
+    const d = atColetar();
+    if(!d.bem || !d.credito){ alert('Preenche o bem de interesse e o valor do crédito antes de finalizar.'); return; }
+    if(await atSalvar(true)){ state.at.passo = 'fim'; render(); window.scrollTo(0,0); }
+  };
+  app.querySelectorAll('[data-at-passo]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); state.at.passo = b.getAttribute('data-at-passo') || null; render(); }; });
+  app.querySelectorAll('[data-at-ficha]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); state.at.fichaId = Number(b.getAttribute('data-at-ficha')); state.at.passo = null; render(); window.scrollTo(0,0); }; });
+  if(g('atLoja')) g('atLoja').onclick = async ()=>{
+    try{ await rpc('pedir_aprovacao', {p_id:id, p_quando:null}); state.at.emLoja = id; state.at.emLojaDesde = Date.now(); state.at.proposta = false; state.at.passo = null; await loadAtendimentos(true); render(); }
+    catch(e){ alert(atErroTexto(e)); }
+  };
+  if(g('atOkVoltar')) g('atOkVoltar').onclick = ()=>{ const q = atIso('atQuando'); if(!q){ alert('Escolhe o dia e a hora.'); return; } atAcao(()=>rpc('finalizar_atendimento',{p_id:id,p_situacao:'vai_voltar',p_retorno:q,p_motivo:null}),'Retorno agendado'); };
+  if(g('atOkAgendar')) g('atOkAgendar').onclick = ()=>{ const q = atIso('atQuando'); if(!q){ alert('Escolhe o dia e a hora.'); return; } atAcao(()=>rpc('pedir_aprovacao',{p_id:id,p_quando:q}),'Enviado para aprovação'); };
+  if(g('atOkNao')) g('atOkNao').onclick = ()=>{ const m = g('atMotivo').value.trim(); if(!m){ alert('Escreve o motivo.'); return; } atAcao(()=>rpc('finalizar_atendimento',{p_id:id,p_situacao:'nao_volta',p_retorno:null,p_motivo:m}),'Atendimento finalizado'); };
+  if(g('atOkVenda')) g('atOkVenda').onclick = ()=>{ const v = parseBRL(g('atVValor').value), d = g('atVData').value; if(!v || !d){ alert('Preenche o valor e a data.'); return; } atAcao(()=>rpc('registrar_fechamento',{p_id:id,p_valor:v,p_data:d}),'Venda enviada para confirmação'); };
+}
+
+// ---------------- Tela virada para o cliente ----------------
+function htmlTelaCliente(){
+  const a = (state.at.lista||[]).find(x=>x.id===state.at.emLoja);
+  if(!a) return '';
+  const nome = esc(a.clientes.nome), credito = atDin(a.credito);
+  let m;
+  if(state.at.proposta) m = `<div class="at-spin"></div><div class="at-eb">Proposta enviada ao financeiro</div><div class="at-h">Gerando a proposta de ${nome}</div><div style="margin:12px 0 22px;"><span class="pill ok">Status: em andamento</span></div><button class="btn gold" id="atCadVenda">Concluir e cadastrar a venda</button>`;
+  else if(a.situacao==='aprovado') m = `<div class="at-eb">FBS Prime · Análise de crédito</div><div class="at-ok">Aprovado</div><div class="at-h">Proposta em nome de ${nome}</div><div class="at-s">Crédito de ${credito}</div><div style="font-size:18px;margin:22px 0 16px;">Podemos gerar a proposta?</div><button class="btn" id="atAindaNao" style="margin-right:8px;">Ainda não</button><button class="btn gold" id="atGerar">Sim, gerar proposta</button>`;
+  else if(a.situacao==='reprovado') m = `<div class="at-eb">FBS Prime · Análise de crédito</div><div class="at-h">Precisamos confirmar mais alguns dados com você</div><div class="at-s">Seu consultor vai conversar com você agora.</div><button class="btn" id="atFecharTela" style="margin-top:22px;">Voltar</button>`;
+  else {
+    const passou5 = Date.now() - state.at.emLojaDesde > 5*60*1000;
+    m = `<div class="at-spin"></div><div class="at-eb">FBS Prime · Análise de crédito</div><div class="at-h">Analisando a proposta de ${nome}</div><div class="at-s">Crédito de ${credito} · Aguarde um instante</div>${passou5 ? '<button class="link" id="atDesistir" style="margin-top:26px;">agendar a aprovação para depois</button>' : ''}`;
+  }
+  return `<div class="at-tela"><div class="at-tela-c">${m}</div></div>`;
+}
+function bindTelaCliente(){
+  const g = x => document.getElementById(x), id = state.at.emLoja;
+  const volta = passo => { state.at.emLoja = null; state.at.proposta = false; state.at.fichaId = id; state.at.passo = passo; render(); };
+  if(g('atGerar')) g('atGerar').onclick = async ()=>{ try{ await rpc('marcar_proposta',{p_id:id}); state.at.proposta = true; render(); }catch(e){ alert(atErroTexto(e)); } };
+  if(g('atAindaNao')) g('atAindaNao').onclick = ()=>volta('fim');
+  if(g('atFecharTela')) g('atFecharTela').onclick = ()=>volta(null);
+  if(g('atCadVenda')) g('atCadVenda').onclick = ()=>volta('fechou');
+  if(g('atDesistir')) g('atDesistir').onclick = ()=>volta('agendar');
+}
+
+// ---------------- Tabelas ----------------
+function htmlTabelas(rep){
+  const T = state.at.tabelas;
+  if(!T) return `<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando tabelas...</div></div>`;
+  const aberta = T.find(t=>t.id===state.at.tabelaId) || T[0];
+  const adms = [...new Set(T.map(t=>t.administradora))];
+  const url = t => (state.at.tabUrls||{})[t.caminho] || '#';
+  return `
+    ${rep ? `<div class="card so-rep" style="margin-bottom:14px;"><div class="card-h"><h3>Enviar tabela</h3></div><div class="card-b at-envio">
+      <div><label class="at-r" for="tbAdm">Administradora</label><select id="tbAdm" style="width:100%;"><option>Âncora</option><option>Embracon</option><option>Outra</option></select></div>
+      <div><label class="at-r" for="tbTitulo">Nome da tabela</label><input id="tbTitulo" placeholder="Ex.: Imóvel, novembro" style="width:100%;"></div>
+      <div><label class="at-r" for="tbArq">PDF</label><input id="tbArq" type="file" accept="application/pdf" style="width:100%;"></div>
+      <button class="btn gold" id="tbEnviar">Enviar</button>
+    </div></div>` : ''}
+    ${!T.length ? `<div class="card"><div class="card-b" style="padding:34px;text-align:center;color:var(--a-dim);">Nenhuma tabela enviada ainda.</div></div>` : `
+    <div class="rel-wrap">
+      <div class="card rel-list">${adms.map(ad=>`<div class="rel-mes">${esc(ad)}</div>${T.filter(t=>t.administradora===ad).map(t=>`
+        <button class="rel-item ${t.id===aberta.id?'on':''}" data-tabela="${t.id}"><span class="ic">PDF</span><span style="min-width:0;">${esc(t.titulo)}<small>enviada em ${new Date(t.criado_em).toLocaleDateString('pt-BR')}</small></span></button>`).join('')}`).join('')}</div>
+      <div class="card viewer">
+        <div class="card-h"><h3>${esc(aberta.administradora)} · ${esc(aberta.titulo)}</h3><span style="display:flex;gap:8px;">${rep ? `<button class="btn small ghost so-rep" data-tabela-del="${aberta.id}">Remover</button>` : ''}<a class="btn small" href="${url(aberta)}" target="_blank" rel="noopener">${icone('baixar')}Abrir em nova aba</a></span></div>
+        <iframe src="${url(aberta)}#view=FitH" title="Tabela ${esc(aberta.titulo)}"></iframe>
+      </div>
+    </div>`}`;
+}
+function bindTabelas(app){
+  app.querySelectorAll('[data-tabela]').forEach(b=>{ b.onclick = ()=>{
+    const t = state.at.tabelas.find(x=>x.id===Number(b.getAttribute('data-tabela')));
+    state.at.tabelaId = t.id;
+    if(window.matchMedia('(max-width:1180px)').matches) window.open((state.at.tabUrls||{})[t.caminho], '_blank', 'noopener');
+    render();
+  }; });
+  const env = document.getElementById('tbEnviar');
+  if(env) env.onclick = async ()=>{
+    const adm = document.getElementById('tbAdm').value, titulo = document.getElementById('tbTitulo').value.trim(), f = document.getElementById('tbArq').files[0];
+    if(!titulo || !f){ alert('Preenche o nome e escolhe o PDF.'); return; }
+    env.disabled = true; env.textContent = 'Enviando…';
+    try{
+      const caminho = `${slugNome(adm)}/${Date.now()}-${slugNome(titulo)}.pdf`;
+      const res = await fetch(SUPABASE_URL+'/storage/v1/object/tabelas/'+caminho, {method:'POST', headers:{...(await cabecalhoAuth()),'Content-Type':'application/pdf'}, body:f});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      await sb('tabelas', {method:'POST', prefer:'return=minimal', body:{administradora:adm, titulo, caminho}});
+      await loadTabelas();
+      showCronoToast('Tabelas', 'Tabela enviada');
+    }catch(e){ console.error(e); alert('Não foi possível enviar a tabela. Tenta de novo.'); env.disabled = false; env.textContent = 'Enviar'; }
+  };
+  app.querySelectorAll('[data-tabela-del]').forEach(b=>{ b.onclick = async ()=>{
+    const t = state.at.tabelas.find(x=>x.id===Number(b.getAttribute('data-tabela-del')));
+    if(!confirm(`Remover a tabela "${t.titulo}"?`)) return;
+    try{
+      await fetch(SUPABASE_URL+'/storage/v1/object/tabelas/'+t.caminho, {method:'DELETE', headers: await cabecalhoAuth()});
+      await sb('tabelas?id=eq.'+t.id, {method:'DELETE'});
+      state.at.tabelaId = null;
+      await loadTabelas();
+    }catch(e){ console.error(e); alert('Não foi possível remover.'); }
+  }; });
+}
+
+// ---------------- Pagina do vendedor ----------------
+function paginaAtendimentosVendedor(){
+  const A = state.at;
+  const top = {titulo:'Atendimentos', sub:'Suas fichas, clientes e tabelas'};
+  if(!A.lista) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando...</div></div>`};
+  const tela = htmlTelaCliente();
+  const aberta = A.fichaId ? A.lista.find(x=>x.id===A.fichaId) : null;
+  if(aberta){
+    top.titulo = esc(aberta.clientes.nome);
+    top.sub = `Ficha de atendimento · ${esc(aberta.vendedor)}`;
+    top.acoes = atPill(aberta.situacao);
+    return {top, html: htmlFicha(aberta) + tela, bind: app=>{ bindFicha(app); app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); A.fichaId = null; A.passo = null; A.sub = b.getAttribute('data-at-sub'); if(!A.tabelas) loadTabelas(); render(); }; }); bindTelaCliente(); }};
+  }
+  top.acoes = `<div class="seg">${[['clientes','Meus clientes'],['novo','Novo atendimento'],['tabelas','Tabelas']].map(s=>`<button class="${A.sub===s[0]?'on':''}" data-at-sub="${s[0]}">${s[1]}</button>`).join('')}</div>`;
+  let html;
+  if(A.sub==='novo') html = htmlNovo();
+  else if(A.sub==='tabelas') html = htmlTabelas(false);
+  else html = htmlClientes();
+  const bind = app=>{
+    app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = ()=>{ atLerNovoSeguro(); A.sub = b.getAttribute('data-at-sub'); if(A.sub==='tabelas' && !A.tabelas) loadTabelas(); render(); }; });
+    if(A.sub==='novo'){
+      document.getElementById('atBuscar').onclick = atBuscar;
+      document.getElementById('atAbrir').onclick = atAbrir;
+      app.querySelectorAll('[data-at-modo]').forEach(b=>{ b.onclick = ()=>{ atLerNovo(); A.novo.modo = b.getAttribute('data-at-modo'); render(); }; });
+      app.querySelectorAll('[data-at-canal]').forEach(b=>{ b.onclick = ()=>{ atLerNovo(); A.novo.canal = b.getAttribute('data-at-canal'); render(); }; });
+    }
+    if(A.sub==='tabelas') bindTabelas(app);
+    if(A.sub==='clientes'){
+      const busca = document.getElementById('atBusca');
+      busca.oninput = ()=>{ A.busca = busca.value; document.getElementById('atLista').innerHTML = htmlListaClientes(); bindLista(app); };
+      bindLista(app);
+    }
+    bindTelaCliente();
+  };
+  return {top, html: html + tela, bind};
+}
+const atLerNovoSeguro = () => { if(document.getElementById('atTel')) atLerNovo(); };
+function atGrupos(){
+  const g = {};
+  state.at.lista.forEach(a=>{ (g[a.cliente_id] = g[a.cliente_id] || []).push(a); });
+  return Object.values(g).map(l=>l.sort((x,y)=>x.criado_em<y.criado_em?1:-1)).sort((x,y)=>x[0].atualizado_em<y[0].atualizado_em?1:-1);
+}
+function htmlListaClientes(){
+  const q = (state.at.busca||'').toLowerCase().trim(), dig = q.replace(/\D/g,'');
+  const gs = atGrupos().filter(l=>{ const c = l[0].clientes; return !q || c.nome.toLowerCase().includes(q) || (dig && c.telefone.includes(dig)); });
+  if(!gs.length) return `<div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">${state.at.lista.length ? 'Nenhum cliente encontrado.' : 'Nenhum atendimento ainda. Comece em Novo atendimento.'}</div>`;
+  return gs.map(l=>{ const a = l[0], c = a.clientes; return `
+    <button class="at-cli" data-at-ficha="${a.id}">
+      <span style="flex:1;min-width:0;"><b>${esc(c.nome)}</b><small>${atTel(c.telefone)} · ${l.length} ${l.length===1?'visita':'visitas'} · última em ${atQuando(a.criado_em)}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</small></span>
+      ${a.retorno_em && !['fechou','nao_volta'].includes(a.situacao) ? `<span class="mute" style="font-size:12px;">retorno ${atQuando(a.retorno_em)}</span>` : ''}
+      ${a.credito ? `<span style="font-size:13px;color:var(--a-gold);">${brlCurto(Number(a.credito))}</span>` : ''}
+      ${atPill(a.situacao)}
+    </button>`; }).join('');
+}
+function bindLista(app){
+  app.querySelectorAll('#atLista [data-at-ficha]').forEach(b=>{ b.onclick = ()=>{ state.at.fichaId = Number(b.getAttribute('data-at-ficha')); state.at.passo = null; render(); window.scrollTo(0,0); }; });
+}
+function htmlClientes(){
+  const L = state.at.lista, ret = atRetornosHoje().length;
+  const apr = L.filter(a=>['aprovacao_loja','aprovacao_agendada'].includes(a.situacao)).length;
+  return `
+    <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));">
+      <div class="kpi destaque"><div class="l">Retornar hoje</div><div class="v">${ret}</div></div>
+      <div class="kpi"><div class="l">Em aprovação</div><div class="v">${apr}</div></div>
+      <div class="kpi"><div class="l">Clientes</div><div class="v">${atGrupos().length}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-b" style="padding-top:16px;"><input id="atBusca" value="${esc(state.at.busca||'')}" placeholder="Buscar por nome ou telefone" style="width:100%;"></div>
+      <div id="atLista">${htmlListaClientes()}</div>
+    </div>`;
+}
+function atLinhaHoje(){
+  const n = state.at.lista ? atRetornosHoje().length : 0;
+  return n ? `<button class="at-hoje" data-central="atendimentos">${n} ${n===1?'cliente para retornar':'clientes para retornar'} hoje</button>` : '';
+}
+
+// ---------------- Painel (representante e coordenador) ----------------
+function paginaAtendimentosGestor(){
+  const A = state.at, rep = ehRep();
+  const top = {titulo:'Atendimentos', sub:'Fichas, aprovações e vendas do time'};
+  if(!A.lista) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando...</div></div>`};
+  const abas = [['aprovacao',`Em aprovação (${atLoja().length+atAgendadas().length})`],['fichas','Todas as fichas']];
+  if(rep) abas.push(['vendas',`Vendas a confirmar (${atVendasPend().length})`]);
+  abas.push(['tabelas','Tabelas']);
+  if(!abas.some(x=>x[0]===A.subGestor)) A.subGestor = 'aprovacao';
+  top.acoes = `<div class="seg">${abas.map(s=>`<button class="${A.subGestor===s[0]?'on':''}" data-at-g="${s[0]}">${s[1]}</button>`).join('')}</div>`;
+  let html;
+  if(A.subGestor==='fichas') html = htmlTodasFichas();
+  else if(A.subGestor==='vendas') html = htmlVendasConfirmar();
+  else if(A.subGestor==='tabelas') html = htmlTabelas(rep);
+  else html = htmlEmAprovacao();
+  const bind = app=>{
+    app.querySelectorAll('[data-at-g]').forEach(b=>{ b.onclick = ()=>{ A.subGestor = b.getAttribute('data-at-g'); if(A.subGestor==='tabelas' && !A.tabelas) loadTabelas(); render(); }; });
+    app.querySelectorAll('[data-at-abrir]').forEach(b=>{ b.onclick = ()=>{ A.drawerId = Number(b.getAttribute('data-at-abrir')); render(); }; });
+    app.querySelectorAll('[data-at-aprovar]').forEach(b=>{ b.onclick = ()=>atDecidir(Number(b.getAttribute('data-at-aprovar')), true); });
+    app.querySelectorAll('[data-at-reprovar]').forEach(b=>{ b.onclick = ()=>atDecidir(Number(b.getAttribute('data-at-reprovar')), false); });
+    app.querySelectorAll('[data-at-venda]').forEach(b=>{ b.onclick = ()=>atConfirmarVenda(Number(b.getAttribute('data-at-venda')), b.getAttribute('data-ok')==='1'); });
+    const fv = document.getElementById('atFiltroV'), fs = document.getElementById('atFiltroS');
+    if(fv) fv.onchange = ()=>{ A.filtroV = fv.value; render(); };
+    if(fs) fs.onchange = ()=>{ A.filtroS = fs.value; render(); };
+    [['atFiltroDe','filtroDe'],['atFiltroAte','filtroAte']].forEach(([i,k])=>{ const el = document.getElementById(i); if(el) el.onchange = ()=>{ A[k] = el.value; render(); }; });
+    if(A.subGestor==='tabelas') bindTabelas(app);
+  };
+  return {top, html, bind};
+}
+async function atDecidir(id, aprovado){
+  let motivo = null;
+  if(!aprovado){ motivo = prompt('Motivo (só o vendedor vê):'); if(motivo===null) return; }
+  try{ await rpc('decidir_aprovacao', {p_id:id, p_aprovado:aprovado, p_motivo:motivo, p_resposta:null, p_retorno:null}); await loadAtendimentos(true); render(); showCronoToast('Aprovação', aprovado ? 'Aprovado: já apareceu para o vendedor' : 'Reprovado'); }
+  catch(e){ console.error(e); alert(atErroTexto(e)); }
+}
+async function atConfirmarVenda(id, ok){
+  const a = state.at.lista.find(x=>x.id===id);
+  if(!confirm(ok ? `Confirmar a venda de ${atDin(a.venda_valor)} de ${a.vendedor}? Ela entra na produção, no ranking e nas campanhas.` : `Recusar a venda de ${atDin(a.venda_valor)} de ${a.vendedor}?`)) return;
+  try{ await rpc('confirmar_venda', {p_id:id, p_confirma:ok}); await loadAtendimentos(true); state.prod = null; state.ranking = null; state.camp = null; render(); showCronoToast('Vendas', ok ? 'Venda confirmada' : 'Venda recusada'); if(ok) launchConfetti(false); }
+  catch(e){ console.error(e); alert(atErroTexto(e)); }
+}
+function htmlEmAprovacao(){
+  const loja = atLoja(), ag = atAgendadas();
+  const linha = (a, botoes) => `<div class="at-apr"><span style="flex:1;min-width:190px;"><b>${esc(a.clientes.nome)}</b><small>${esc(a.vendedor)} · crédito ${atDin(a.credito)} · renda ${atDin(a.renda)}</small></span>${botoes}</div>`;
+  return `
+    <div class="card" style="margin-bottom:14px;${loja.length?'border-color:rgba(201,168,76,.6);':''}">
+      <div class="card-h"><h3>Cliente na loja agora</h3><span class="hint">o vendedor está aguardando na frente do cliente</span></div>
+      <div class="card-b">${loja.map(a=>linha(a,`<button class="btn small" data-at-abrir="${a.id}">Abrir ficha</button><button class="btn small" data-at-reprovar="${a.id}">Reprovar</button><button class="btn small gold" data-at-aprovar="${a.id}">Aprovar</button>`)).join('') || '<div class="mute" style="font-size:13px;">Ninguém aguardando agora. Quando chegar, toca um aviso.</div>'}</div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Agendadas</h3><span class="hint">por dia e hora</span></div>
+      <div class="card-b">${ag.map(a=>{ const atras = new Date(a.aprovacao_em) < new Date(); return linha(a,`<span class="pill ${atras?'warn':'roxo'}">${atQuando(a.aprovacao_em)}</span><button class="btn small" data-at-abrir="${a.id}">Abrir ficha</button>`); }).join('') || '<div class="mute" style="font-size:13px;">Nenhuma aprovação agendada.</div>'}</div>
+    </div>`;
+}
+function htmlTodasFichas(){
+  const A = state.at;
+  const nomes = [...new Set(A.lista.map(a=>a.vendedor))].sort();
+  const lista = A.lista.filter(a=>{ const d = dayKey(new Date(a.criado_em)); return (!A.filtroV||a.vendedor===A.filtroV) && (!A.filtroS||a.situacao===A.filtroS) && (!A.filtroDe||d>=A.filtroDe) && (!A.filtroAte||d<=A.filtroAte); });
+  return `
+    <div class="card">
+      <div class="card-h"><h3>${lista.length} ${lista.length===1?'ficha':'fichas'}</h3><span style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="atFiltroDe" type="date" value="${A.filtroDe||''}" aria-label="Desde"><input id="atFiltroAte" type="date" value="${A.filtroAte||''}" aria-label="Até">
+        <select id="atFiltroV"><option value="">Todos os vendedores</option>${nomes.map(n=>`<option ${n===A.filtroV?'selected':''}>${esc(n)}</option>`).join('')}</select>
+        <select id="atFiltroS"><option value="">Todas as situações</option>${Object.keys(AT_SITUACOES).map(s=>`<option value="${s}" ${s===A.filtroS?'selected':''}>${AT_SITUACOES[s][0]}</option>`).join('')}</select>
+      </span></div>
+      <div class="scroll-x"><table class="tbl">
+        <thead><tr><th>Data</th><th>Cliente</th><th>Telefone</th><th>Vendedor</th><th class="r">Crédito</th><th>Canal</th><th>Situação</th><th>Retorno</th></tr></thead>
+        <tbody>${lista.map(a=>`<tr data-at-abrir="${a.id}" style="cursor:pointer;">
+          <td>${atQuando(a.criado_em)}</td><td><b>${esc(a.clientes.nome)}</b></td><td class="mute">${atTel(a.clientes.telefone)}</td>
+          <td><span class="pessoa">${avatar(a.vendedor)}<span>${esc(a.vendedor)}${a.ajudante?`<br><small class="mute">ajuda de ${esc(a.ajudante)}</small>`:''}</span></span></td><td class="r">${atDin(a.credito)}</td><td>${esc(atCanalNome(a.clientes.canal))}</td><td>${atPill(a.situacao)}</td><td class="mute">${atQuando(a.retorno_em)}</td>
+        </tr>`).join('') || '<tr><td colspan="8" class="mute" style="text-align:center;padding:26px;">Nenhuma ficha ainda.</td></tr>'}</tbody>
+      </table></div>
+    </div>`;
+}
+function htmlVendasConfirmar(){
+  const l = atVendasPend();
+  return `<div class="card"><div class="card-h"><h3>Vendas a confirmar</h3><span class="hint">só entram no ranking e nas campanhas depois de confirmadas</span></div>
+    <div class="scroll-x"><table class="tbl"><thead><tr><th>Data</th><th>Vendedor</th><th>Cliente</th><th>Canal</th><th class="r">Valor</th><th></th></tr></thead>
+    <tbody>${l.map(a=>`<tr><td>${new Date(a.venda_data+'T12:00:00').toLocaleDateString('pt-BR')}</td><td><span class="pessoa">${avatar(a.vendedor)}${esc(a.vendedor)}</span></td><td><button class="link" data-at-abrir="${a.id}">${esc(a.clientes.nome)}</button></td><td>${esc(atCanalNome(a.clientes.canal))}</td><td class="r"><b style="color:var(--a-gold);">${atDin(a.venda_valor)}</b></td><td class="r"><button class="btn small" data-at-venda="${a.id}" data-ok="0">Recusar</button> <button class="btn small gold" data-at-venda="${a.id}" data-ok="1">Confirmar</button></td></tr>`).join('') || '<tr><td colspan="6" class="mute" style="text-align:center;padding:26px;">Nenhuma venda aguardando.</td></tr>'}</tbody></table></div></div>`;
+}
+const atRenderBase = render;
+render = function(pulse){
+  const A = state.at;
+  if(state.view==='app' && state.centralTab==='atendimentos' && A.sub==='novo' && !A.fichaId && document.getElementById('atTel')){
+    A.novo.tel = document.getElementById('atTel').value;
+    const nm = document.getElementById('atNome'); if(nm) A.novo.nome = nm.value;
+    A.novo.lgpd = document.getElementById('atLgpd').checked;
+  }
+  const antes = {}, ativo = document.activeElement && document.activeElement.id;
+  document.querySelectorAll('.at-guarda').forEach(g=>{
+    const v = {};
+    g.querySelectorAll('input[id],select[id]').forEach(e=>{ if(e.type!=='file') v[e.id] = e.value; });
+    antes[g.dataset.k] = v;
+  });
+  atRenderBase(pulse);
+  document.querySelectorAll('.at-guarda').forEach(g=>{
+    const v = antes[g.dataset.k];
+    if(!v) return;
+    g.querySelectorAll('input[id],select[id]').forEach(e=>{ if(e.id in v) e.value = v[e.id]; });
+  });
+  if(ativo){ const e = document.getElementById(ativo); if(e && e.closest('.at-guarda')) e.focus(); }
+};
+function renderFichaDrawer(){
+  const a = state.at.lista.find(x=>x.id===state.at.drawerId);
+  if(!a) return '';
+  const c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}];
+  const item = (r,v) => `<div><span class="at-r">${r}</span><div class="at-fixo">${v}</div></div>`;
+  const simNao = (b,v) => b==null ? '—' : (b ? `Sim${v?` · ${atDin(v)}`:''}` : 'Não');
+  const projH = i => { const p = proj[i]||{}; return `<div style="margin-top:14px;"><div class="at-tit">Projeção ${i+1}</div><div class="at-grade">${[['Crédito','credito'],['Entrada','entrada'],['Parcelas','parcelas'],['Prazo','prazo'],['Renda','renda'],['Documentação','documentacao'],['Custo final','custo_final'],['Outros','outros']].map(([r,k])=>item(r,esc(p[k]||'—'))).join('')}</div></div>`; };
+  const emApr = ['aprovacao_loja','aprovacao_agendada'].includes(a.situacao);
+  return `
+    <div class="drawer-bg" id="atDrawerBg"><div class="drawer at-drawer at-guarda" data-k="d${a.id}" role="dialog" aria-modal="true" aria-labelledby="atDrawerT">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><h2 id="atDrawerT">${esc(c.nome)}</h2>${atPill(a.situacao)}</div>
+      <div class="sub">${atTel(c.telefone)}${c.telefone2?` · ${atTel(c.telefone2)}`:''} · ${esc(a.vendedor)}${a.ajudante?` (ajuda de ${esc(a.ajudante)})`:''} · ${atQuando(a.criado_em)}</div>
+      <div class="at-grade">${item('Bem',esc(a.bem||'—'))}${item('Crédito',atDin(a.credito))}${item('Renda',atDin(a.renda))}${item('Canal',esc(atCanalNome(c.canal)))}${item('Entrada',atDin(a.entrada))}${item('Parcelas',atDin(a.parcela))}${item('Restrição',simNao(a.restricao,a.restricao_valor))}${item('FGTS',simNao(a.fgts,a.fgts_valor))}${item('Aluguel',simNao(a.aluguel,a.aluguel_valor))}</div>
+      ${projH(0)}${projH(1)}
+      ${a.motivo ? `<div class="at-aviso" style="margin-top:14px;">Motivo: ${esc(a.motivo)}</div>` : ''}
+      ${a.resposta_cliente||a.retorno_em ? `<div class="at-aviso" style="margin-top:14px;">${a.resposta_cliente?`Resposta: ${esc(a.resposta_cliente)}. `:''}${a.retorno_em?`Retorno: ${atQuando(a.retorno_em)}.`:''}</div>` : ''}
+      ${emApr ? `<div class="at-resultado">
+        <div class="at-tit">Resultado da aprovação</div>
+        <label for="drRes">Resultado</label><select id="drRes"><option value="1">Aprovado</option><option value="0">Reprovado</option></select>
+        <label for="drResp">Resposta do cliente</label><input id="drResp" placeholder="Ex.: vai fechar, vai pensar">
+        <label for="drRet">Retorno agendado</label><input id="drRet" type="datetime-local">
+        <label for="drMot">Observação para o vendedor</label><input id="drMot" placeholder="Opcional">
+      </div>` : ''}
+      <div class="acoes"><button class="btn" id="drFechar">Fechar</button>${emApr ? '<button class="btn gold" id="drSalvar">Salvar e devolver ao vendedor</button>' : ''}</div>
+    </div></div>`;
+}
+function bindFichaDrawer(){
+  const fechar = ()=>{ state.at.drawerId = null; render(); };
+  const bg = document.getElementById('atDrawerBg');
+  if(!bg){ state.at.drawerId = null; return; }
+  bg.onclick = e=>{ if(e.target===bg) fechar(); };
+  document.getElementById('drFechar').onclick = fechar;
+  const s = document.getElementById('drSalvar');
+  if(s) s.onclick = async ()=>{
+    const g = x=>document.getElementById(x).value, id = state.at.drawerId;
+    try{
+      await rpc('decidir_aprovacao', {p_id:id, p_aprovado:g('drRes')==='1', p_motivo:g('drMot').trim()||null, p_resposta:g('drResp').trim()||null, p_retorno:g('drRet') ? new Date(g('drRet')).toISOString() : null});
+      state.at.drawerId = null;
+      await loadAtendimentos(true);
+      render();
+      showCronoToast('Aprovação', 'Devolvido ao vendedor');
+    }catch(e){ console.error(e); alert(atErroTexto(e)); }
+  };
+}
+
 async function salvarProducaoMes(mes, equipe, texto){
   const ano = state.prodAno;
   const valor = parseBRL(texto);
@@ -4577,6 +5224,7 @@ async function abrirArea(){
   const p = state.perfilAcesso;
   await loadVendorList();
   loadCronograma();
+  loadAtendimentos(true).then(()=>render());
   if(p.papel==='vendedor'){ selectVendor(p.nome); return; }
   state.view = 'admin';
   loadAdminData();
@@ -4710,7 +5358,7 @@ function render(pulse){
   const disabled = !!state.closed;
 
   if(state.centralTab !== 'hoje'){
-    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false), campanhas: paginaCampanhasVendedor, minhameta: paginaMinhaMeta}[state.centralTab];
+    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false), campanhas: paginaCampanhasVendedor, minhameta: paginaMinhaMeta, atendimentos: paginaAtendimentosVendedor}[state.centralTab];
     if(pagina){ renderCentral(app, pagina()); return; }
   }
 
@@ -4718,6 +5366,7 @@ function render(pulse){
     <h2 class="sr-only">Registro de ligações do dia para ${esc(state.vendor)}</h2>
     <div class="hoje">
     <div class="hoje-info">
+    ${atLinhaHoje()}
     ${renderCronoCard(false)}
 
     ${renderMetasPanel()}
