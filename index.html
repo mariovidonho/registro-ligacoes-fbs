@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0D1B2A;
@@ -950,20 +950,35 @@
   .at-sec{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--a-dim);padding:14px 20px 7px;}
   .at-sec span{font-weight:500;}
   .at-sec + .at-cli{border-top:none;}
-  .at-folha{background:#fff;color:#1B2A3A;border:1px solid var(--a-line);border-radius:6px;padding:34px 38px;max-width:680px;margin:0 auto 6px;}
-  .at-folha.uma{max-width:520px;}
-  .at-folha-marca{font-size:12px;letter-spacing:.18em;color:#9A7726;font-weight:700;}
-  .at-folha-t{font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;line-height:1.15;margin:5px 0 3px;}
-  .at-folha-s{font-size:14px;color:#5F6B77;margin-bottom:24px;}
-  .at-folha table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:16px;font-variant-numeric:tabular-nums;}
-  .at-folha th{text-align:right;font-size:14px;font-weight:600;padding:8px 10px;border-bottom:2px solid #1B2A3A;vertical-align:bottom;}
-  .at-folha td{text-align:right;padding:12px 10px;border-bottom:1px solid #EAE5DA;}
-  .at-folha th:first-child,.at-folha td:first-child{text-align:left;padding-left:0;color:#5F6B77;width:34%;}
-  .at-folha .rec{background:#FBF6E9;}
-  .at-folha tr.gr td{font-family:Fraunces,Georgia,serif;font-size:27px;font-weight:600;padding:16px 10px;}
-  .at-folha tr.gr td:first-child{font-family:Inter,sans-serif;font-size:16px;font-weight:400;padding-left:0;}
-  .at-folha-selo{display:block;font-size:11px;font-weight:600;color:#7A5C14;margin-bottom:3px;}
-  .at-folha-pe{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:24px;font-size:13px;color:#5F6B77;}
+  .at-folha-ops{display:flex;justify-content:center;gap:6px;margin-bottom:12px;}
+  .at-folha-ops button{background:#fff;border:1px solid #CFC7B6;border-radius:8px;padding:7px 16px;font:500 13px Inter,sans-serif;color:var(--a-dim);cursor:pointer;}
+  .at-folha-ops button.on{background:#1B2A3A;border-color:#1B2A3A;color:#fff;}
+  .at-folha-fone{max-width:900px;margin:0 auto 12px;}
+  .at-folha-box{display:flex;justify-content:center;width:100%;}
+  .at-folha{flex:none;width:900px;height:1273px;box-sizing:border-box;background:#fff;color:#00334E;font-family:Montserrat,Arial,sans-serif;padding:56px;display:flex;flex-direction:column;gap:32px;box-shadow:0 4px 24px rgba(0,51,78,.18);}
+  .at-folha *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .pf-eb{font-size:13px;font-weight:600;letter-spacing:5px;color:#015B96;}
+  .pf-nome{font-family:Georgia,Gelasio,serif;font-size:46px;font-weight:700;line-height:1.15;margin-top:12px;color:#00334E;}
+  .pf-tr{width:80px;height:4px;background:#519AC4;margin-top:20px;}
+  .pf-credito{border-radius:20px;padding:36px 40px;background:#00334E;}
+  .pf-credito-r{font-size:12px;font-weight:600;letter-spacing:3px;color:#D6E6F2;}
+  .pf-credito-v{font-family:Georgia,Gelasio,serif;font-size:72px;font-weight:700;margin-top:8px;line-height:1.05;color:#fff;}
+  .pf-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+  .pf-card{background:#F4F6F8;border:1px solid #D6E0E8;border-radius:14px;padding:22px 26px;}
+  .pf-card-r{font-size:11px;font-weight:600;letter-spacing:2px;color:#015B96;}
+  .pf-card-v{font-family:Georgia,Gelasio,serif;font-size:30px;font-weight:700;margin-top:8px;}
+  .pf-card.esc{background:#00334E;border-color:#00334E;color:#fff;}
+  .pf-card.esc .pf-card-r{font-weight:700;color:#9CC6E3;}
+  .pf-pessoas{border-top:1px solid #D6E0E8;padding-top:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;font-size:14px;line-height:1.6;color:#00334E;}
+  .pf-r{display:block;font-size:11px;font-weight:600;letter-spacing:2px;color:#015B96;}
+  .pf-logos{margin-top:auto;background:#fff;border:1px solid #D6E0E8;border-radius:12px;padding:14px 28px;display:flex;flex-wrap:wrap;justify-content:center;gap:2px 0;}
+  .pf-logos div{width:183px;height:48px;display:flex;align-items:center;justify-content:center;}
+  .pf-pe{font-size:13px;line-height:1.5;color:#3E566B;}
+  .pf-ed{display:inline-block;min-width:12px;border-radius:3px;outline:none;}
+  .pf-ed[contenteditable]:hover,.pf-ed[contenteditable]:focus{background:#EAF2F8;}
+  .pf-ed:empty::before{content:attr(data-ph);color:#9FB0BE;}
+  body.at-cheia .pf-ed:empty::before{content:none;}
+  body.at-cheia .pf-vazio{display:none;}
   #atPops{position:fixed;top:16px;right:16px;z-index:65;display:flex;flex-direction:column;gap:10px;width:min(340px,calc(100vw - 32px));pointer-events:none;}
   .at-pop{pointer-events:auto;background:#fff;border:1px solid #DDD6C7;border-radius:14px;padding:14px 16px;box-shadow:0 10px 28px rgba(15,30,45,.22);color:var(--text);font:400 14px Inter,sans-serif;}
   .at-pop-l{display:flex;align-items:center;gap:12px;}
@@ -980,28 +995,24 @@
   .at-pop.res .at-pop-a{justify-content:center;}
   body.at-cheia .adm{grid-template-columns:minmax(0,1fr);}
   body.at-cheia .adm-side,body.at-cheia .adm-top,body.at-cheia #cronoToast{display:none!important;}
-  body.at-cheia .adm-main{width:100%;padding:clamp(20px,5vh,56px) 16px 24px;}
-  body.at-cheia .at-folha{max-width:880px;padding:clamp(26px,5vw,60px);border:none;}
-  body.at-cheia .at-folha.uma{max-width:640px;}
-  body.at-cheia .at-folha-t{font-size:clamp(30px,4vw,44px);}
-  body.at-cheia .at-folha table{font-size:clamp(17px,2vw,21px);}
-  body.at-cheia .at-folha tr.gr td{font-size:clamp(28px,4vw,42px);}
-  body.at-cheia .at-folha tr.gr td:first-child{font-size:clamp(17px,2vw,21px);}
-  .at-cheia-acoes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  body.at-cheia .adm-main{width:100%;padding:14px 16px 10px;}
+  .at-cheia-acoes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px;}
   @media (max-width:760px){
     .at-sim,.at-bloco-g{grid-template-columns:minmax(0,1fr);}
     .at-previa{position:static;}
-    .at-folha{padding:22px 16px;}
-    .at-folha table{font-size:14px;}
-    .at-folha-t{font-size:24px;}
-    .at-folha tr.gr td{font-size:20px;}
   }
   @media print{
     body.at-tem-folha{background:#fff!important;}
+    body.at-tem-folha .adm-side,body.at-tem-folha .adm-top,body.at-tem-folha .at-etapas,body.at-tem-folha .at-barra,body.at-tem-folha .at-cheia-acoes,body.at-tem-folha .at-folha-ops,body.at-tem-folha .at-folha-fone,body.at-tem-folha .at-etapa-c:not(.on),body.at-tem-folha #atPops,body.at-tem-folha #cronoToast{display:none!important;}
+    body.at-tem-folha .adm{display:block;min-height:0;}
+    body.at-tem-folha .adm-main{padding:0;}
     body.at-tem-folha *{visibility:hidden;}
     body.at-tem-folha .at-folha,body.at-tem-folha .at-folha *{visibility:visible;}
-    body.at-tem-folha .at-folha{position:absolute;left:0;top:0;width:100%;max-width:none;border:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    body.at-tem-folha .at-folha{position:absolute;left:0;top:0;zoom:1!important;box-shadow:none;}
+    .pf-ed:empty::before{content:none!important;}
+    .pf-vazio{display:none!important;}
   }
+
   @keyframes at-gira{to{transform:rotate(360deg)}}
   @media (max-width:860px){
     .at-duas,.at-ops,.at-ops.tres{grid-template-columns:minmax(0,1fr);}
@@ -1274,18 +1285,18 @@ function applyVendorList(list){
   VENDORES = list.map(v=>v.name);
   VENDOR_PERFIL = {};
   list.forEach(v=>{
-    VENDOR_PERFIL[v.name] = {foto:v.foto||'', apelido:v.apelido||'', frase:v.frase||'', aniversario:v.aniversario||'', equipe:v.equipe||''};
+    VENDOR_PERFIL[v.name] = {foto:v.foto||'', apelido:v.apelido||'', frase:v.frase||'', aniversario:v.aniversario||'', equipe:v.equipe||'', telefone:v.telefone||''};
   });
 }
 
 // Le a lista de vendedores/PINs do banco
 async function loadVendorList(){
   try{
-    const rows = await sb('vendedores?select=nome,equipe,foto_url,apelido,frase,aniversario&order=criado_em,nome', undefined, 2);
+    const rows = await sb('vendedores?select=nome,equipe,foto_url,apelido,frase,aniversario,telefone&order=criado_em,nome', undefined, 2);
     const p = state.perfilAcesso;
     // coordenador trabalha so com a propria equipe
     const visiveis = (rows||[]).filter(r=>!p || p.papel!=='coordenador' || r.equipe===p.equipe);
-    applyVendorList(visiveis.map(r=>({name:r.nome, equipe:r.equipe, foto:r.foto_url, apelido:r.apelido, frase:r.frase, aniversario:r.aniversario})));
+    applyVendorList(visiveis.map(r=>({name:r.nome, equipe:r.equipe, foto:r.foto_url, apelido:r.apelido, frase:r.frase, aniversario:r.aniversario, telefone:r.telefone})));
   }catch(e){
     console.error('Falha ao carregar vendedores', e);
     alert('Não foi possível carregar a lista de vendedores. Verifica sua conexão e tenta de novo.');
@@ -1427,7 +1438,7 @@ let state = {
   pinsAbertos: null,     // quais PINs estao revelados na tela
   relUrls: null,         // links temporarios dos PDFs de relatorio
   at: {lista:null, tabelas:null, tabUrls:null, tabelaId:null, sub:'clientes', subGestor:'aprovacao', fichaId:null, passo:null, busca:'', filtroV:'', filtroS:'',
-       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, espera:{}, etapa:'cliente', etapaDe:null, opcao:0, cheia:false, drawerId:null}
+       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, espera:{}, etapa:'cliente', etapaDe:null, opcao:0, folhaOp:null, folhaExtras:{}, cheia:false, drawerId:null}
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -2327,7 +2338,7 @@ async function enviarFoto(nome, file){
 
 function abrirPerfil(nome){
   const p = VENDOR_PERFIL[nome] || {};
-  state.perfil = {nome, foto:p.foto||'', apelido:p.apelido||'', frase:p.frase||'', aniversario:p.aniversario||'', enviando:false};
+  state.perfil = {nome, foto:p.foto||'', apelido:p.apelido||'', frase:p.frase||'', aniversario:p.aniversario||'', telefone:p.telefone||'', enviando:false};
   render();
 }
 function renderPerfilDrawer(){
@@ -2350,6 +2361,8 @@ function renderPerfilDrawer(){
         </div>
         <label for="perfilApelido">Como prefere ser chamado</label>
         <input id="perfilApelido" maxlength="30" value="${esc(p.apelido)}" placeholder="${esc(p.nome.split(' ')[0])}">
+        <label for="perfilTelefone">Telefone (sai na folha de proposta)</label>
+        <input id="perfilTelefone" maxlength="20" inputmode="tel" value="${esc(p.telefone)}" placeholder="(11) 99999-0000">
         <label for="perfilFrase">Frase ou meta pessoal</label>
         <input id="perfilFrase" maxlength="120" value="${esc(p.frase)}" placeholder="Ex.: Bater 2 vendas em novembro">
         <label for="perfilAniver">Aniversário (dia/mês)</label>
@@ -2366,6 +2379,7 @@ function bindPerfilDrawer(){
   const lerCampos = ()=>{
     state.perfil.apelido = document.getElementById('perfilApelido').value;
     state.perfil.frase = document.getElementById('perfilFrase').value;
+    state.perfil.telefone = document.getElementById('perfilTelefone').value;
     state.perfil.aniversario = document.getElementById('perfilAniver').value;
   };
   const fechar = ()=>{ state.perfil = null; render(); };
@@ -2392,18 +2406,20 @@ async function salvarPerfil(){
   const p = state.perfil;
   p.apelido = document.getElementById('perfilApelido').value.trim();
   p.frase = document.getElementById('perfilFrase').value.trim();
+  p.telefone = document.getElementById('perfilTelefone').value.replace(/[^0-9]/g,'');
+  if(p.telefone && p.telefone.length < 10){ alert('Escreve o telefone com DDD.'); return; }
   p.aniversario = document.getElementById('perfilAniver').value.trim();
   if(p.aniversario && !/^(0?[1-9]|[12]\d|3[01])\/(0?[1-9]|1[0-2])$/.test(p.aniversario)){ alert('Escreve o aniversário como dia/mês, por exemplo 25/03.'); return; }
   if(p.aniversario) p.aniversario = p.aniversario.split('/').map(x=>x.padStart(2,'0')).join('/');
   try{
     await sb('vendedores?nome='+eq(p.nome), {method:'PATCH', prefer:'return=minimal',
-      body:{foto_url: p.foto || null, apelido: p.apelido || null, frase: p.frase || null, aniversario: p.aniversario || null}});
+      body:{foto_url: p.foto || null, apelido: p.apelido || null, frase: p.frase || null, aniversario: p.aniversario || null, telefone: p.telefone || null}});
   }catch(e){
     console.error('Falha ao salvar perfil', e);
     alert('Não foi possível salvar o perfil. Verifica sua conexão e tenta de novo.');
     return;
   }
-  VENDOR_PERFIL[p.nome] = {foto:p.foto, apelido:p.apelido, frase:p.frase, aniversario:p.aniversario};
+  VENDOR_PERFIL[p.nome] = {...VENDOR_PERFIL[p.nome], foto:p.foto, apelido:p.apelido, frase:p.frase, aniversario:p.aniversario, telefone:p.telefone};
   state.perfil = null;
   render();
   showCronoToast('Perfil', 'Perfil salvo');
@@ -4582,7 +4598,7 @@ setInterval(async ()=>{
   }
   if(state.view==='app'){ atSincEspera(); atPintarPops(); }
   if(!mudou) return;
-  const digitando = document.activeElement && ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName);
+  const digitando = document.activeElement && (['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable);
   if(gestor && state.adminTab==='atendimentos' && !state.at.drawerId && !digitando) render();
   else if(state.view==='app' && state.centralTab==='atendimentos' && !digitando) render();
 }, 3000);
@@ -4667,7 +4683,7 @@ function atColetar(){
   const v = id => (document.getElementById(id)||{}).value || '';
   const din = id => { const n = parseBRL(v(id)); return Number.isNaN(n) ? null : n; };
   const bool = id => v(id)==='' ? null : v(id)==='sim';
-  const proj = i => { const o = {}; ['credito','entrada','parcelas','prazo','renda','documentacao','custo_final','outros'].forEach(k=>{ o[k] = v(`p${i}_${k}`).trim(); }); o.recomendada = v(`p${i}_recomendada`)==='1'; return o; };
+  const proj = i => { const o = {}; ['credito','entrada','parcelas','primeira_parcela','prazo','renda','documentacao','custo_final','outros'].forEach(k=>{ o[k] = v(`p${i}_${k}`).trim(); }); o.recomendada = v(`p${i}_recomendada`)==='1'; return o; };
   return {nome:v('fNome'), telefone2:v('fTel2'), bem:v('fBem').trim(), credito:din('fCredito'), renda:din('fRenda'), entrada:din('fEntrada'), parcela:din('fParcela'),
     restricao:bool('fRestricao'), restricao_valor:bool('fRestricao') ? din('fRestricaoV') : null, fgts:bool('fFgts'), fgts_valor:bool('fFgts') ? din('fFgtsV') : null, aluguel:bool('fAluguel'), aluguel_valor:bool('fAluguel') ? din('fAluguelV') : null,
     projecoes:[proj(0), proj(1)]};
@@ -4683,36 +4699,62 @@ async function atSalvar(silencioso){
 }
 const atSimNao = (id, rot, v) => `<div class="at-sn-linha"><span class="at-sn-rot">${rot}</span><input type="hidden" id="${id}" value="${v==null?'':(v?'sim':'nao')}"><span class="at-sn" data-sn="${id}"><button type="button" value="nao">Não</button><button type="button" value="sim">Sim</button></span></div>`;
 const atCampo = (rot, id, val, extra) => `<div><label class="at-r" for="${id}">${rot}</label><input id="${id}" value="${esc(val==null?'':val)}" style="width:100%;" ${extra||''}></div>`;
-const AT_FOLHA = [['parcelas','Parcela'],['credito','Crédito'],['entrada','Entrada'],['prazo','Prazo'],['documentacao','Documentação'],['custo_final','Custo final'],['outros','Outros']];
-function atVal(k, v){
+const AT_FOLHA = ['credito','entrada','parcelas','primeira_parcela','prazo','documentacao','custo_final'];
+function atVal(k, v, centavos){
   v = String(v||'').trim();
   if(!v) return '';
   if(k==='prazo') return /^[0-9]+$/.test(v) ? v+' meses' : v;
-  if(k==='outros') return v;
+  if(k==='outros' || k==='primeira_parcela') return v;
   const n = parseBRL(v);
-  return n==null || Number.isNaN(n) ? v : 'R$ '+n.toLocaleString('pt-BR',{maximumFractionDigits:2});
+  if(n==null || Number.isNaN(n)) return v;
+  return 'R$ '+n.toLocaleString('pt-BR', centavos ? {minimumFractionDigits:2,maximumFractionDigits:2} : {maximumFractionDigits:2});
 }
-function htmlFolha(a, cheia){
-  const opcoes = (Array.isArray(a.projecoes) ? a.projecoes : []).slice(0,2).map((p,i)=>({p:p||{},i})).filter(o=>AT_FOLHA.some(([k])=>String(o.p[k]||'').trim()));
+const AT_PARCEIROS = [['embracon','Embracon',92,24],['ancora','Âncora Consórcios',68,24],['bb','Banco do Brasil',116,22],['bradesco','Bradesco',116,22],['caixa','Caixa',116,22],['itau','Itaú',34,34],['santander','Santander',116,22]];
+function htmlFolha(a){
+  const A = state.at, cheia = A.cheia;
+  const opcoes = (Array.isArray(a.projecoes) ? a.projecoes : []).slice(0,2).map((p,i)=>({p:p||{},i})).filter(o=>AT_FOLHA.some(k=>String(o.p[k]||'').trim()));
   if(!opcoes.length) return `<div class="card"><div class="card-b" style="padding:34px;text-align:center;color:var(--a-dim);">Preencha pelo menos uma opção na Proposta para montar a folha.</div></div>`;
-  const linhas = AT_FOLHA.filter(([k])=>opcoes.some(o=>String(o.p[k]||'').trim()));
-  const data = new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
-  const cel = (o, html) => `<td class="${o.p.recomendada?'rec':''}">${html}</td>`;
+  const sel = opcoes.find(o=>o.i===A.folhaOp) || opcoes.find(o=>o.p.recomendada) || opcoes[0];
+  A.folhaOp = sel.i;
+  const x = A.folhaExtras[a.id] = A.folhaExtras[a.id] || {}, fone = (VENDOR_PERFIL[state.vendor]||{}).telefone || '';
+  const ed = (k, ph, val) => `<span class="pf-ed" ${cheia ? '' : 'contenteditable="plaintext-only"'} spellcheck="false" data-ed="${k}" data-ph="${ph}">${esc(val||'')}</span>`;
+  const val = k => esc(atVal(k, sel.p[k], true)) || '—';
+  const card = (r, k, cls) => `<div class="pf-card ${cls||''}"><div class="pf-card-r">${r}</div><div class="pf-card-v">${val(k)}</div></div>`;
+  const hoje = new Date().toLocaleDateString('pt-BR');
   return `
-    <div class="at-folha ${opcoes.length===1?'uma':''}">
-      <div class="at-folha-marca">FBS PRIME</div>
-      <div class="at-folha-t serif">Proposta para ${esc(a.clientes.nome)}</div>
-      <div class="at-folha-s">${a.bem?esc(a.bem)+' · ':''}${data}</div>
-      <table>
-        <thead><tr><th></th>${opcoes.map(o=>`<th class="${o.p.recomendada?'rec':''}">${o.p.recomendada?'<span class="at-folha-selo">Recomendada</span>':''}${opcoes.length>1?`Opção ${o.i+1}`:'Sua proposta'}</th>`).join('')}</tr></thead>
-        <tbody>${linhas.map(([k,r],n)=>`<tr class="${n===0&&k==='parcelas'?'gr':''}"><td>${r}</td>${opcoes.map(o=>cel(o, esc(atVal(k,o.p[k]))||'—')).join('')}</tr>`).join('')}</tbody>
-      </table>
-      <div class="at-folha-pe"><span>Seu consultor: ${esc(a.vendedor)}</span><span>Proposta sujeita a confirmação</span></div>
-    </div>`;
+    ${!fone && !cheia ? '<div class="at-aviso at-folha-fone">Seu telefone ainda não sai nesta folha. <button class="link" id="atPerfilFone">Colocar no meu perfil</button></div>' : ''}
+    ${opcoes.length>1 ? `<div class="at-folha-ops">${opcoes.map(o=>`<button type="button" class="${o.i===sel.i?'on':''}" data-folha-op="${o.i}">Opção ${o.i+1}</button>`).join('')}</div>` : ''}
+    <div class="at-folha-box"><div class="at-folha">
+      <div><img src="/proposta/fbs.png" alt="FBS Prime" style="width:180px;height:85px;object-fit:contain"></div>
+      <div>
+        <div class="pf-eb">PROPOSTA DE CRÉDITO</div>
+        <div class="pf-nome">${esc(a.clientes.nome)}</div>
+        <div class="pf-tr"></div>
+      </div>
+      <div class="pf-credito"><div class="pf-credito-r">CRÉDITO DISPONIBILIZADO</div><div class="pf-credito-v">${val('credito')}</div></div>
+      <div class="pf-grade">
+        ${card('ENTRADA','entrada')}${card('PARCELAS','parcelas')}${card('PRIMEIRA PARCELA','primeira_parcela')}${card('PRAZO','prazo')}${card('DOCUMENTAÇÃO','documentacao')}${card('CUSTO FINAL','custo_final','esc')}
+      </div>
+      <div class="pf-pessoas">
+        <div data-grupo><span class="pf-r">CPF</span>${ed('cpf','000.000.000-00',x.cpf)}<br>Nasc. ${ed('nasc','00/00/0000',x.nasc)}</div>
+        <div data-grupo><span class="pf-r">CÔNJUGE</span>${ed('conjuge','Nome do cônjuge',x.conjuge)}<br>${ed('conjuge_cpf','CPF',x.conjuge_cpf)} · ${ed('conjuge_nasc','Nasc.',x.conjuge_nasc)}</div>
+        <div><span class="pf-r">REPRESENTANTE</span>${esc(a.vendedor)}<br>Data: ${hoje}</div>
+      </div>
+      <div class="pf-logos">${AT_PARCEIROS.map(([f,n,w,h])=>`<div><img src="/proposta/${f}.png" alt="${n}" style="width:${w}px;height:${h}px;object-fit:contain"></div>`).join('')}</div>
+      <div class="pf-pe">Proposta <span data-grupo>válida até ${ed('validade','00/00/0000',x.validade)}, </span>sujeita à análise e aprovação de crédito. FBS Prime${fone ? ` · ${atTel(fone)}` : ''} · fbsprime20@gmail.com</div>
+    </div></div>`;
 }
+function atImprimir(){
+  const st = document.createElement('style');
+  st.textContent = '@page{size:900px 1273px;margin:0}';
+  document.head.appendChild(st);
+  window.addEventListener('afterprint', ()=>st.remove(), {once:true});
+  window.print();
+}
+window.addEventListener('resize', ()=>{ if(typeof atSyncFicha==='function') atSyncFicha(); });
 function htmlFicha(a){
   const A = state.at, c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}], cheia = A.cheia;
-  if(A.etapaDe !== a.id){ A.etapa = 'cliente'; A.opcao = 0; A.etapaDe = a.id; }
+  if(A.etapaDe !== a.id){ A.etapa = 'cliente'; A.opcao = 0; A.folhaOp = null; A.etapaDe = a.id; }
   const et = A.etapa, opc = A.opcao;
   const visitas = A.lista.filter(x=>x.cliente_id===a.cliente_id).sort((x,y)=>x.criado_em<y.criado_em?-1:1);
   const nVisita = visitas.findIndex(x=>x.id===a.id)+1;
@@ -4722,9 +4764,9 @@ function htmlFicha(a){
       <div class="at-bloco-g">
         <div style="grid-column:1/-1">${cp('Crédito','credito',dinheiro)}</div>
         ${cp('Entrada','entrada',dinheiro)}${cp('Parcela','parcelas',dinheiro)}
-        ${cp('Prazo (meses)','prazo','inputmode="numeric"')}${cp('Documentação','documentacao',dinheiro)}
-        ${cp('Custo final','custo_final',dinheiro)}${cp('Renda','renda',dinheiro)}
-        <div style="grid-column:1/-1">${cp('Outros','outros')}</div>
+        ${cp('Primeira parcela','primeira_parcela','placeholder="00/00/0000"')}${cp('Prazo (meses)','prazo','inputmode="numeric"')}
+        ${cp('Documentação','documentacao')}${cp('Custo final','custo_final',dinheiro)}
+        ${cp('Renda','renda',dinheiro)}${cp('Outros','outros')}
       </div>
       <input type="hidden" id="p${i}_recomendada" value="${p.recomendada?'1':''}">
       <button type="button" class="at-rec" data-rec="${i}"></button>
@@ -4806,10 +4848,17 @@ function atSyncFicha(){
     b.classList.toggle('on', on);
     b.textContent = on ? 'Recomendada na folha' : 'Marcar como recomendada';
   });
+  const fo = document.querySelector('.at-folha');
+  if(fo){
+    // ao mostrar ao cliente, a folha inteira cabe na tela sem precisar rolar
+    const altura = state.at.cheia ? Math.max(.5, (window.innerHeight-130)/1273) : 1;
+    fo.style.zoom = Math.min(1, fo.parentNode.clientWidth/900, altura) || 1;
+    fo.querySelectorAll('[data-grupo]').forEach(b=>b.classList.toggle('pf-vazio', [...b.querySelectorAll('.pf-ed')].every(e=>!e.textContent.trim())));
+  }
   const pv = g('atPrevia');
   if(pv){
     const i = state.at.opcao, val = k => atVal(k, (g(`p${i}_${k}`)||{}).value);
-    pv.innerHTML = `<div class="at-previa-v">${esc(val('parcelas')) ? esc(val('parcelas'))+' por mês' : 'Parcela'}</div>` + [['credito','Crédito'],['entrada','Entrada'],['prazo','Prazo'],['documentacao','Documentação'],['custo_final','Custo final']].map(([k,r])=>`<div class="at-previa-l"><span>${r}</span><span>${esc(val(k))||'—'}</span></div>`).join('');
+    pv.innerHTML = `<div class="at-previa-v">${esc(val('parcelas')) ? esc(val('parcelas'))+' por mês' : 'Parcela'}</div>` + [['credito','Crédito'],['entrada','Entrada'],['primeira_parcela','Primeira parcela'],['prazo','Prazo'],['documentacao','Documentação'],['custo_final','Custo final']].map(([k,r])=>`<div class="at-previa-l"><span>${r}</span><span>${esc(val(k))||'—'}</span></div>`).join('');
   }
 }
 function htmlPasso(a){
@@ -4846,7 +4895,18 @@ function bindFicha(app){
   if(g('atVoltar')) g('atVoltar').onclick = async ()=>{ if(await atSalvar(true)){ state.at.fichaId = null; state.at.passo = null; render(); } };
   if(g('atSalvar')) g('atSalvar').onclick = ()=>atSalvar(false);
   if(g('atMostrar')) g('atMostrar').onclick = ()=>{ atEntrarCheia(); render(); window.scrollTo(0,0); };
-  if(g('atImprimir')) g('atImprimir').onclick = ()=>window.print();
+  if(g('atImprimir')) g('atImprimir').onclick = atImprimir;
+  if(g('atPerfilFone')) g('atPerfilFone').onclick = ()=>abrirPerfil(state.vendor);
+  app.querySelectorAll('[data-folha-op]').forEach(b=>{ b.onclick = ()=>{ state.at.folhaOp = Number(b.getAttribute('data-folha-op')); render(); }; });
+  app.querySelectorAll('[data-ed]').forEach(e=>{
+    e.onkeydown = ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); e.blur(); } };
+    e.oninput = ()=>{
+      const t = e.textContent.trim(), k = e.getAttribute('data-ed');
+      if(!t) e.innerHTML = '';
+      (state.at.folhaExtras[id] = state.at.folhaExtras[id] || {})[k] = t;
+      atSyncFicha();
+    };
+  });
   app.querySelectorAll('[data-opcao]').forEach(b=>{ b.onclick = ()=>{ state.at.opcao = Number(b.getAttribute('data-opcao')); render(); }; });
   app.querySelectorAll('[data-sn] button').forEach(b=>{ b.onclick = ()=>{ g(b.parentNode.getAttribute('data-sn')).value = b.value; atSyncFicha(); }; });
   app.querySelectorAll('[data-rec]').forEach(b=>{ b.onclick = ()=>{
@@ -5186,7 +5246,7 @@ function renderFichaDrawer(){
   const c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}];
   const item = (r,v) => `<div><span class="at-r">${r}</span><div class="at-fixo">${v}</div></div>`;
   const simNao = (b,v) => b==null ? '—' : (b ? `Sim${v?` · ${atDin(v)}`:''}` : 'Não');
-  const projH = i => { const p = proj[i]||{}; return `<div style="margin-top:14px;"><div class="at-tit">Projeção ${i+1}</div><div class="at-grade">${[['Crédito','credito'],['Entrada','entrada'],['Parcelas','parcelas'],['Prazo','prazo'],['Renda','renda'],['Documentação','documentacao'],['Custo final','custo_final'],['Outros','outros']].map(([r,k])=>item(r,esc(p[k]||'—'))).join('')}</div></div>`; };
+  const projH = i => { const p = proj[i]||{}; return `<div style="margin-top:14px;"><div class="at-tit">Projeção ${i+1}</div><div class="at-grade">${[['Crédito','credito'],['Entrada','entrada'],['Parcelas','parcelas'],['Primeira parcela','primeira_parcela'],['Prazo','prazo'],['Renda','renda'],['Documentação','documentacao'],['Custo final','custo_final'],['Outros','outros']].map(([r,k])=>item(r,esc(p[k]||'—'))).join('')}</div></div>`; };
   const emApr = ['aprovacao_loja','aprovacao_agendada'].includes(a.situacao);
   return `
     <div class="drawer-bg" id="atDrawerBg"><div class="drawer at-drawer at-guarda" data-k="d${a.id}" role="dialog" aria-modal="true" aria-labelledby="atDrawerT">
