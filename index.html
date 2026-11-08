@@ -804,6 +804,11 @@
   .drop.over{border-color:var(--a-gold);background:var(--a-gold-soft);color:var(--text);}
   .drop b{color:var(--text);}
 
+  /* ---- Minha meta ---- */
+  .mm-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
+  .mm-progresso{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start;}
+  .mm-rotulo{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-dim);font-weight:600;margin-bottom:6px;}
+
   /* ---- Campanhas ---- */
   .camp-hero{display:grid;grid-template-columns:minmax(220px,340px) minmax(0,1fr);gap:26px;padding:22px;}
   .camp-arte{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--a-line);align-self:start;}
@@ -836,6 +841,7 @@
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
     .camp-hero{grid-template-columns:minmax(0,1fr);}
     .camp-resumo{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .mm-planos,.mm-progresso{grid-template-columns:minmax(0,1fr);}
     .camp-arte{max-width:340px;}
     .rel-wrap{grid-template-columns:minmax(0,1fr);}
     .viewer{display:none;}
@@ -1149,7 +1155,9 @@ let state = {
   cronoEventosDraft: null, // rascunho dos eventos fixos editados no admin
   perfil: null,          // perfil aberto na janela lateral {nome, foto, apelido, frase, aniversario}
   camp: null,            // campanhas + bases + vendas (aba Campanhas)
-  campForm: null         // campanha sendo criada/editada no admin
+  campForm: null,        // campanha sendo criada/editada no admin
+  mp: null,              // regra da calculadora + metas pessoais
+  mmValor: null          // valor digitado na calculadora "Minha meta"
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -1541,7 +1549,7 @@ function selectVendor(name){
   if(state.vendor !== name){
     state.allCalls = []; state.calls = []; state.closed = null; state.pendentes = [];
   }
-  if(state.vendor !== name){ state.relatorios = null; state.relAberto = null; state.relErro = false; state.centralTab = 'hoje'; }
+  if(state.vendor !== name){ state.relatorios = null; state.relAberto = null; state.relErro = false; state.centralTab = 'hoje'; state.mp = null; state.mmValor = null; }
   state.vendor = name;
   state.pendingVendor = null;
   state.vendorPinError = false;
@@ -2190,6 +2198,7 @@ function irParaPagina(id){
   if(id==='relatorios' && !state.adminRel) loadAdminRelatorios();
   if(id==='ranking' && !state.ranking) loadRanking();
   if(id==='campanhas' && !state.camp) loadCampanhas();
+  if(id==='metas'){ if(!state.mp) loadMetasPessoais(); if(!state.desemp) loadDesempenho(); }
   render();
   window.scrollTo(0,0);
 }
@@ -2340,7 +2349,16 @@ function paginaLigacoes(){
 }
 
 // ---------------- Metas ----------------
+// pagina Metas do admin: metas fixas da semana em cima, metas individuais do mes embaixo
 function paginaMetas(){
+  const p = paginaMetasFixas();
+  return {
+    top: {...p.top, titulo:'Metas'},
+    html: `<div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;margin:0 0 12px;">Metas fixas da semana</div>` + p.html + htmlMetasIndividuais(),
+    bind: app=>{ if(p.bind) p.bind(app); bindMetasIndividuais(app); }
+  };
+}
+function paginaMetasFixas(){
   const metas = state.adminMetas;
   const semana = metas ? (Object.values(metas).find(Boolean)||{}).semana : null;
   const campos = [
@@ -2870,6 +2888,7 @@ function irParaCentral(id){
   if(id==='desempenho' && !state.desemp) loadDesempenho();
   if(id==='ranking' && !state.ranking) loadRanking();
   if(id==='campanhas' && !state.camp) loadCampanhas();
+  if(id==='minhameta'){ if(!state.mp) loadMetasPessoais(); if(!state.desemp) loadDesempenho(); }
   render();
   window.scrollTo(0,0);
 }
@@ -3884,6 +3903,319 @@ async function salvarCampanha(){
 }
 document.addEventListener('keydown', ev=>{ if(ev.key==='Escape' && state.campForm){ state.campForm = null; render(); } });
 
+/*
+  Minha meta: o vendedor escolhe quanto quer vender no mes e ve o funil necessario,
+  pela regra da FBS (ticket medio e funil de 1 venda, editaveis no admin) e pelo
+  historico dele (as taxas reais das semanas fechadas). A atividade e proporcional
+  a meta (cotas de R$ 100 mil); vendas aparecem no ticket medio. Semana = mes / 4,
+  dia util = semana / 5 (a mesma divisao das metas fixas: 600 -> 150 -> 30).
+  So o vendedor e o gestor veem.
+*/
+ICONES.minhameta = ICONES.metas;
+CENTRAL_PAGINAS.splice(CENTRAL_PAGINAS.findIndex(p=>p.id==='desempenho')+1, 0, {id:'minhameta', nome:'Minha meta'});
+const REGRA_META_PADRAO = {ticket:500000, ligacoes:600, agendamentos:20, comparecimentos:7};
+const mesAtualKey = () => todayKey().slice(0,7);
+const nomeMes = k => `${MESES[Number(k.slice(5,7))-1]} de ${k.slice(0,4)}`;
+
+async function loadMetasPessoais(){
+  const doVendedor = state.view==='app' ? '&vendedor='+eq(state.vendor) : '';
+  try{
+    const [cfg, metas] = await Promise.all([
+      sb('config?select=valor&chave=eq.regra_meta', undefined, 1),
+      sb('metas_pessoais?select=vendedor,mes,valor,plano,atualizado_em&order=mes.desc'+doVendedor, undefined, 1)
+    ]);
+    const r = cfg && cfg[0] && cfg[0].valor;
+    state.mp = {
+      regra: r && r.ticket ? {...REGRA_META_PADRAO, ...r} : {...REGRA_META_PADRAO},
+      metas: (metas||[]).map(m=>({...m, valor:Number(m.valor)}))
+    };
+  }catch(e){
+    console.error('Falha ao carregar metas pessoais', e);
+    state.mp = {erro:true};
+  }
+  render();
+}
+
+// Taxas reais do vendedor nas semanas fechadas (so semanas com ligacoes registradas no site)
+function taxasHistorico(v, regra){
+  const D = state.desemp, hoje = todayKey();
+  let L=0, A=0, C=0, V=0, Rv=0, Vv=0, n=0, desde=null;
+  D.semanas.filter(s=>s.vendedor===v && s.fim < hoje).forEach(s=>{
+    const lig = D.dias.filter(x=>x.vendedor===v && x.dia>=s.ini && x.dia<=s.fim).reduce((a,x)=>a+x.total,0);
+    if(!lig) return;
+    L += lig; A += s.agendamentos||0; C += s.comparecimentos||0; V += s.vendas||0; n++;
+    if(s.vendas && Number(s.receita)){ Rv += Number(s.receita); Vv += s.vendas; }
+    if(!desde || s.ini < desde) desde = s.ini;
+  });
+  const fbs = {la: regra.ligacoes/regra.agendamentos, ac: regra.agendamentos/regra.comparecimentos, cv: regra.comparecimentos};
+  const la = A>0 ? L/A : null, ac = C>0 ? A/C : null, cv = V>0 ? C/V : null;
+  const ticket = Vv>=2 ? Rv/Vv : null;
+  const cvU = cv ?? fbs.cv, acU = ac ?? fbs.ac, laU = la ?? fbs.la;
+  return {n, desde, L, A, C, V, la, ac, cv, ticket,
+    porVenda: {comparecimentos: cvU, agendamentos: cvU*acU, ligacoes: cvU*acU*laU},
+    ticketUsado: ticket ?? regra.ticket,
+    completo: la!==null && ac!==null && cv!==null};
+}
+function planoMeta(valor, porVenda, ticket){
+  const vendas = valor / ticket;
+  const mes = {
+    ligacoes: Math.ceil(vendas*porVenda.ligacoes - 1e-9),
+    agendamentos: Math.ceil(vendas*porVenda.agendamentos - 1e-9),
+    comparecimentos: Math.ceil(vendas*porVenda.comparecimentos - 1e-9)
+  };
+  const semana = {}, dia = {};
+  Object.keys(mes).forEach(k=>{ semana[k] = Math.ceil(mes[k]/4 - 1e-9); dia[k] = Math.ceil(semana[k]/5 - 1e-9); });
+  return {vendas, vendasMin: Math.ceil(vendas - 1e-9), mes, semana, dia, ticket};
+}
+const planoPadrao = (valor, regra) => planoMeta(valor, {ligacoes:regra.ligacoes, agendamentos:regra.agendamentos, comparecimentos:regra.comparecimentos}, regra.ticket);
+const vendasTexto = p => { const v = Math.round(p.vendas*10)/10; return Number.isInteger(v) ? `${v} ${v===1?'venda':'vendas'}` : `${v.toLocaleString('pt-BR')} vendas (pelo menos ${p.vendasMin})`; };
+
+function tabelaPlano(p){
+  const linha = (rotulo, k) => `<tr><td>${rotulo}</td><td class="r"><b>${p.mes[k].toLocaleString('pt-BR')}</b></td><td class="r">${p.semana[k].toLocaleString('pt-BR')}</td><td class="r">${p.dia[k].toLocaleString('pt-BR')}</td></tr>`;
+  return `<table class="tbl">
+    <thead><tr><th></th><th class="r">No mês</th><th class="r">Por semana</th><th class="r">Por dia útil</th></tr></thead>
+    <tbody>
+      ${linha('Ligações','ligacoes')}${linha('Agendamentos','agendamentos')}${linha('Comparecimentos','comparecimentos')}
+      <tr><td>Vendas</td><td class="r" colspan="3"><b style="color:var(--a-gold);">${vendasTexto(p)}</b> <span class="mute">· ticket ${brlCurto(p.ticket)}</span></td></tr>
+    </tbody></table>`;
+}
+
+function htmlPlanos(valor, v){
+  const M = state.mp;
+  if(!valor || valor<=0) return `<div class="card"><div class="card-b" style="padding:26px;text-align:center;color:var(--a-dim);">Digite quanto você quer vender no mês para ver o caminho.</div></div>`;
+  const pP = planoPadrao(valor, M.regra);
+  const h = taxasHistorico(v, M.regra);
+  const pH = planoMeta(valor, h.porVenda, h.ticketUsado);
+  const fmt = x => x==null ? '—' : (Math.round(x*10)/10).toLocaleString('pt-BR');
+  return `
+    <div class="mm-planos">
+      <div class="card">
+        <div class="card-h"><h3>Padrão FBS</h3><span class="hint">1 venda = ${M.regra.ligacoes} ligações · ${M.regra.agendamentos} agendamentos · ${M.regra.comparecimentos} comparecimentos</span></div>
+        <div class="scroll-x">${tabelaPlano(pP)}</div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Pelo seu histórico</h3><span class="hint">${h.n ? `${h.n} semanas fechadas desde ${dataCurta(h.desde)}` : 'sem semanas fechadas ainda'}</span></div>
+        <div class="scroll-x">${tabelaPlano(pH)}</div>
+        <div class="card-b" style="padding-top:12px;font-size:12px;color:var(--a-dim);line-height:1.6;">
+          Você faz <b style="color:var(--text);">1 agendamento a cada ${fmt(h.la)} ligações</b> · ${h.ac ? `<b style="color:var(--text);">${Math.round(100/h.ac)}%</b> dos agendados comparecem` : 'comparecimento: —'} · ${h.cv ? `<b style="color:var(--text);">1 venda a cada ${fmt(h.cv)} comparecimentos</b>` : 'ainda sem venda nas semanas fechadas'}${h.ticket ? ` · seu ticket médio: <b style="color:var(--text);">${brlCurto(h.ticket)}</b>` : ''}.
+          ${!h.completo ? '<br><span style="color:#E59866;">Onde ainda falta histórico, usamos o padrão FBS.</span>' : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function htmlProgressoMeta(meta, v){
+  const M = state.mp, hoje = todayKey(), iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje), iniSem = inicioSemana(hoje);
+  const plano = planoPadrao(meta.valor, M.regra);
+  const r = desempenhoPeriodo(v, iniMes, hoje);
+  const sem = desempenhoPeriodo(v, iniSem, hoje);
+  const restantes = diasUteisEntre(hoje, fimM);
+  const faltaLig = Math.max(0, plano.mes.ligacoes - r.ligacoes);
+  const item = (rotulo, feito, alvo) => `
+    <div style="margin-top:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;"><span>${rotulo}</span><span><b>${feito.toLocaleString('pt-BR')}</b> <span class="mute">/ ${alvo.toLocaleString('pt-BR')}</span></span></div>
+      <div class="barra" style="min-width:0;height:8px;"><i style="width:${Math.min(100,pct(feito,alvo))}%;background:${feito>=alvo?'#5FD39A':'var(--a-gold)'};"></i></div>
+    </div>`;
+  return `
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h"><h3>Seu caminho em ${MESES[Number(hoje.slice(5,7))-1].toLowerCase()}</h3><span class="hint">meta salva: <b style="color:var(--a-gold);">${BRL.format(meta.valor)}</b></span></div>
+      <div class="card-b">
+        <div class="mm-progresso">
+          <div>
+            <div class="mute" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;">Produção no mês</div>
+            <div class="serif" style="font-size:30px;color:var(--a-gold);">${BRL.format(r.receita)}</div>
+            <div class="barra" style="min-width:0;height:12px;margin:8px 0 6px;"><i style="width:${Math.min(100,pct(r.receita,meta.valor))}%;background:var(--a-gold);"></i></div>
+            <div style="font-size:12px;color:var(--a-dim);">${pct(r.receita,meta.valor)}% da sua meta · ${r.vendas} ${r.vendas===1?'venda':'vendas'} de ${plano.vendasMin}</div>
+            <div class="camp-status ${faltaLig ? '' : 'ok'}" style="font-size:13px;">${faltaLig
+              ? `Faltam ${faltaLig.toLocaleString('pt-BR')} ligações: <b>${restantes ? Math.ceil(faltaLig/restantes) : faltaLig} por dia útil</b> nos ${restantes} ${restantes===1?'dia útil restante':'dias úteis restantes'}.`
+              : 'Você já fez as ligações do mês para a sua meta. Agora é converter!'}</div>
+          </div>
+          <div>
+            ${item('Ligações no mês', r.ligacoes, plano.mes.ligacoes)}
+            ${item('Agendamentos', r.agendamentos, plano.mes.agendamentos)}
+            ${item('Comparecimentos', r.comparecimentos, plano.mes.comparecimentos)}
+            ${item('Ligações nesta semana', sem.ligacoes, plano.semana.ligacoes)}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function paginaMinhaMeta(){
+  const mes = mesAtualKey();
+  const top = {titulo:'Minha meta', sub:`${nomeMes(mes)} · só você e o gestor veem`};
+  if(!state.mp || !state.desemp) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando...</div></div>`};
+  if(state.mp.erro || state.desemp.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar agora. Tenta de novo em instantes.</div></div>`};
+  const v = state.vendor;
+  const salva = state.mp.metas.find(m=>m.vendedor===v && m.mes===mes);
+  if(state.mmValor == null) state.mmValor = salva ? salva.valor : 1000000;
+  const valor = state.mmValor;
+  const chips = [500000, 1000000, 1500000, 2000000, 3000000];
+  const html = `
+    ${salva ? htmlProgressoMeta(salva, v) : ''}
+    <div class="card mm-calc" style="margin-bottom:18px;">
+      <div class="card-b" style="padding-top:20px;">
+        <label for="mmValor" class="mute" style="display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:8px;">Quanto você quer vender em ${MESES[Number(mes.slice(5,7))-1].toLowerCase()}?</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+          <input id="mmValor" class="valor-grande" inputmode="decimal" value="${valor ? valor.toLocaleString('pt-BR') : ''}" placeholder="1.000.000" style="width:240px;padding:12px 14px;">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">${chips.map(c=>`<button class="btn small ${c===valor?'gold':''}" data-mm-chip="${c}">${brlCurto(c)}</button>`).join('')}</div>
+          <button class="btn gold" id="mmSalvar" style="margin-left:auto;">${salva ? (salva.valor===valor ? '✓ Meta salva' : 'Atualizar minha meta') : 'Salvar como minha meta'}</button>
+        </div>
+        <div id="mmResumo" style="font-size:13px;color:var(--a-dim);margin-top:10px;">${valor ? `${BRL.format(valor)} = ${vendasTexto(planoPadrao(valor, state.mp.regra))} no ticket médio de ${brlCurto(state.mp.regra.ticket)}.` : ''}</div>
+      </div>
+    </div>
+    <div id="mmResultado">${htmlPlanos(valor, v)}</div>`;
+  const bind = app=>{
+    const inp = document.getElementById('mmValor');
+    const atualizar = ()=>{
+      const n = parseBRL(inp.value);
+      state.mmValor = Number.isNaN(n) ? null : n;
+      document.getElementById('mmResultado').innerHTML = htmlPlanos(state.mmValor, v);
+      document.getElementById('mmResumo').textContent = state.mmValor ? `${BRL.format(state.mmValor)} = ${vendasTexto(planoPadrao(state.mmValor, state.mp.regra)).replace(/<[^>]+>/g,'')} no ticket médio de ${brlCurto(state.mp.regra.ticket)}.` : '';
+      app.querySelectorAll('[data-mm-chip]').forEach(b=>b.classList.toggle('gold', Number(b.getAttribute('data-mm-chip'))===state.mmValor));
+      const bt = document.getElementById('mmSalvar');
+      bt.textContent = salva ? (salva.valor===state.mmValor ? '✓ Meta salva' : 'Atualizar minha meta') : 'Salvar como minha meta';
+    };
+    inp.oninput = atualizar;
+    app.querySelectorAll('[data-mm-chip]').forEach(b=>{ b.onclick = ()=>{ inp.value = Number(b.getAttribute('data-mm-chip')).toLocaleString('pt-BR'); atualizar(); }; });
+    document.getElementById('mmSalvar').onclick = ()=>salvarMetaPessoal(v, mes, state.mmValor);
+  };
+  return {top, html, bind};
+}
+
+async function salvarMetaPessoal(v, mes, valor){
+  if(!valor || valor<=0 || Number.isNaN(valor)){ alert('Digita a meta em reais, por exemplo 1.000.000'); return; }
+  const M = state.mp, h = taxasHistorico(v, M.regra);
+  // guarda o retrato do momento: regra, taxas do vendedor e os dois planos
+  const plano = {regra: M.regra, historico: {semanas:h.n, desde:h.desde, ligacoes_por_agendamento:h.la, agendamentos_por_comparecimento:h.ac, comparecimentos_por_venda:h.cv, ticket:h.ticket},
+    padrao: planoPadrao(valor, M.regra), pelo_historico: planoMeta(valor, h.porVenda, h.ticketUsado)};
+  try{
+    await sb('metas_pessoais?on_conflict=vendedor,mes', {method:'POST', prefer:'resolution=merge-duplicates,return=minimal',
+      body:{vendedor:v, mes, valor, plano, atualizado_em:new Date().toISOString()}});
+  }catch(e){
+    console.error('Falha ao salvar meta pessoal', e);
+    alert('Não foi possível salvar a meta. Tenta de novo.');
+    return;
+  }
+  await loadMetasPessoais();
+  showCronoToast('Minha meta', `${BRL.format(valor)} em ${MESES[Number(mes.slice(5,7))-1].toLowerCase()}`);
+}
+
+// ---------------- Admin: regra + metas individuais (abaixo das metas fixas) ----------------
+function htmlMetasIndividuais(){
+  const M = state.mp, D = state.desemp;
+  if(!M || !D) return `<div class="card" style="margin-top:18px;"><div class="card-b" style="padding:24px;text-align:center;color:var(--a-dim);">Carregando metas individuais...</div></div>`;
+  if(M.erro || D.erro) return `<div class="alerta" style="margin-top:18px;"><div class="t">Não consegui carregar as metas individuais.</div></div>`;
+  const mes = mesAtualKey(), hoje = todayKey(), iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje);
+  const passados = diasUteisEntre(iniMes, hoje), totalDias = diasUteisEntre(iniMes, fimM);
+  const linhas = VENDORES.map(v=>{
+    const meta = M.metas.find(m=>m.vendedor===v && m.mes===mes);
+    const r = desempenhoPeriodo(v, iniMes, hoje);
+    const plano = meta ? planoPadrao(meta.valor, M.regra) : null;
+    const esperadoLig = plano ? plano.mes.ligacoes * passados / Math.max(1,totalDias) : 0;
+    return {v, meta, r, plano, ritmo: plano && esperadoLig ? r.ligacoes/esperadoLig : null};
+  });
+  const comMeta = linhas.filter(x=>x.meta);
+  const somaMetas = comMeta.reduce((s,x)=>s+x.meta.valor,0);
+  const realizado = linhas.reduce((s,x)=>s+x.r.receita,0);
+  const realizadoComMeta = comMeta.reduce((s,x)=>s+x.r.receita,0);
+  const historico = M.metas.filter(m=>m.mes < mes);
+  const ritmoPill = x => x.ritmo==null ? '<span class="mute">—</span>' : (x.ritmo>=1 ? `<span class="pill ok">no ritmo · ${Math.round(x.ritmo*100)}%</span>` : (x.ritmo>=.7 ? `<span class="pill">${Math.round(x.ritmo*100)}% do ritmo</span>` : `<span class="pill warn">${Math.round(x.ritmo*100)}% do ritmo</span>`));
+  return `
+    <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;margin:34px 0 4px;">Metas individuais</div>
+    <h2 class="serif" style="font-size:26px;margin:0 0 4px;">${nomeMes(mes)}</h2>
+    <div style="color:var(--a-dim);font-size:14px;margin-bottom:18px;">Cada vendedor escolhe a própria meta em "Minha meta" (só ele e você veem). Você também pode definir ou corrigir aqui.</div>
+    <div class="kpis">
+      <div class="kpi destaque"><div class="l">Se todos baterem</div><div class="v">${brlCurto(somaMetas)}</div><div class="d">soma das metas individuais</div></div>
+      <div class="kpi"><div class="l">Produzido no mês</div><div class="v">${brlCurto(realizado)}</div><div class="d">${BRL.format(realizado)}</div></div>
+      <div class="kpi"><div class="l">Atingido</div><div class="v">${somaMetas ? pct(realizadoComMeta, somaMetas)+'%' : '—'}</div><div class="d">de quem tem meta</div></div>
+      <div class="kpi"><div class="l">Com meta definida</div><div class="v">${comMeta.length}<span style="font-size:17px;color:var(--a-dim);"> / ${VENDORES.length}</span></div><div class="d">${passados} de ${totalDias} dias úteis passados</div></div>
+    </div>
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-h"><h3>Por vendedor</h3><span class="hint">feito / necessário no mês pela regra da FBS</span></div>
+      <div class="scroll-x">
+        <table class="tbl">
+          <thead><tr><th>Vendedor</th><th class="r">Meta do mês</th><th class="r">Vendas</th><th class="r">Ligações</th><th class="r">Agend.</th><th class="r">Comp.</th><th class="r">Produção</th><th>Atingido</th><th>Ritmo de ligações</th></tr></thead>
+          <tbody>
+            ${linhas.map(x=>`<tr>
+              <td><span class="pessoa">${avatar(x.v)}${esc(x.v)}</span></td>
+              <td class="r"><input class="cel mm-admin" inputmode="decimal" data-vendedor="${esc(x.v)}" value="${x.meta ? x.meta.valor.toLocaleString('pt-BR') : ''}" placeholder="sem meta"></td>
+              <td class="r">${x.plano ? `${x.r.vendas} <span class="mute">/ ${x.plano.vendasMin}</span>` : '<span class="mute">—</span>'}</td>
+              <td class="r">${x.r.ligacoes.toLocaleString('pt-BR')}${x.plano ? ` <span class="mute">/ ${x.plano.mes.ligacoes.toLocaleString('pt-BR')}</span>` : ''}</td>
+              <td class="r">${x.r.agendamentos}${x.plano ? ` <span class="mute">/ ${x.plano.mes.agendamentos}</span>` : ''}</td>
+              <td class="r">${x.r.comparecimentos}${x.plano ? ` <span class="mute">/ ${x.plano.mes.comparecimentos}</span>` : ''}</td>
+              <td class="r"><b style="color:var(--a-gold);">${x.r.receita ? brlCurto(x.r.receita) : '0'}</b></td>
+              <td style="min-width:130px;">${x.meta ? `<div class="barra" style="min-width:0;height:7px;"><i style="width:${Math.min(100,pct(x.r.receita,x.meta.valor))}%;background:var(--a-gold);"></i></div><span class="mute" style="font-size:11px;">${pct(x.r.receita,x.meta.valor)}%</span>` : '<span class="mute">—</span>'}</td>
+              <td>${ritmoPill(x)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-h"><h3>Histórico das metas pessoais</h3><span class="hint">base para descobrir o padrão de cada vendedor</span></div>
+        <div class="scroll-x">
+          <table class="tbl">
+            <thead><tr><th>Mês</th><th>Vendedor</th><th class="r">Meta</th><th class="r">Produção</th><th class="r">Atingido</th><th class="r">Lig./agend.</th></tr></thead>
+            <tbody>
+              ${historico.map(m=>{
+                const ini = m.mes+'-01', r = desempenhoPeriodo(m.vendedor, ini, fimMes(ini));
+                const la = m.plano && m.plano.historico && m.plano.historico.ligacoes_por_agendamento;
+                return `<tr><td>${nomeMes(m.mes)}</td><td>${esc(m.vendedor)}</td><td class="r">${brlCurto(m.valor)}</td><td class="r">${brlCurto(r.receita)}</td><td class="r">${pct(r.receita,m.valor)}%</td><td class="r mute">${la ? (Math.round(la*10)/10).toLocaleString('pt-BR') : '—'}</td></tr>`;
+              }).join('') || `<tr><td colspan="6" class="mute" style="text-align:center;padding:22px;">O histórico começa a partir das metas de ${nomeMes(mes).toLowerCase()}. A cada mês, a meta e as taxas de cada vendedor ficam guardadas aqui.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Regra da calculadora</h3></div>
+        <div class="card-b">
+          <div style="font-size:12px;color:var(--a-dim);margin-bottom:12px;">Usada no "Padrão FBS" da calculadora e no acompanhamento acima.</div>
+          <label class="mm-rotulo" for="rgTicket">Ticket médio (R$)</label>
+          <input id="rgTicket" inputmode="decimal" value="${M.regra.ticket.toLocaleString('pt-BR')}" style="width:100%;">
+          <div class="mm-rotulo" style="margin-top:12px;">Para 1 venda, no mês</div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;">
+            <div><label class="mm-rotulo" for="rgLig" style="font-size:10px;">Ligações</label><input id="rgLig" type="number" min="1" value="${M.regra.ligacoes}" style="width:100%;"></div>
+            <div><label class="mm-rotulo" for="rgAg" style="font-size:10px;">Agendamentos</label><input id="rgAg" type="number" min="1" value="${M.regra.agendamentos}" style="width:100%;"></div>
+            <div><label class="mm-rotulo" for="rgComp" style="font-size:10px;">Comparec.</label><input id="rgComp" type="number" min="1" value="${M.regra.comparecimentos}" style="width:100%;"></div>
+          </div>
+          <button class="btn gold" id="rgSalvar" style="margin-top:14px;">Salvar regra</button>
+        </div>
+      </div>
+    </div>`;
+}
+function bindMetasIndividuais(app){
+  app.querySelectorAll('.mm-admin').forEach(inp=>{
+    inp.onchange = async ()=>{
+      const v = inp.getAttribute('data-vendedor'), valor = parseBRL(inp.value), mes = mesAtualKey();
+      if(Number.isNaN(valor)){ alert('Digita um valor válido, por exemplo 1.000.000'); render(); return; }
+      if(valor===null){
+        if(!confirm(`Tirar a meta de ${v} em ${nomeMes(mes).toLowerCase()}?`)){ render(); return; }
+        try{ await sb('metas_pessoais?vendedor='+eq(v)+'&mes=eq.'+mes, {method:'DELETE'}); }catch(e){ alert('Não foi possível tirar a meta.'); }
+        await loadMetasPessoais();
+        return;
+      }
+      await salvarMetaPessoal(v, mes, valor);
+    };
+  });
+  const bt = document.getElementById('rgSalvar');
+  if(bt) bt.onclick = async ()=>{
+    const regra = {ticket: parseBRL(document.getElementById('rgTicket').value), ligacoes: Number(document.getElementById('rgLig').value),
+      agendamentos: Number(document.getElementById('rgAg').value), comparecimentos: Number(document.getElementById('rgComp').value)};
+    if(!regra.ticket || Number.isNaN(regra.ticket) || [regra.ligacoes, regra.agendamentos, regra.comparecimentos].some(x=>!x || x<1)){
+      alert('Confere os valores: ticket em reais e números maiores que zero.'); return;
+    }
+    if(!confirm(`Salvar a regra?\n\nTicket médio ${BRL.format(regra.ticket)}\n1 venda = ${regra.ligacoes} ligações, ${regra.agendamentos} agendamentos, ${regra.comparecimentos} comparecimentos`)) return;
+    try{
+      await sb('config?on_conflict=chave', {method:'POST', prefer:'resolution=merge-duplicates,return=minimal', body:{chave:'regra_meta', valor:regra, atualizado_em:new Date().toISOString()}});
+    }catch(e){ console.error(e); alert('Não foi possível salvar a regra.'); return; }
+    await loadMetasPessoais();
+    showCronoToast('Metas', 'Regra da calculadora salva');
+  };
+}
+
 async function salvarProducaoMes(mes, equipe, texto){
   const ano = state.prodAno;
   const valor = parseBRL(texto);
@@ -4152,7 +4484,7 @@ function render(pulse){
   const disabled = !!state.closed;
 
   if(state.centralTab !== 'hoje'){
-    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false), campanhas: paginaCampanhasVendedor}[state.centralTab];
+    const pagina = {relatorios: paginaRelatoriosVendedor, desempenho: paginaDesempenho, ranking: ()=>paginaRanking(false), campanhas: paginaCampanhasVendedor, minhameta: paginaMinhaMeta}[state.centralTab];
     if(pagina){ renderCentral(app, pagina()); return; }
   }
 

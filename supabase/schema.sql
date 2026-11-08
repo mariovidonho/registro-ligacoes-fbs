@@ -517,6 +517,37 @@ drop policy if exists "site" on public.campanha_ajustes;
 create policy "site" on public.campanhas        for all to anon using (true) with check (true);
 create policy "site" on public.campanha_ajustes for all to anon using (true) with check (true);
 
+-- ---------------------------------------------------------------------------
+-- Metas pessoais (aba "Minha meta" da Central do Vendedor).
+-- `config.regra_meta`: ticket médio e o funil de 1 venda (editável no admin).
+-- `metas_pessoais`: a meta em R$ que cada vendedor estipulou para o mês, com o
+-- plano calculado na hora de salvar (padrão FBS e pelo histórico dele), pra
+-- formar uma base de dados mês a mês.
+-- ---------------------------------------------------------------------------
+create table if not exists public.config (
+  chave         text primary key,
+  valor         jsonb not null,
+  atualizado_em timestamptz not null default now()
+);
+insert into public.config (chave, valor)
+values ('regra_meta', '{"ticket": 500000, "ligacoes": 600, "agendamentos": 20, "comparecimentos": 7}')
+on conflict (chave) do nothing;
+
+create table if not exists public.metas_pessoais (
+  vendedor      text not null,
+  mes           text not null,          -- "AAAA-MM"
+  valor         numeric(14,2) not null check (valor > 0),
+  plano         jsonb,                  -- regra, taxas do histórico e números calculados ao salvar
+  atualizado_em timestamptz not null default now(),
+  primary key (vendedor, mes)
+);
+alter table public.config         enable row level security;
+alter table public.metas_pessoais enable row level security;
+drop policy if exists "site" on public.config;
+drop policy if exists "site" on public.metas_pessoais;
+create policy "site" on public.config         for all to anon using (true) with check (true);
+create policy "site" on public.metas_pessoais for all to anon using (true) with check (true);
+
 -- Lista inicial de vendedores (a mesma que está no site)
 insert into public.vendedores (nome, pin) values
   ('Arthur Lima', '1098'), ('Wellington Augusto', '1111'), ('Rayane Castro', '1095'),
