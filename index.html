@@ -804,6 +804,50 @@
   .drop.over{border-color:var(--a-gold);background:var(--a-gold-soft);color:var(--text);}
   .drop b{color:var(--text);}
 
+  /* ---- Coordenador: so leitura no que e geral ---- */
+  .adm.coord .so-rep{display:none !important;}
+  .adm.coord .crono-time,.adm.coord .ev-campo,.adm.coord .camp-base{pointer-events:none;opacity:.65;}
+
+  /* ---- Tela de login ---- */
+  .lg{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:100vh;width:100%;font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);}
+  .lg-marca{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px;background:radial-gradient(120% 90% at 0% 0%,#1B3A54 0%,#0F2437 48%,#091622 100%);}
+  .lg-marca::before,.lg-marca::after{content:"";position:absolute;right:-18%;width:75%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.75));transform:rotate(-38deg);transform-origin:right;}
+  .lg-marca::before{bottom:34%;}
+  .lg-marca::after{bottom:27%;opacity:.45;}
+  .lg-logo{display:flex;align-items:center;gap:14px;position:relative;}
+  .lg-logo img{height:46px;}
+  .lg-logo .n{font-size:13px;letter-spacing:.24em;color:var(--a-gold);font-weight:700;}
+  .lg-logo .t{font-size:13px;color:var(--a-dim);margin-top:2px;}
+  .lg-frase{position:relative;font-family:Fraunces,Georgia,serif;font-size:clamp(38px,4.6vw,64px);font-weight:600;line-height:1.08;letter-spacing:-.015em;}
+  .lg-frase em{font-style:italic;color:var(--a-gold);}
+  .lg-rodape{position:relative;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-mute);}
+  .lg-form{display:flex;align-items:center;justify-content:center;padding:40px 28px;background:#0A1520;}
+  .lg-card{width:100%;max-width:440px;}
+  .lg-card h1{font-family:Fraunces,Georgia,serif;font-size:32px;font-weight:600;margin:0 0 6px;}
+  .lg-card .sub{color:var(--a-dim);font-size:14px;margin-bottom:24px;}
+  .lg-papeis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px;}
+  .lg-papeis button{background:var(--a-card);border:1px solid var(--a-line);border-radius:14px;color:var(--a-dim);padding:14px 6px 12px;cursor:pointer;font:600 12.5px Inter,sans-serif;display:flex;flex-direction:column;align-items:center;gap:8px;transition:border-color .15s,color .15s,background .15s;}
+  .lg-papeis button svg{width:22px;height:22px;}
+  .lg-papeis button:hover{border-color:#2C4C68;color:var(--text);}
+  .lg-papeis button.on{border-color:var(--a-gold);color:var(--a-gold);background:var(--a-gold-soft);}
+  .lg-rotulo{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--a-dim);font-weight:600;margin:0 0 7px;}
+  .lg-pessoas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:18px;max-height:236px;overflow-y:auto;}
+  .lg-pessoas button{display:flex;align-items:center;gap:9px;background:var(--a-card);border:1px solid var(--a-line);border-radius:12px;padding:8px 10px;color:var(--text);font:500 13px Inter,sans-serif;text-align:left;cursor:pointer;min-width:0;}
+  .lg-pessoas button span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .lg-pessoas button:hover{border-color:#2C4C68;}
+  .lg-pessoas button.on{border-color:var(--a-gold);background:var(--a-gold-soft);}
+  body.modo-admin .lg-card input{width:100%;padding:13px 14px;font-size:16px;margin-bottom:16px;}
+  .lg-erro{color:#F0A3A3;font-size:13px;margin:-6px 0 14px;}
+  .lg-entrar{width:100%;justify-content:center;padding:14px;font-size:15px;}
+  .lg-vazio{color:var(--a-dim);font-size:13px;margin-bottom:18px;}
+  @media (max-width:860px){
+    .lg{grid-template-columns:minmax(0,1fr);}
+    .lg-marca{padding:24px 22px;gap:18px;}
+    .lg-marca::before,.lg-marca::after,.lg-rodape{display:none;}
+    .lg-frase{font-size:28px;}
+    .lg-form{align-items:flex-start;padding:24px 18px 40px;}
+  }
+
   /* ---- Minha meta ---- */
   .mm-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
   .mm-progresso{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start;}
@@ -884,24 +928,48 @@
   "Apagar" item avulso do historico foi removido de proposito: so
   "desfazer ultima ligacao" existe (ver funcao undoLast).
 */
-const DEFAULT_VENDOR_LIST = [
-  {name:"Arthur Lima", pin:"1098"}, {name:"Wellington Augusto", pin:"1111"},
-  {name:"Rayane Castro", pin:"1095"}, {name:"Raissa Gabrielly", pin:"1097"},
-  {name:"Nayara Lima", pin:"1096"}, {name:"Diane Ruiz", pin:"1094"},
-  {name:"Erick Fernandes", pin:"1099"}, {name:"Camila Abreu", pin:"1264"},
-  {name:"Javam Trajano", pin:"1265"}, {name:"Cley Silva", pin:"1268"}
-];
-const ADMIN_PIN_HASH = "c342fde8dbf5b6617f87b3a8e74fd4ab3d47c54d74c37a8a261a25cfc65fb7a8";
-
 const SUPABASE_URL = "https://cnwqzxrqxjatyqsnkxqx.supabase.co";
 // chave "publishable": e publica de proposito (o acesso e controlado pelas policies do banco)
 const SUPABASE_KEY = "sb_publishable_A4bCcKHzh2XzmSCh6QXY4A_32aWwLuy";
 
 let VENDORES = [];
-let VENDOR_PINS = {};
 let VENDOR_PERFIL = {};   // nome -> {foto, apelido, frase, aniversario}
 
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+// Sessao do login: o token vai em toda chamada e e renovado sozinho antes de vencer
+const AUTH_KEY = 'fbs_auth';
+let sessao = (()=>{ try{ return JSON.parse(localStorage.getItem(AUTH_KEY)); }catch(e){ return null; } })();
+function guardarSessao(s){
+  sessao = s;
+  try{ s ? localStorage.setItem(AUTH_KEY, JSON.stringify(s)) : localStorage.removeItem(AUTH_KEY); }catch(e){}
+}
+function aceitarToken(j){ guardarSessao({access_token:j.access_token, refresh_token:j.refresh_token, expira: Date.now()+j.expires_in*1000}); }
+let renovando = null;
+function renovarSessao(){
+  if(!sessao) return Promise.resolve(false);
+  if(renovando) return renovando;
+  renovando = (async()=>{
+    try{
+      const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+        method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type':'application/json'},
+        body: JSON.stringify({refresh_token: sessao.refresh_token})
+      });
+      if(res.status>=400 && res.status<500){ guardarSessao(null); location.reload(); return false; }
+      if(!res.ok) return false;
+      aceitarToken(await res.json());
+      return true;
+    }catch(e){ return false; } // sem internet: mantem a sessao e tenta de novo depois
+    finally{ renovando = null; }
+  })();
+  return renovando;
+}
+async function cabecalhoAuth(){
+  if(sessao && Date.now() > sessao.expira - 60000) await renovarSessao();
+  const h = {apikey: SUPABASE_KEY};
+  if(sessao) h.Authorization = 'Bearer ' + sessao.access_token;
+  return h;
+}
 
 // Chamada a API REST do Supabase. Qualquer status fora de 2xx vira erro.
 // `retries` refaz a chamada (so usar em leituras ou operacoes que podem repetir sem efeito colateral).
@@ -913,7 +981,7 @@ async function sb(path, opts, retries){
     const ctrl = new AbortController();
     const timeout = setTimeout(()=>ctrl.abort(), 30000);
     try{
-      const headers = {apikey: SUPABASE_KEY};
+      const headers = await cabecalhoAuth();
       if(opts.body !== undefined) headers['Content-Type'] = 'application/json';
       if(opts.prefer) headers.Prefer = opts.prefer;
       const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
@@ -923,6 +991,10 @@ async function sb(path, opts, retries){
         signal: ctrl.signal
       });
       const text = await res.text();
+      if(res.status===401 && sessao && !opts.renovou){
+        await renovarSessao();
+        return sb(path, {...opts, renovou:true}, retries);
+      }
       if(!res.ok) throw new Error(`Erro ao comunicar com o servidor (HTTP ${res.status}) ${text.slice(0,200)}`);
       return text.trim() ? JSON.parse(text) : null;
     }catch(e){
@@ -980,7 +1052,7 @@ async function flushQueue(){
   try{
     while(true){
       const q0 = loadQueue();
-      const item = q0[0];
+      const item = q0.find(x=>x.body.vendedor===state.vendor);
       if(!item) break;
       inflightId = item.id;
       try{
@@ -995,7 +1067,7 @@ async function flushQueue(){
         consecutiveFails++;
         // manda a ligacao que falhou pro fim da fila, pra ela nao travar as outras
         saveQueue(loadQueue().filter(x=>x.id!==item.id).concat(item));
-        if(consecutiveFails >= loadQueue().length) break;
+        if(consecutiveFails >= loadQueue().filter(x=>x.body.vendedor===state.vendor).length) break;
         continue;
       }
       consecutiveFails = 0;
@@ -1015,23 +1087,6 @@ async function flushQueue(){
 // reenvia assim que a internet volta ou o vendedor volta pro app
 window.addEventListener('online', ()=>flushQueue());
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && loadQueue().length) flushQueue(); });
-
-const SESSION_KEY = 'fbs_session';
-function saveSession(session){
-  try{ localStorage.setItem(SESSION_KEY, JSON.stringify(session)); }catch(e){}
-}
-function loadSession(){
-  try{ return JSON.parse(localStorage.getItem(SESSION_KEY)); }catch(e){ return null; }
-}
-function clearSession(){
-  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
-}
-
-async function sha256(text){
-  const enc = new TextEncoder().encode(text);
-  const buf = await crypto.subtle.digest('SHA-256', enc);
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
 
 function dayKey(d){
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -1058,38 +1113,36 @@ function timeLabel(iso){
 }
 function applyVendorList(list){
   VENDORES = list.map(v=>v.name);
-  VENDOR_PINS = {};
   VENDOR_PERFIL = {};
   list.forEach(v=>{
-    VENDOR_PINS[v.name] = v.pin;
-    VENDOR_PERFIL[v.name] = {foto:v.foto||'', apelido:v.apelido||'', frase:v.frase||'', aniversario:v.aniversario||''};
+    VENDOR_PERFIL[v.name] = {foto:v.foto||'', apelido:v.apelido||'', frase:v.frase||'', aniversario:v.aniversario||'', equipe:v.equipe||''};
   });
 }
 
 // Le a lista de vendedores/PINs do banco
 async function loadVendorList(){
   try{
-    const rows = await sb('vendedores?select=nome,pin,foto_url,apelido,frase,aniversario&order=criado_em,nome', undefined, 2);
-    const list = (rows||[]).map(r=>({name:r.nome, pin:r.pin, foto:r.foto_url, apelido:r.apelido, frase:r.frase, aniversario:r.aniversario}));
-    if(list.length){ applyVendorList(list); return; }
-    applyVendorList(DEFAULT_VENDOR_LIST);
+    const rows = await sb('vendedores?select=nome,equipe,foto_url,apelido,frase,aniversario&order=criado_em,nome', undefined, 2);
+    const p = state.perfilAcesso;
+    // coordenador trabalha so com a propria equipe
+    const visiveis = (rows||[]).filter(r=>!p || p.papel!=='coordenador' || r.equipe===p.equipe);
+    applyVendorList(visiveis.map(r=>({name:r.nome, equipe:r.equipe, foto:r.foto_url, apelido:r.apelido, frase:r.frase, aniversario:r.aniversario})));
   }catch(e){
     console.error('Falha ao carregar vendedores', e);
     alert('Não foi possível carregar a lista de vendedores. Verifica sua conexão e tenta de novo.');
-    applyVendorList(DEFAULT_VENDOR_LIST);
   }
 }
 
 // Adiciona/remove 1 vendedor por vez
 async function addVendor(){
-  const nameInput = document.getElementById('newVendorName');
-  const pinInput = document.getElementById('newVendorPin');
-  const name = nameInput.value.trim();
-  const pin = pinInput.value.trim();
-  if(!name || !pin){ alert('Preenche o nome e o PIN antes de adicionar.'); return; }
+  const name = document.getElementById('newVendorName').value.trim();
+  const pin = document.getElementById('newVendorPin').value.trim();
+  const equipe = document.getElementById('newVendorEquipe').value;
+  if(!name || !pin){ alert('Preenche o nome e o PIN provisório antes de adicionar.'); return; }
+  if(!/^[0-9]{4,6}$/.test(pin)){ alert('O PIN provisório precisa ter de 4 a 6 números.'); return; }
   if(VENDORES.includes(name)){ alert('Já existe um vendedor com esse nome.'); return; }
   try{
-    await sb('vendedores', {method:'POST', prefer:'return=minimal', body:{nome:name, pin}});
+    await rpc('admin_criar_vendedor', {p_nome:name, p_pin:pin, p_equipe:equipe||null});
   }catch(e){
     console.error('Falha ao adicionar vendedor', e);
     alert('Não foi possível adicionar o vendedor. Tenta de novo.');
@@ -1098,12 +1151,13 @@ async function addVendor(){
   await loadVendorList();
   if(state.adminRows) await loadAdminData();
   else render();
+  showCronoToast('Vendedores', `${esc(name)} cadastrado. No primeiro acesso, ele cria o PIN de 6 números.`);
 }
 
 async function removeVendor(name){
-  if(!confirm(`Remover ${name} da lista? Os dados já registrados por ele continuam salvos, só não aparece mais no seletor.`)) return;
+  if(!confirm(`Remover ${name}? O acesso dele é apagado, mas os dados já registrados continuam salvos.`)) return;
   try{
-    await sb('vendedores?nome='+eq(name), {method:'DELETE'});
+    await rpc('admin_remover_acesso', {p_nome:name, p_papel:'vendedor'});
   }catch(e){
     console.error('Falha ao remover vendedor', e);
     alert('Não foi possível remover o vendedor. Tenta de novo.');
@@ -1111,6 +1165,48 @@ async function removeVendor(name){
   }
   await loadVendorList();
   await loadAdminData();
+}
+
+async function redefinirPin(nome){
+  const pin = prompt(`PIN provisório para ${nome} (4 a 6 números). No próximo acesso, a pessoa cria um PIN novo de 6 números:`);
+  if(pin === null) return;
+  if(!/^[0-9]{4,6}$/.test(pin.trim())){ alert('O PIN provisório precisa ter de 4 a 6 números.'); return; }
+  try{
+    await rpc('admin_redefinir_pin', {p_nome:nome, p_pin:pin.trim()});
+  }catch(e){
+    console.error('Falha ao redefinir PIN', e);
+    alert('Não foi possível redefinir o PIN. Tenta de novo.');
+    return;
+  }
+  showCronoToast('Acesso', `PIN provisório definido para ${esc(nome)}`);
+}
+
+async function loadCoordenadores(){
+  try{ state.coords = await rpc('admin_coordenadores', {}, 1) || []; }
+  catch(e){ console.error('Falha ao carregar coordenadores', e); state.coords = []; }
+  if(state.view==='admin') render();
+}
+async function addCoordenador(){
+  const nome = document.getElementById('newCoordNome').value.trim();
+  const pin = document.getElementById('newCoordPin').value.trim();
+  const equipe = document.getElementById('newCoordEquipe').value;
+  if(!nome || !pin || !equipe){ alert('Preenche o nome, a equipe e o PIN provisório.'); return; }
+  if(!/^[0-9]{4,6}$/.test(pin)){ alert('O PIN provisório precisa ter de 4 a 6 números.'); return; }
+  try{
+    await rpc('admin_criar_coordenador', {p_nome:nome, p_pin:pin, p_equipe:equipe});
+  }catch(e){
+    console.error('Falha ao criar coordenador', e);
+    alert('Não foi possível criar o acesso. Confere se já não existe um coordenador com esse nome.');
+    return;
+  }
+  await loadCoordenadores();
+  showCronoToast('Coordenadores', `Acesso criado para ${esc(nome)}`);
+}
+async function removeCoordenador(nome){
+  if(!confirm(`Remover o acesso de coordenador de ${nome}?`)) return;
+  try{ await rpc('admin_remover_acesso', {p_nome:nome, p_papel:'coordenador'}); }
+  catch(e){ console.error(e); alert('Não foi possível remover o acesso.'); return; }
+  await loadCoordenadores();
 }
 
 let state = {
@@ -1157,7 +1253,11 @@ let state = {
   camp: null,            // campanhas + bases + vendas (aba Campanhas)
   campForm: null,        // campanha sendo criada/editada no admin
   mp: null,              // regra da calculadora + metas pessoais
-  mmValor: null          // valor digitado na calculadora "Minha meta"
+  mmValor: null,         // valor digitado na calculadora "Minha meta"
+  login: {papel:'vendedor', nome:'', nomes:null, erro:'', enviando:false},
+  perfilAcesso: null,    // {papel, nome, equipe, trocar_pin} de quem esta logado
+  coords: null,          // coordenadores (so o representante carrega)
+  relUrls: null          // links temporarios dos PDFs de relatorio
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -1445,7 +1545,7 @@ async function loadAdminData(silent){
       closed: r.closed || null
     }));
     rows.sort((a,b)=>b.total-a.total);
-    state.adminRows = rows;
+    state.adminRows = ehRep() ? rows : rows.filter(r=>VENDORES.includes(r.vendor));
   }catch(e){
     console.error('Falha ao carregar dados do painel', e);
     // em atualizacao automatica, mantem os numeros que ja estavam na tela em vez de mostrar zero
@@ -1466,12 +1566,6 @@ function setPeriodType(type){
   loadAdminData();
 }
 
-function openAdminGate(){
-  state.view = 'adminGate';
-  state.pinError = false;
-  render();
-}
-
 let adminPollTimer = null;
 function startAdminPolling(){
   stopAdminPolling();
@@ -1487,29 +1581,13 @@ function stopAdminPolling(){
   if(adminPollTimer){ clearInterval(adminPollTimer); adminPollTimer = null; }
 }
 
-async function checkPin(){
-  const val = document.getElementById('pinInput').value;
-  const hash = await sha256(val);
-  if(hash === ADMIN_PIN_HASH){
-    state.view = 'admin';
-    saveSession({type:'admin'});
-    loadAdminData();
-    loadAdminMetas();
-    loadCampanhas();
-    startAdminPolling();
-  }else{
-    state.pinError = true;
-    render();
-  }
-}
-
-function exitAdmin(){
+async function sairDoSistema(){
   stopAdminPolling();
-  clearSession();
-  state.view = 'picker';
-  state.adminRows = null;
-  render();
+  try{ await fetch(SUPABASE_URL + '/auth/v1/logout', {method:'POST', headers: await cabecalhoAuth()}); }catch(e){}
+  guardarSessao(null);
+  location.reload(); // recomeca limpo: nada de um usuario fica na memoria pro proximo
 }
+const exitAdmin = sairDoSistema;
 
 function exportCsv(){
   const rows = state.adminRows || [];
@@ -1528,23 +1606,6 @@ function exportCsv(){
   URL.revokeObjectURL(url);
 }
 
-function goToVendorGate(name){
-  state.pendingVendor = name;
-  state.vendorPinError = false;
-  state.view = 'vendorGate';
-  render();
-}
-
-function checkVendorPin(){
-  const val = document.getElementById('vendorPinInput').value;
-  if(VENDOR_PINS[state.pendingVendor] === val){
-    selectVendor(state.pendingVendor);
-  }else{
-    state.vendorPinError = true;
-    render();
-  }
-}
-
 function selectVendor(name){
   if(state.vendor !== name){
     state.allCalls = []; state.calls = []; state.closed = null; state.pendentes = [];
@@ -1554,7 +1615,6 @@ function selectVendor(name){
   state.pendingVendor = null;
   state.vendorPinError = false;
   state.view = 'app';
-  saveSession({type:'vendor', name});
   loadVendorData(name);
   loadMetas(name);
   loadRelatoriosVendedor();
@@ -1587,21 +1647,7 @@ async function adminSaveMeta(vendor, campo, valor){
   }
 }
 
-function trocarVendedor(){
-  state.vendor = null;
-  state.calls = [];
-  state.allCalls = [];
-  state.loadError = false;
-  state.closed = null;
-  state.metas = null;
-  state.relatorios = null;
-  state.relAberto = null;
-  state.centralTab = 'hoje';
-  state.vendasEditOpen = false;
-  state.view = 'picker';
-  clearSession();
-  render();
-}
+const trocarVendedor = sairDoSistema;
 
 function periodInputHtml(){
   if(state.periodType==='dia'){
@@ -1898,7 +1944,7 @@ function showCronoToast(kicker, texto){
 // A cada poucos segundos: atualiza relogio/barra e avisa quando muda o passo
 let cronoUltimaChave = null, cronoUltimoEvento = null;
 function cronoTick(){
-  if(Date.now() - cronoCarregadoEm > 15*60*1000) loadCronograma();
+  if(sessao && (state.view==='app' || state.view==='admin') && Date.now() - cronoCarregadoEm > 15*60*1000) loadCronograma();
   const e = cronoEstado();
   const chaveEvento = e.evento ? 'ev'+e.evento.idx : '';
   const chave = e.fase + '|' + (e.i ?? '') + '|' + chaveEvento;
@@ -2095,7 +2141,7 @@ async function enviarFoto(nome, file){
   const blob = await prepararFoto(file);
   const caminho = `${slugNome(nome)}-${Date.now()}.jpg`;
   const res = await fetch(SUPABASE_URL + '/storage/v1/object/fotos/' + caminho, {
-    method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type':'image/jpeg'}, body: blob
+    method:'POST', headers:{...(await cabecalhoAuth()), 'Content-Type':'image/jpeg'}, body: blob
   });
   if(!res.ok) throw new Error('HTTP '+res.status+' '+(await res.text()).slice(0,200));
   return SUPABASE_URL + '/storage/v1/object/public/fotos/' + caminho;
@@ -2223,15 +2269,17 @@ function renderAdmin(app){
     ranking: ()=>paginaRanking(true), campanhas: paginaCampanhasAdmin
   }[state.adminTab] || paginaLigacoes;
   const p = pagina();
+  // coordenador nao ve o que e geral da empresa (producao e cadastros)
+  const paginasVisiveis = ADMIN_PAGINAS.filter(pg=>ehRep() || !['producao','vendedores'].includes(pg.id));
   app.innerHTML = `
-    <div class="adm">
+    <div class="adm ${ehRep() ? '' : 'coord'}">
       <aside class="adm-side">
         <div class="adm-brand">
           <img src="logo-icon.png" alt="">
-          <div><div class="n">FBS PRIME</div><div class="t">Painel do gestor</div></div>
+          <div><div class="n">FBS PRIME</div><div class="t">${ehRep() ? 'Painel do representante' : 'Painel do coordenador'}</div></div>
         </div>
         <nav class="adm-nav">
-          ${ADMIN_PAGINAS.map(pg=>`<button class="${state.adminTab===pg.id?'on':''}" data-pagina="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span></button>`).join('')}
+          ${paginasVisiveis.map(pg=>`<button class="${state.adminTab===pg.id?'on':''}" data-pagina="${pg.id}">${icone(pg.id)}<span>${pg.nome}</span></button>`).join('')}
         </nav>
         <div class="adm-side-foot">
           <div class="adm-mini-crono" id="admMiniCrono" data-pagina="cronograma" title="Abrir cronograma">${miniCronoHtml()}</div>
@@ -2728,6 +2776,8 @@ function paginaVendedores(){
   const rows = state.adminRows || [];
   const vendas = state.prod && !state.prod.erro ? state.prod.vendas.filter(v=>v.data.slice(0,4)===String(ano)) : null;
   const top = {titulo:'Vendedores', sub:`${VENDORES.length} no time · ligações de ${periodLabel().toLowerCase()}`};
+  const equipesAtivas = state.prod && !state.prod.erro ? state.prod.equipes.filter(e=>e.ativa).map(e=>e.nome) : ['Gaviões'];
+  if(!state.coords) loadCoordenadores();
   const html = `
     <div class="cards-grid">
       ${VENDORES.map(v=>{
@@ -2735,7 +2785,7 @@ function paginaVendedores(){
         const vs = vendas ? vendas.filter(x=>x.vendedor===v) : [];
         return `<div class="pcard">
           <div class="top">${avatar(v)}
-            <div style="flex:1;min-width:0;"><div class="nm">${esc(v)}</div><div class="meta-l">PIN ${esc(VENDOR_PINS[v]||'')}${(VENDOR_PERFIL[v]||{}).aniversario ? ' · 🎂 '+esc(VENDOR_PERFIL[v].aniversario) : ''}</div></div>
+            <div style="flex:1;min-width:0;"><div class="nm">${esc(v)}</div><div class="meta-l">${esc((VENDOR_PERFIL[v]||{}).equipe || 'sem equipe')}${(VENDOR_PERFIL[v]||{}).aniversario ? ' · 🎂 '+esc(VENDOR_PERFIL[v].aniversario) : ''}</div></div>
             <button class="link" data-perfil="${esc(v)}">editar perfil</button>
           </div>
           ${(VENDOR_PERFIL[v]||{}).frase ? `<div style="font-size:12px;color:var(--a-dim);font-style:italic;">“${esc(VENDOR_PERFIL[v].frase)}”</div>` : ''}
@@ -2744,18 +2794,45 @@ function paginaVendedores(){
             <div><span>Atend.</span><b>${r.total ? pct(r.atendeu,r.total)+'%' : '—'}</b></div>
             <div><span>Vendas ${ano}</span><b>${vendas ? (vs.length ? brlCurto(vs.reduce((s,x)=>s+x.valor,0)) : '0') : '…'}</b></div>
           </div>
-          <div class="foot"><span class="mute" style="font-size:11px;">${vendas && vs.length ? vs.length+(vs.length===1?' venda no site':' vendas no site') : 'vendas registradas no site'}</span><button class="link danger" data-remove="${esc(v)}">remover</button></div>
+          <div class="foot">
+            <select data-equipe-de="${esc(v)}" style="padding:5px 8px;font-size:12px;">${equipesAtivas.map(e=>`<option ${e===(VENDOR_PERFIL[v]||{}).equipe?'selected':''}>${esc(e)}</option>`).join('')}</select>
+            <span><button class="link" data-pin="${esc(v)}">redefinir PIN</button> <button class="link danger" data-remove="${esc(v)}">remover</button></span>
+          </div>
         </div>`;
       }).join('')}
       <div class="pcard novo">
         <div class="nm">Novo vendedor</div>
         <input id="newVendorName" placeholder="Nome completo">
-        <input id="newVendorPin" placeholder="PIN de acesso" inputmode="numeric">
+        <select id="newVendorEquipe" style="width:100%;">${equipesAtivas.map(e=>`<option>${esc(e)}</option>`).join('')}</select>
+        <input id="newVendorPin" placeholder="PIN provisório" inputmode="numeric">
         <button class="btn" id="addVendorBtn" style="justify-content:center;">${icone('mais')}Adicionar vendedor</button>
+      </div>
+    </div>
+    <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--a-gold);font-weight:700;margin:30px 0 12px;">Coordenadores</div>
+    <div class="cards-grid">
+      ${(state.coords||[]).map(c=>`<div class="pcard">
+        <div class="top">${avatar(c.nome)}<div style="flex:1;min-width:0;"><div class="nm">${esc(c.nome)}</div><div class="meta-l">Equipe ${esc(c.equipe||'—')}${c.trocar_pin ? ' · aguardando 1º acesso' : ''}</div></div></div>
+        <div class="foot"><span></span><span><button class="link" data-pin="${esc(c.nome)}">redefinir PIN</button> <button class="link danger" data-coord-rem="${esc(c.nome)}">remover</button></span></div>
+      </div>`).join('')}
+      <div class="pcard novo">
+        <div class="nm">Novo coordenador</div>
+        <input id="newCoordNome" placeholder="Nome">
+        <select id="newCoordEquipe" style="width:100%;">${equipesAtivas.map(e=>`<option>${esc(e)}</option>`).join('')}</select>
+        <input id="newCoordPin" placeholder="PIN provisório" inputmode="numeric">
+        <button class="btn" id="addCoordBtn" style="justify-content:center;">${icone('mais')}Criar acesso</button>
       </div>
     </div>`;
   const bind = app=>{
     document.getElementById('addVendorBtn').onclick = addVendor;
+    document.getElementById('addCoordBtn').onclick = addCoordenador;
+    app.querySelectorAll('[data-pin]').forEach(b=>{ b.onclick = ()=>redefinirPin(b.getAttribute('data-pin')); });
+    app.querySelectorAll('[data-coord-rem]').forEach(b=>{ b.onclick = ()=>removeCoordenador(b.getAttribute('data-coord-rem')); });
+    app.querySelectorAll('[data-equipe-de]').forEach(sel=>{
+      sel.onchange = async ()=>{
+        try{ await rpc('admin_definir_equipe', {p_nome:sel.getAttribute('data-equipe-de'), p_equipe:sel.value}); await loadVendorList(); render(); }
+        catch(e){ console.error(e); alert('Não foi possível mudar a equipe.'); }
+      };
+    });
     app.querySelectorAll('[data-remove]').forEach(btn=>{ btn.onclick = ()=>removeVendor(btn.getAttribute('data-remove')); });
     app.querySelectorAll('[data-perfil]').forEach(btn=>{ btn.onclick = ()=>abrirPerfil(btn.getAttribute('data-perfil')); });
   };
@@ -2809,8 +2886,8 @@ function paginaCronograma(){
             </tbody>
           </table></div>
           <div class="card-b" style="padding-top:16px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-            <button class="btn ghost" id="cronoResetBtn">Voltar ao padrão</button>
-            <button class="btn gold" id="cronoSaveBtn">Salvar horários</button>
+            <button class="btn ghost so-rep" id="cronoResetBtn">Voltar ao padrão</button>
+            <button class="btn gold so-rep" id="cronoSaveBtn">Salvar horários</button>
           </div>
         </div>
         <div class="card">
@@ -2828,8 +2905,8 @@ function paginaCronograma(){
             </tbody>
           </table></div>
           <div class="card-b" style="padding-top:16px;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;">
-            <button class="btn" id="evAddBtn">${icone('mais')}Adicionar evento</button>
-            <button class="btn gold" id="evSaveBtn">Salvar eventos</button>
+            <button class="btn so-rep" id="evAddBtn">${icone('mais')}Adicionar evento</button>
+            <button class="btn gold so-rep" id="evSaveBtn">Salvar eventos</button>
           </div>
         </div>
       </div>
@@ -2879,7 +2956,19 @@ const CENTRAL_PAGINAS = [
   {id:'hoje', nome:'Hoje'},
   {id:'relatorios', nome:'Relatórios'}
 ];
-const relUrl = caminho => SUPABASE_URL + '/storage/v1/object/public/relatorios/' + caminho.split('/').map(encodeURIComponent).join('/');
+const relUrl = caminho => (state.relUrls||{})[caminho] || '#';
+async function assinarRelatorios(caminhos){
+  if(!caminhos.length) return;
+  try{
+    const res = await fetch(SUPABASE_URL + '/storage/v1/object/sign/relatorios', {
+      method:'POST', headers:{...(await cabecalhoAuth()), 'Content-Type':'application/json'},
+      body: JSON.stringify({expiresIn: 21600, paths: caminhos})
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    state.relUrls = state.relUrls || {};
+    (await res.json()).forEach(x=>{ if(x.signedURL) state.relUrls[x.path] = SUPABASE_URL + '/storage/v1' + x.signedURL; });
+  }catch(e){ console.error('Falha ao gerar links dos relatórios', e); }
+}
 const relRotulo = r => r.semana ? `Semana ${r.semana}` : 'Fechamento do mês';
 
 function irParaCentral(id){
@@ -2944,6 +3033,7 @@ async function loadRelatoriosVendedor(){
     const rows = await sb('relatorios?select=id,ano,mes,semana,titulo,caminho,criado_em,visto_em&vendedor='+eq(vendor)+'&order=ano.desc,mes.desc,semana.desc.nullsfirst', undefined, 1);
     if(state.vendor !== vendor) return;
     state.relatorios = rows || [];
+    await assinarRelatorios(state.relatorios.map(r=>r.caminho));
   }catch(e){
     console.error('Falha ao carregar relatórios', e);
     if(!state.relatorios) state.relatorios = [];
@@ -3036,6 +3126,7 @@ async function loadAdminRelatorios(){
   try{
     const rows = await sb('relatorios?select=id,vendedor,ano,mes,semana,caminho,criado_em,visto_em&order=ano.desc,mes.desc,semana.desc.nullsfirst,vendedor', undefined, 1);
     state.adminRel = rows || [];
+    await assinarRelatorios(state.adminRel.map(r=>r.caminho));
   }catch(e){
     console.error('Falha ao carregar relatórios', e);
     state.adminRel = state.adminRel || [];
@@ -3060,7 +3151,7 @@ async function enviarRelatorios(){
     const caminho = `${item.ano}/${String(item.mes).padStart(2,'0')}/${item.semana ? 'semana-'+item.semana : 'mes'}/${slugNome(item.vendedor)}.pdf`;
     try{
       const res = await fetch(SUPABASE_URL + '/storage/v1/object/relatorios/' + caminho, {
-        method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type':'application/pdf', 'x-upsert':'true'}, body:item.file
+        method:'POST', headers:{...(await cabecalhoAuth()), 'Content-Type':'application/pdf', 'x-upsert':'true'}, body:item.file
       });
       if(!res.ok) throw new Error('HTTP '+res.status+' '+(await res.text()).slice(0,200));
       await sb('relatorios?on_conflict=caminho', {
@@ -3085,7 +3176,7 @@ async function removerRelatorio(id){
   const r = state.adminRel.find(x=>x.id===id);
   if(!r || !confirm(`Remover o relatório de ${r.vendedor} (${MESES[r.mes-1]} · ${relRotulo(r)})?`)) return;
   try{
-    await fetch(SUPABASE_URL + '/storage/v1/object/relatorios/' + r.caminho, {method:'DELETE', headers:{apikey: SUPABASE_KEY}});
+    await fetch(SUPABASE_URL + '/storage/v1/object/relatorios/' + r.caminho, {method:'DELETE', headers: await cabecalhoAuth()});
     await sb('relatorios?id=eq.'+id, {method:'DELETE'});
   }catch(e){
     console.error('Falha ao remover relatório', e);
@@ -3099,7 +3190,7 @@ function paginaRelatoriosAdmin(){
   const todos = state.adminRel;
   const opcoesMes = m => MESES.map((n,i)=>`<option value="${i+1}" ${i+1===m?'selected':''}>${n}</option>`).join('');
   const html = `
-    <div class="card" style="margin-bottom:18px;">
+    <div class="card so-rep" style="margin-bottom:18px;">
       <div class="card-h"><h3>Enviar relatórios</h3><span class="hint">Pode arrastar vários PDFs de uma vez. O vendedor, o mês e a semana saem do nome do arquivo.</span></div>
       <div class="card-b">
         <label class="drop" id="relDrop">
@@ -3141,7 +3232,7 @@ function paginaRelatoriosAdmin(){
                 <td><span class="pessoa">${avatar(r.vendedor)}${esc(r.vendedor)}</span></td>
                 <td class="mute">${new Date(r.criado_em).toLocaleDateString('pt-BR')}</td>
                 <td>${r.visto_em ? `<span class="pill ok">aberto em ${new Date(r.visto_em).toLocaleDateString('pt-BR')}</span>` : '<span class="pill">ainda não</span>'}</td>
-                <td class="r"><a class="link" href="${relUrl(r.caminho)}" target="_blank" rel="noopener">ver</a> <button class="link danger" data-rel-del="${r.id}">remover</button></td>
+                <td class="r"><a class="link" href="${relUrl(r.caminho)}" target="_blank" rel="noopener">ver</a> <button class="link danger so-rep" data-rel-del="${r.id}">remover</button></td>
               </tr>`).join('') || `<tr><td colspan="6" class="mute" style="text-align:center;padding:24px;">Nenhum relatório enviado ainda.</td></tr>`}
           </tbody>
         </table>
@@ -3215,7 +3306,7 @@ async function loadDesempenho(){
     const [dias, metricas, vendas] = await Promise.all([
       rpc('ligacoes_diarias', {p_desde: desde}, 1),
       sb('metricas_semanais?select=vendedor,semana,agendamentos,comparecimentos,vendas,receita,cards_parados,zero_comentario,negocios_ativos,dias_atividade', undefined, 1),
-      sb('vendas?select=vendedor,data,valor', undefined, 1)
+      rpc('vendas_resumo', {}, 1)
     ]);
     const ano = new Date().getFullYear();
     state.desemp = {
@@ -3452,7 +3543,7 @@ async function loadRanking(){
   try{
     const [hist, vendas] = await Promise.all([
       sb('ranking_historico?select=vendedor,ano,mes,valor,ativo', undefined, 1),
-      sb('vendas?select=vendedor,data,valor', undefined, 1)
+      rpc('vendas_resumo', {}, 1)
     ]);
     state.ranking = {
       hist: (hist||[]).map(r=>({...r, valor:Number(r.valor)})),
@@ -3574,7 +3665,7 @@ async function loadCampanhas(){
     const [lista, ajustes, vendas] = await Promise.all([
       sb('campanhas?select=*&order=inicio.desc', undefined, 1),
       sb('campanha_ajustes?select=campanha_id,vendedor,valor', undefined, 1),
-      sb('vendas?select=vendedor,data,valor,canal', undefined, 1)
+      rpc('vendas_resumo', {}, 1)
     ]);
     state.camp = {
       lista: (lista||[]).map(c=>({...c, meta:Number(c.meta), marco_valor: c.marco_valor!=null ? Number(c.marco_valor) : null})),
@@ -3719,7 +3810,7 @@ function paginaCampanhasVendedor(){
 // ---------------- Campanhas (admin) ----------------
 function paginaCampanhasAdmin(){
   const top = {titulo:'Campanhas', sub:'Premiações para o time · progresso calculado com as vendas registradas no site',
-    acoes:`<button class="btn gold" id="campNovaBtn">${icone('mais')}Nova campanha</button>`};
+    acoes:`<button class="btn gold so-rep" id="campNovaBtn">${icone('mais')}Nova campanha</button>`};
   const C = state.camp;
   if(!C) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando campanhas...</div></div>`,
     bind:()=>{ document.getElementById('campNovaBtn').onclick = ()=>abrirCampanha(null); }};
@@ -3740,8 +3831,8 @@ function paginaCampanhasAdmin(){
           </div>
         </div>
         <span style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
-          <button class="btn small" data-camp-edit="${c.id}">Editar</button>
-          <button class="btn small ghost" data-camp-ativa="${c.id}">${c.ativa?'Ocultar':'Mostrar'}</button>
+          <button class="btn small so-rep" data-camp-edit="${c.id}">Editar</button>
+          <button class="btn small ghost so-rep" data-camp-ativa="${c.id}">${c.ativa?'Ocultar':'Mostrar'}</button>
         </span>
       </div>
       <div class="scroll-x">
@@ -3867,7 +3958,7 @@ function bindCampanhaDrawer(){
     try{
       const ext = (file.type.split('/')[1]||'jpg').replace('jpeg','jpg');
       const caminho = `campanhas/${slugNome(state.campForm.titulo||'campanha')}-${Date.now()}.${ext}`;
-      const res = await fetch(SUPABASE_URL + '/storage/v1/object/fotos/' + caminho, {method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type': file.type}, body:file});
+      const res = await fetch(SUPABASE_URL + '/storage/v1/object/fotos/' + caminho, {method:'POST', headers:{...(await cabecalhoAuth()), 'Content-Type': file.type}, body:file});
       if(!res.ok) throw new Error('HTTP '+res.status);
       state.campForm.imagem_url = SUPABASE_URL + '/storage/v1/object/public/fotos/' + caminho;
     }catch(err){
@@ -4169,7 +4260,7 @@ function htmlMetasIndividuais(){
           </table>
         </div>
       </div>
-      <div class="card">
+      <div class="card so-rep">
         <div class="card-h"><h3>Regra da calculadora</h3></div>
         <div class="card-b">
           <div style="font-size:12px;color:var(--a-dim);margin-bottom:12px;">Usada no "Padrão FBS" da calculadora e no acompanhamento acima.</div>
@@ -4341,6 +4432,173 @@ async function alternarEquipe(nome){
   await loadProducao();
 }
 
+// ---------------- Login ----------------
+const ehRep = () => !!state.perfilAcesso && state.perfilAcesso.papel==='representante';
+const ICONES_PAPEL = {
+  representante:'<path d="M12 3l8 4v5c0 4.6-3.2 8-8 9-4.8-1-8-4.4-8-9V7z"/><path d="M9 12l2 2 4-4"/>',
+  coordenador:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
+  vendedor:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+};
+function iconePapel(p){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONES_PAPEL[p]}</svg>`; }
+const ladoMarca = () => `
+  <aside class="lg-marca">
+    <div class="lg-logo"><img src="logo-icon.png" alt=""><div><div class="n">FBS PRIME</div><div class="t">Central comercial</div></div></div>
+    <div class="lg-frase">Foco.<br>Resultado.<br><em>Reconhecimento.</em></div>
+    <div class="lg-rodape">Acesso restrito ao time FBS Prime</div>
+  </aside>`;
+
+async function irParaLogin(){
+  state.view = 'login';
+  render();
+  try{
+    const nomes = await rpc('nomes_login', {}, 1);
+    state.login.nomes = nomes || [];
+    state.login.nomes.forEach(n=>{ VENDOR_PERFIL[n.nome] = {...(VENDOR_PERFIL[n.nome]||{}), foto:n.foto_url||''}; });
+  }catch(e){
+    console.error('Falha ao carregar nomes', e);
+    state.login.nomes = [];
+    state.login.erro = 'Não consegui carregar os nomes. Verifica sua conexão e recarrega a página.';
+  }
+  if(state.view==='login') render();
+}
+
+function renderLogin(app){
+  const L = state.login;
+  const papeis = [['representante','Representante'],['coordenador','Coordenador'],['vendedor','Vendedor']];
+  const pessoas = (L.nomes||[]).filter(n=>n.papel===L.papel);
+  const porEmail = L.papel==='representante';
+  app.innerHTML = `
+    <div class="lg">
+      ${ladoMarca()}
+      <main class="lg-form">
+        <div class="lg-card">
+          <h1>Quem está entrando?</h1>
+          <div class="sub">Escolha o seu acesso para continuar.</div>
+          <div class="lg-papeis">
+            ${papeis.map(([id,nome])=>`<button type="button" class="${L.papel===id?'on':''}" data-papel="${id}">${iconePapel(id)}${nome}</button>`).join('')}
+          </div>
+          ${porEmail ? `
+            <label class="lg-rotulo" for="lgEmail">E-mail</label>
+            <input id="lgEmail" type="email" autocomplete="username" placeholder="seu e-mail">
+            <label class="lg-rotulo" for="lgSenha">Senha</label>
+            <input id="lgSenha" type="password" autocomplete="current-password" placeholder="Sua senha">
+          ` : `
+            <div class="lg-rotulo">Seu nome</div>
+            ${L.nomes===null ? '<div class="lg-vazio">Carregando...</div>' : (pessoas.length ? `<div class="lg-pessoas">${pessoas.map(n=>`<button type="button" class="${L.nome===n.nome?'on':''}" data-nome="${esc(n.nome)}">${avatar(n.nome, 30)}<span>${esc(n.nome)}</span></button>`).join('')}</div>` : `<div class="lg-vazio">Nenhum ${L.papel} cadastrado ainda.</div>`)}
+            <label class="lg-rotulo" for="lgPin">PIN</label>
+            <input id="lgPin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Digite seu PIN">
+          `}
+          ${L.erro ? `<div class="lg-erro">${esc(L.erro)}</div>` : ''}
+          <button class="btn gold lg-entrar" id="lgEntrar" ${L.enviando?'disabled':''}>${L.enviando?'Entrando…':'Entrar'}</button>
+        </div>
+      </main>
+    </div>`;
+  app.querySelectorAll('[data-papel]').forEach(b=>{ b.onclick = ()=>{ L.papel = b.getAttribute('data-papel'); L.nome = ''; L.erro = ''; render(); }; });
+  app.querySelectorAll('[data-nome]').forEach(b=>{ b.onclick = ()=>{
+    L.nome = b.getAttribute('data-nome'); L.erro = '';
+    app.querySelectorAll('[data-nome]').forEach(x=>x.classList.toggle('on', x===b));
+    document.getElementById('lgPin').focus();
+  }; });
+  document.getElementById('lgEntrar').onclick = entrar;
+  app.querySelectorAll('.lg-card input').forEach(i=>i.addEventListener('keydown', e=>{ if(e.key==='Enter') entrar(); }));
+}
+
+async function entrar(){
+  const L = state.login, porEmail = L.papel==='representante';
+  let email, senha;
+  if(porEmail){
+    email = document.getElementById('lgEmail').value.trim().toLowerCase();
+    senha = document.getElementById('lgSenha').value;
+    if(!email || !senha){ L.erro = 'Preenche o e-mail e a senha.'; render(); return; }
+  }else{
+    const pessoa = (L.nomes||[]).find(n=>n.nome===L.nome && n.papel===L.papel);
+    const pin = document.getElementById('lgPin').value.trim();
+    if(!pessoa){ L.erro = 'Escolhe o seu nome.'; render(); return; }
+    if(!pin){ L.erro = 'Digita o seu PIN.'; render(); return; }
+    email = pessoa.login; senha = 'fbs-' + pin;
+  }
+  L.enviando = true; L.erro = ''; render();
+  try{
+    const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method:'POST', headers:{apikey: SUPABASE_KEY, 'Content-Type':'application/json'},
+      body: JSON.stringify({email, password: senha})
+    });
+    if(!res.ok){
+      L.erro = res.status===429 ? 'Muitas tentativas. Aguarda alguns minutos e tenta de novo.'
+        : (porEmail ? 'E-mail ou senha incorretos.' : 'PIN incorreto.');
+      L.enviando = false; render(); return;
+    }
+    aceitarToken(await res.json());
+  }catch(e){
+    console.error('Falha no login', e);
+    L.erro = 'Sem conexão com o servidor. Tenta de novo.';
+    L.enviando = false; render(); return;
+  }
+  L.enviando = false;
+  if(!await entrarNoSistema()){ if(!L.erro) L.erro = 'Não consegui abrir o seu acesso. Tenta de novo.'; guardarSessao(null); irParaLogin(); }
+}
+
+// Com a sessao valida: descobre quem e, exige o PIN novo se precisar e abre a area certa
+async function entrarNoSistema(){
+  let perfil;
+  try{ perfil = await rpc('meu_perfil', {}, 1); }
+  catch(e){ console.error('Falha ao ler perfil', e); return false; }
+  if(!perfil){ state.login.erro = 'Esta conta ainda não tem acesso liberado. Fale com o representante.'; return false; }
+  state.perfilAcesso = perfil;
+  if(perfil.trocar_pin){ state.view = 'novoPin'; render(); return true; }
+  await abrirArea();
+  return true;
+}
+async function abrirArea(){
+  const p = state.perfilAcesso;
+  await loadVendorList();
+  loadCronograma();
+  if(p.papel==='vendedor'){ selectVendor(p.nome); return; }
+  state.view = 'admin';
+  loadAdminData();
+  loadAdminMetas();
+  loadCampanhas();
+  startAdminPolling();
+}
+
+function renderNovoPin(app){
+  const P = state.perfilAcesso;
+  app.innerHTML = `
+    <div class="lg">
+      ${ladoMarca()}
+      <main class="lg-form">
+        <div class="lg-card">
+          <h1>Crie seu novo PIN</h1>
+          <div class="sub">${esc(P.nome.split(' ')[0])}, para proteger os dados dos clientes, seu acesso agora usa um PIN de <b style="color:var(--text);">6 números</b>. Só você vai saber: nem o gestor consegue ver.</div>
+          <label class="lg-rotulo" for="npPin">Novo PIN</label>
+          <input id="npPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="6 números">
+          <label class="lg-rotulo" for="npPin2">Repita o PIN</label>
+          <input id="npPin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="6 números">
+          <div class="lg-erro" id="npErro"></div>
+          <button class="btn gold lg-entrar" id="npSalvar">Salvar e entrar</button>
+        </div>
+      </main>
+    </div>`;
+  const salvar = async ()=>{
+    const a = document.getElementById('npPin').value.trim(), b = document.getElementById('npPin2').value.trim(), erro = document.getElementById('npErro');
+    if(!/^[0-9]{6}$/.test(a)){ erro.textContent = 'O PIN precisa ter exatamente 6 números.'; return; }
+    if(/^(\d)\1{5}$/.test(a) || '0123456789'.includes(a) || '9876543210'.includes(a)){ erro.textContent = 'Esse PIN é fácil de adivinhar. Escolhe outro.'; return; }
+    if(a!==b){ erro.textContent = 'Os dois PINs não estão iguais.'; return; }
+    const bt = document.getElementById('npSalvar'); bt.disabled = true; bt.textContent = 'Salvando…';
+    try{
+      await rpc('trocar_meu_pin', {p_novo:a});
+      state.perfilAcesso.trocar_pin = false;
+      await abrirArea();
+    }catch(e){
+      console.error('Falha ao trocar PIN', e);
+      erro.textContent = 'Não foi possível salvar. Tenta de novo.';
+      bt.disabled = false; bt.textContent = 'Salvar e entrar';
+    }
+  };
+  document.getElementById('npSalvar').onclick = salvar;
+  app.querySelectorAll('.lg-card input').forEach(i=>i.addEventListener('keydown', e=>{ if(e.key==='Enter') salvar(); }));
+}
+
 function renderMetasPanel(){
   if(!state.metas){
     return `<div class="metas-card"><div class="metas-title">Minhas metas da semana</div><div class="empty-hint" style="padding:4px 0;">${state.metasLoading?'Carregando metas...':'Não foi possível carregar suas metas agora.'}</div></div>`;
@@ -4401,75 +4659,19 @@ function renderCallModal(){
 function render(pulse){
   const app = document.getElementById('app');
   // admin e central do vendedor usam o layout de tela cheia
-  document.body.classList.toggle('modo-admin', state.view==='admin' || state.view==='app');
+  document.body.classList.toggle('modo-admin', ['admin','app','login','novoPin'].includes(state.view));
 
   if(state.view === 'loading'){
     app.innerHTML = `<p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p><h1>Carregando...</h1>`;
     return;
   }
 
-  if(state.view === 'picker'){
-    app.innerHTML = `
-      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
-      <h1>Registro de ligações</h1>
-      <div class="picker-card">
-        <p class="tally-label" style="margin-bottom:0;">Quem está ligando agora?</p>
-        <select id="vendorSelect">
-          <option value="" disabled selected>Escolha seu nome</option>
-          ${VENDORES.map(v=>`<option value="${v}">${v}</option>`).join('')}
-        </select>
-        <button class="confirm-btn" id="confirmBtn">Começar</button>
-      </div>
-      <div style="text-align:center;margin-top:22px;">
-        <button class="undo-btn" id="adminLink">painel administrativo</button>
-      </div>
-    `;
-    document.getElementById('confirmBtn').onclick = ()=>{
-      const v = document.getElementById('vendorSelect').value;
-      if(!v){ alert('Escolhe seu nome na lista primeiro.'); return; }
-      goToVendorGate(v);
-    };
-    document.getElementById('adminLink').onclick = openAdminGate;
+  if(state.view === 'login'){
+    renderLogin(app);
     return;
   }
-
-  if(state.view === 'vendorGate'){
-    app.innerHTML = `
-      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
-      <h1>Registro de ligações</h1>
-      <div class="picker-card">
-        <p class="tally-label" style="margin-bottom:0;">PIN de ${state.pendingVendor}</p>
-        <input type="password" inputmode="numeric" id="vendorPinInput" placeholder="Digite seu PIN">
-        ${state.vendorPinError ? '<p style="color:#F09595;font-size:13px;margin:-8px 0 12px;">PIN incorreto. Tenta de novo.</p>' : ''}
-        <button class="confirm-btn" id="vendorPinBtn">Entrar</button>
-      </div>
-      <div style="text-align:center;margin-top:22px;">
-        <button class="undo-btn" id="vendorBackLink">voltar</button>
-      </div>
-    `;
-    document.getElementById('vendorPinBtn').onclick = checkVendorPin;
-    document.getElementById('vendorPinInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkVendorPin(); });
-    document.getElementById('vendorBackLink').onclick = ()=>{ state.view='picker'; render(); };
-    return;
-  }
-
-  if(state.view === 'adminGate'){
-    app.innerHTML = `
-      <p class="eyebrow"><img src="logo-icon.png" alt="">FBS Prime</p>
-      <h1>Painel administrativo</h1>
-      <div class="picker-card">
-        <p class="tally-label" style="margin-bottom:0;">Senha de acesso</p>
-        <input type="password" id="pinInput" placeholder="Digite a senha">
-        ${state.pinError ? '<p style="color:#F09595;font-size:13px;margin:-8px 0 12px;">Senha incorreta. Tenta de novo.</p>' : ''}
-        <button class="confirm-btn" id="pinBtn">Entrar</button>
-      </div>
-      <div style="text-align:center;margin-top:22px;">
-        <button class="undo-btn" id="backLink">voltar</button>
-      </div>
-    `;
-    document.getElementById('pinBtn').onclick = checkPin;
-    document.getElementById('pinInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPin(); });
-    document.getElementById('backLink').onclick = ()=>{ state.view='picker'; render(); };
+  if(state.view === 'novoPin'){
+    renderNovoPin(app);
     return;
   }
 
@@ -4608,25 +4810,10 @@ function render(pulse){
 }
 
 async function init(){
-  if(loadQueue().length) scheduleFlush(1500);
-  cronoTick(); // marca o passo atual (sem aviso de troca ao abrir o site) e busca os horarios no banco
-  await loadVendorList();
-  const session = loadSession();
-  if(session && session.type === 'admin'){
-    state.view = 'admin';
-    loadAdminData();
-    loadAdminMetas();
-    loadCampanhas();
-    startAdminPolling();
-    return;
-  }
-  if(session && session.type === 'vendor' && VENDORES.includes(session.name)){
-    selectVendor(session.name);
-    return;
-  }
-  clearSession();
-  state.view = 'picker';
-  render();
+  try{ localStorage.removeItem('fbs_session'); }catch(e){} // sessao do modelo antigo
+  cronoTick(); // marca o passo atual (sem aviso de troca ao abrir o site)
+  if(sessao && await entrarNoSistema()) return;
+  irParaLogin();
 }
 init();
 </script>

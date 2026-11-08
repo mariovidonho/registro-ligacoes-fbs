@@ -1,6 +1,6 @@
+-- ATENÇÃO: NÃO rode este arquivo inteiro de novo. Ele recria as regras antigas de acesso livre.
+-- A segurança atual está em seguranca_1_logins.sql, seguranca_2_regras.sql e seguranca_3_trancar.sql.
 -- Registro de Ligações FBS Prime — banco no Supabase
--- Cole este arquivo inteiro no Supabase: SQL Editor > New query > Run.
--- Pode rodar de novo sem problema (não apaga dados).
 --
 -- Datas de "dia" e "semana" são calculadas no fuso de São Paulo, então uma
 -- ligação às 22h conta no dia certo (a planilha usava UTC).
