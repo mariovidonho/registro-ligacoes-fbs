@@ -890,37 +890,118 @@
   .at-hoje{width:100%;background:var(--a-gold-soft);border:1px solid rgba(201,168,76,.45);border-radius:12px;color:var(--a-gold);font:600 13px Inter,sans-serif;padding:10px 14px;margin-bottom:12px;cursor:pointer;text-align:left;}
   .at-drawer{width:min(620px,100%);}
   .at-resultado{margin-top:16px;border-top:1px solid var(--a-line);padding-top:14px;}
-  .at-spin{flex:none;display:inline-block;width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:var(--a-gold);animation:at-gira 1s linear infinite;}
-  .at-etapas{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-  .at-etapas i{flex:0 1 44px;height:1px;background:var(--a-line);}
-  .at-etapa-b{display:flex;align-items:center;gap:9px;background:none;border:none;color:var(--a-dim);cursor:pointer;font:600 14px Inter,sans-serif;padding:4px 0;}
-  .at-etapa-b span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--a-line);font-size:12px;}
-  .at-etapa-b.on{color:var(--text);}
-  .at-etapa-b.on span{background:var(--a-gold);border-color:var(--a-gold);color:#241D0B;}
+  .at-spin{flex:none;display:inline-block;width:22px;height:22px;border-radius:50%;border:3px solid #E5DFD2;border-top-color:#B8923A;animation:at-gira 1s linear infinite;}
+  .at-tema{--text:#1B2A3A;--a-card:#FFFFFF;--a-card-2:#F6F3EC;--a-line:#DDD6C7;--a-dim:#5F6B77;--a-mute:#8A929B;--a-gold:#8C6B1F;--a-gold-soft:#F6EFDC;--a-side:#FFFFFF;color:var(--text);}
+  body.modo-admin.at-claro{background:#F6F3EC;}
+  .adm-main.at-tema{background:#F6F3EC;}
+  .at-tema .btn{color:var(--text);background:#fff;border-color:#CFC7B6;}
+  .at-tema .btn:hover{border-color:#1B2A3A;}
+  .at-tema .btn.gold{background:#1B2A3A;border-color:#1B2A3A;color:#fff;}
+  .at-tema .btn.gold:hover{filter:none;background:#26394D;}
+  .at-tema .seg button.on{background:#1B2A3A;color:#fff;box-shadow:none;}
+  .at-tema .pill.ok{color:#7A5C14;border-color:#E3D3A6;background:#F6EFDC;}
+  .at-tema .pill.warn{color:#A32D2D;border-color:#F0C4C4;background:#FCEBEB;}
+  .at-tema .pill.live{color:#1E7A4E;border-color:#B5DEC8;background:#E6F3EC;}
+  .at-tema .pill.roxo{color:#534AB7;border-color:#CECBF6;background:#EEEDFE;}
+  .at-tema .alerta{border-color:#F0C4C4;background:#FCEBEB;}
+  .at-tema .alerta .t{color:#A32D2D;}
+  .at-tema .tbl td{border-bottom-color:#EAE5DA;}
+  .at-tema .tbl tbody tr:hover,.at-tema .at-cli:hover{background:#FAF8F3;}
+  .at-tema .at-cli,.at-tema .at-apr,.at-tema .rel-item{border-top-color:#EAE5DA;}
+  .at-tema .at-op:hover{border-color:#1B2A3A;}
+  .at-tema .at-aviso.roxo{background:#EEEDFE;color:#3C3489;}
+  .at-tema .at-aviso.verde{background:#E6F3EC;color:#1E7A4E;}
+  .at-tema .at-r{text-transform:none;letter-spacing:0;font-size:12px;font-weight:500;}
+  .at-tema .at-barra{background:linear-gradient(rgba(246,243,236,0),#F6F3EC 30%);}
+  .at-tema .at-guarda input:not([type=hidden]),.at-tema .at-guarda select{background:transparent;border:none;border-bottom:1px solid #CFC7B6;border-radius:0;padding:5px 0 6px;font-size:16px;}
+  .at-tema .at-guarda input:not([type=hidden]):focus{border-bottom-color:#1B2A3A;}
+  .at-tema .at-guarda .at-fixo{background:none;border:none;border-bottom:1px solid #EAE5DA;border-radius:0;padding:5px 0 6px;min-height:0;font-size:16px;}
+  .at-etapas{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+  .at-etapas i{flex:0 1 36px;height:1px;background:var(--a-line);}
+  .at-etapa-b{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--a-dim);cursor:pointer;font:500 14px Inter,sans-serif;padding:4px 0;}
+  .at-etapa-b span{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#E5DFD2;font-size:12px;}
+  .at-etapa-b.on{color:var(--text);font-weight:600;}
+  .at-etapa-b.on span{background:#1B2A3A;color:#fff;}
   .at-etapa-c{display:none;}
   .at-etapa-c.on{display:block;}
+  .at-coluna{max-width:680px;}
+  .at-bloco{background:#fff;border:1px solid var(--a-line);border-radius:12px;padding:18px 20px;margin-bottom:12px;}
+  .at-bloco h3{margin:0 0 12px;font-size:15px;font-weight:600;}
+  .at-bloco-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;}
+  .at-sn-linha{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #EAE5DA;font-size:14px;}
+  .at-sn{display:inline-flex;border:1px solid #CFC7B6;border-radius:8px;overflow:hidden;}
+  .at-sn button{background:#fff;border:none;padding:6px 15px;font:500 13px Inter,sans-serif;color:var(--a-dim);cursor:pointer;}
+  .at-sn button.on{background:#1B2A3A;color:#fff;}
+  .at-sn-valor{max-width:240px;padding:0 0 10px;}
+  .at-rodape-info{font-size:12px;color:var(--a-mute);margin:2px 2px 12px;}
+  .at-sim{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px;align-items:start;max-width:1000px;}
+  .at-abas{display:flex;gap:22px;border-bottom:1px solid var(--a-line);margin-bottom:16px;}
+  .at-abas button{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;padding:0 0 9px;font:500 14px Inter,sans-serif;color:var(--a-dim);cursor:pointer;}
+  .at-abas button.on{color:var(--text);font-weight:600;border-bottom-color:#B8923A;}
+  .at-op-c{display:none;}
+  .at-op-c.on{display:block;}
+  .at-rec{margin-top:14px;background:none;border:1px dashed #CFC7B6;border-radius:8px;padding:7px 12px;font:500 13px Inter,sans-serif;color:var(--a-dim);cursor:pointer;}
+  .at-rec.on{border:1px solid #B8923A;background:#F6EFDC;color:#7A5C14;}
+  .at-previa{position:sticky;top:16px;}
+  .at-previa-r{font-size:12px;color:var(--a-dim);}
+  .at-previa-v{font-family:Fraunces,Georgia,serif;font-size:26px;font-weight:600;margin:4px 0 10px;}
+  .at-previa-l{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid #EAE5DA;font-size:14px;}
+  .at-previa-l span:first-child{color:var(--a-dim);}
+  .at-sec{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--a-dim);padding:14px 20px 7px;}
+  .at-sec span{font-weight:500;}
+  .at-sec + .at-cli{border-top:none;}
+  .at-folha{background:#fff;color:#1B2A3A;border:1px solid var(--a-line);border-radius:6px;padding:34px 38px;max-width:680px;margin:0 auto 6px;}
+  .at-folha.uma{max-width:520px;}
+  .at-folha-marca{font-size:12px;letter-spacing:.18em;color:#9A7726;font-weight:700;}
+  .at-folha-t{font-family:Fraunces,Georgia,serif;font-size:30px;font-weight:600;line-height:1.15;margin:5px 0 3px;}
+  .at-folha-s{font-size:14px;color:#5F6B77;margin-bottom:24px;}
+  .at-folha table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:16px;font-variant-numeric:tabular-nums;}
+  .at-folha th{text-align:right;font-size:14px;font-weight:600;padding:8px 10px;border-bottom:2px solid #1B2A3A;vertical-align:bottom;}
+  .at-folha td{text-align:right;padding:12px 10px;border-bottom:1px solid #EAE5DA;}
+  .at-folha th:first-child,.at-folha td:first-child{text-align:left;padding-left:0;color:#5F6B77;width:34%;}
+  .at-folha .rec{background:#FBF6E9;}
+  .at-folha tr.gr td{font-family:Fraunces,Georgia,serif;font-size:27px;font-weight:600;padding:16px 10px;}
+  .at-folha tr.gr td:first-child{font-family:Inter,sans-serif;font-size:16px;font-weight:400;padding-left:0;}
+  .at-folha-selo{display:block;font-size:11px;font-weight:600;color:#7A5C14;margin-bottom:3px;}
+  .at-folha-pe{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:24px;font-size:13px;color:#5F6B77;}
   #atPops{position:fixed;top:16px;right:16px;z-index:65;display:flex;flex-direction:column;gap:10px;width:min(340px,calc(100vw - 32px));pointer-events:none;}
-  .at-pop{pointer-events:auto;background:#14293D;border:1px solid rgba(201,168,76,.5);border-radius:14px;padding:14px 16px;box-shadow:0 12px 32px rgba(0,0,0,.45);color:var(--text);font:400 14px Inter,sans-serif;}
+  .at-pop{pointer-events:auto;background:#fff;border:1px solid #DDD6C7;border-radius:14px;padding:14px 16px;box-shadow:0 10px 28px rgba(15,30,45,.22);color:var(--text);font:400 14px Inter,sans-serif;}
   .at-pop-l{display:flex;align-items:center;gap:12px;}
   .at-pop b{font-weight:600;display:block;}
-  .at-pop small{display:block;font-size:12px;color:#9FB2C4;margin-top:2px;}
+  .at-pop small{display:block;font-size:12px;color:var(--a-dim);margin-top:2px;}
   .at-pop .link{margin-top:6px;}
-  .at-pop.res{border-color:rgba(95,211,154,.6);text-align:center;}
-  .at-pop-eb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#C9A84C;font-weight:700;}
-  .at-pop-ok{font-size:38px;font-weight:600;color:#5FD39A;line-height:1.15;}
+  .at-pop.res{border-color:#9CCBB0;text-align:center;}
+  .at-pop-eb{font-size:12px;color:var(--a-dim);}
+  .at-pop-ok{font-size:36px;font-weight:600;color:#1E7A4E;line-height:1.15;}
   .at-pop-t{font-weight:600;}
   .at-pop-p{margin-top:12px;}
-  .at-pop-priv{margin-top:8px;font-size:12px;background:rgba(255,255,255,.06);border-radius:8px;padding:7px 9px;}
+  .at-pop-priv{margin-top:8px;font-size:12px;background:#F6F3EC;border-radius:8px;padding:7px 9px;}
   .at-pop-a{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;flex-wrap:wrap;}
   .at-pop.res .at-pop-a{justify-content:center;}
   body.at-cheia .adm{grid-template-columns:minmax(0,1fr);}
   body.at-cheia .adm-side,body.at-cheia .adm-top,body.at-cheia #cronoToast{display:none!important;}
-  body.at-cheia .adm-main{width:100%;max-width:1240px;margin:0 auto;padding:22px clamp(16px,4vw,48px) 24px;}
-  body.at-cheia .at-guarda input,body.at-cheia .at-guarda select,body.at-cheia .at-fixo{font-size:17px;padding:11px 14px;}
-  body.at-cheia .at-guarda .at-r{font-size:12px;}
-  .at-cheia-topo{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;}
-  .at-marca{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
-  .at-cheia-nome{font-size:clamp(24px,3.4vw,34px);font-weight:600;margin-top:2px;}
+  body.at-cheia .adm-main{width:100%;padding:clamp(20px,5vh,56px) 16px 24px;}
+  body.at-cheia .at-folha{max-width:880px;padding:clamp(26px,5vw,60px);border:none;}
+  body.at-cheia .at-folha.uma{max-width:640px;}
+  body.at-cheia .at-folha-t{font-size:clamp(30px,4vw,44px);}
+  body.at-cheia .at-folha table{font-size:clamp(17px,2vw,21px);}
+  body.at-cheia .at-folha tr.gr td{font-size:clamp(28px,4vw,42px);}
+  body.at-cheia .at-folha tr.gr td:first-child{font-size:clamp(17px,2vw,21px);}
+  .at-cheia-acoes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  @media (max-width:760px){
+    .at-sim,.at-bloco-g{grid-template-columns:minmax(0,1fr);}
+    .at-previa{position:static;}
+    .at-folha{padding:22px 16px;}
+    .at-folha table{font-size:14px;}
+    .at-folha-t{font-size:24px;}
+    .at-folha tr.gr td{font-size:20px;}
+  }
+  @media print{
+    body.at-tem-folha{background:#fff!important;}
+    body.at-tem-folha *{visibility:hidden;}
+    body.at-tem-folha .at-folha,body.at-tem-folha .at-folha *{visibility:visible;}
+    body.at-tem-folha .at-folha{position:absolute;left:0;top:0;width:100%;max-width:none;border:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
   @keyframes at-gira{to{transform:rotate(360deg)}}
   @media (max-width:860px){
     .at-duas,.at-ops,.at-ops.tres{grid-template-columns:minmax(0,1fr);}
@@ -1346,7 +1427,7 @@ let state = {
   pinsAbertos: null,     // quais PINs estao revelados na tela
   relUrls: null,         // links temporarios dos PDFs de relatorio
   at: {lista:null, tabelas:null, tabUrls:null, tabelaId:null, sub:'clientes', subGestor:'aprovacao', fichaId:null, passo:null, busca:'', filtroV:'', filtroS:'',
-       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, espera:{}, etapa:'dados', etapaDe:null, cheia:false, drawerId:null}
+       novo:{tel:'', nome:'', modo:'meu', titular:'', canal:'', lgpd:false, achado:null, erro:''}, espera:{}, etapa:'cliente', etapaDe:null, opcao:0, cheia:false, drawerId:null}
 };
 
 // Le historico recente do vendedor + status "fechado" do dia + dias pendentes
@@ -4531,7 +4612,7 @@ async function atBuscar(){
   }catch(e){ n.erro = atErroTexto(e); }
   render();
 }
-async function atAbrir(cheia){
+async function atAbrir(){
   atLerNovo();
   const n = state.at.novo, dig = n.tel.replace(/\D/g,'');
   n.erro = '';
@@ -4548,7 +4629,6 @@ async function atAbrir(cheia){
     state.at.lista = null;
     await loadAtendimentos(true);
     state.at.fichaId = id; state.at.passo = null; state.at.sub = 'clientes';
-    if(cheia) atEntrarCheia();
     render();
     window.scrollTo(0,0);
   }catch(e){
@@ -4575,9 +4655,9 @@ function htmlNovo(){
       ${n.modo==='ajuda' ? `<label class="at-r" for="atTitular" style="margin-top:12px;">Qual colega?</label><select id="atTitular" style="width:100%;" ${colegaDono?'disabled':''}><option value="">Escolha</option>${VENDORES_LOGIN().filter(v=>v!==eu).map(v=>`<option ${v===n.titular?'selected':''}>${esc(v)}</option>`).join('')}</select>` : ''}
       <div class="at-r" style="margin-top:16px;">De onde veio este cliente?</div>
       <div class="at-chips">${AT_CANAIS.map(c=>`<button class="at-chip ${n.canal===c[0]?'on':''}" data-at-canal="${esc(c[0])}">${c[1]}</button>`).join('')}</div>
-      <label class="at-lgpd"><input type="checkbox" id="atLgpd" ${n.lgpd?'checked':''}><span>O cliente autorizou a FBS Prime a guardar estes dados para fazer o atendimento e a simulação.</span></label>
+      <label class="at-lgpd"><input type="checkbox" id="atLgpd" ${n.lgpd?'checked':''}><span>O cliente autorizou a FBS Prime a guardar estes dados para fazer o atendimento e a proposta.</span></label>
       ${n.erro ? `<div class="lg-erro" style="margin:10px 0 0;">${esc(n.erro)}</div>` : ''}
-      <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:14px;"><button class="btn" id="atAbrir">Abrir ficha</button><button class="btn gold" id="atAbrirCheia">Abrir em tela cheia</button></div>
+      <div style="text-align:right;margin-top:14px;"><button class="btn gold" id="atAbrir">Abrir ficha</button></div>
     </div></div>`;
 }
 const VENDORES_LOGIN = () => VENDORES;
@@ -4587,9 +4667,9 @@ function atColetar(){
   const v = id => (document.getElementById(id)||{}).value || '';
   const din = id => { const n = parseBRL(v(id)); return Number.isNaN(n) ? null : n; };
   const bool = id => v(id)==='' ? null : v(id)==='sim';
-  const proj = i => { const o = {}; ['credito','entrada','parcelas','prazo','renda','documentacao','custo_final','outros'].forEach(k=>{ o[k] = v(`p${i}_${k}`).trim(); }); return o; };
+  const proj = i => { const o = {}; ['credito','entrada','parcelas','prazo','renda','documentacao','custo_final','outros'].forEach(k=>{ o[k] = v(`p${i}_${k}`).trim(); }); o.recomendada = v(`p${i}_recomendada`)==='1'; return o; };
   return {nome:v('fNome'), telefone2:v('fTel2'), bem:v('fBem').trim(), credito:din('fCredito'), renda:din('fRenda'), entrada:din('fEntrada'), parcela:din('fParcela'),
-    restricao:bool('fRestricao'), restricao_valor:din('fRestricaoV'), fgts:bool('fFgts'), fgts_valor:din('fFgtsV'), aluguel:bool('fAluguel'), aluguel_valor:din('fAluguelV'),
+    restricao:bool('fRestricao'), restricao_valor:bool('fRestricao') ? din('fRestricaoV') : null, fgts:bool('fFgts'), fgts_valor:bool('fFgts') ? din('fFgtsV') : null, aluguel:bool('fAluguel'), aluguel_valor:bool('fAluguel') ? din('fAluguelV') : null,
     projecoes:[proj(0), proj(1)]};
 }
 async function atSalvar(silencioso){
@@ -4601,19 +4681,55 @@ async function atSalvar(silencioso){
     return true;
   }catch(e){ console.error('Falha ao salvar ficha', e); alert(atErroTexto(e)); return false; }
 }
-const atSimNao = (id, v) => `<select id="${id}" style="width:100%;"><option value="" ${v==null?'selected':''}>—</option><option value="sim" ${v===true?'selected':''}>Sim</option><option value="nao" ${v===false?'selected':''}>Não</option></select>`;
+const atSimNao = (id, rot, v) => `<div class="at-sn-linha"><span class="at-sn-rot">${rot}</span><input type="hidden" id="${id}" value="${v==null?'':(v?'sim':'nao')}"><span class="at-sn" data-sn="${id}"><button type="button" value="nao">Não</button><button type="button" value="sim">Sim</button></span></div>`;
 const atCampo = (rot, id, val, extra) => `<div><label class="at-r" for="${id}">${rot}</label><input id="${id}" value="${esc(val==null?'':val)}" style="width:100%;" ${extra||''}></div>`;
+const AT_FOLHA = [['parcelas','Parcela'],['credito','Crédito'],['entrada','Entrada'],['prazo','Prazo'],['documentacao','Documentação'],['custo_final','Custo final'],['outros','Outros']];
+function atVal(k, v){
+  v = String(v||'').trim();
+  if(!v) return '';
+  if(k==='prazo') return /^[0-9]+$/.test(v) ? v+' meses' : v;
+  if(k==='outros') return v;
+  const n = parseBRL(v);
+  return n==null || Number.isNaN(n) ? v : 'R$ '+n.toLocaleString('pt-BR',{maximumFractionDigits:2});
+}
+function htmlFolha(a, cheia){
+  const opcoes = (Array.isArray(a.projecoes) ? a.projecoes : []).slice(0,2).map((p,i)=>({p:p||{},i})).filter(o=>AT_FOLHA.some(([k])=>String(o.p[k]||'').trim()));
+  if(!opcoes.length) return `<div class="card"><div class="card-b" style="padding:34px;text-align:center;color:var(--a-dim);">Preencha pelo menos uma opção na Proposta para montar a folha.</div></div>`;
+  const linhas = AT_FOLHA.filter(([k])=>opcoes.some(o=>String(o.p[k]||'').trim()));
+  const data = new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
+  const cel = (o, html) => `<td class="${o.p.recomendada?'rec':''}">${html}</td>`;
+  return `
+    <div class="at-folha ${opcoes.length===1?'uma':''}">
+      <div class="at-folha-marca">FBS PRIME</div>
+      <div class="at-folha-t serif">Proposta para ${esc(a.clientes.nome)}</div>
+      <div class="at-folha-s">${a.bem?esc(a.bem)+' · ':''}${data}</div>
+      <table>
+        <thead><tr><th></th>${opcoes.map(o=>`<th class="${o.p.recomendada?'rec':''}">${o.p.recomendada?'<span class="at-folha-selo">Recomendada</span>':''}${opcoes.length>1?`Opção ${o.i+1}`:'Sua proposta'}</th>`).join('')}</tr></thead>
+        <tbody>${linhas.map(([k,r],n)=>`<tr class="${n===0&&k==='parcelas'?'gr':''}"><td>${r}</td>${opcoes.map(o=>cel(o, esc(atVal(k,o.p[k]))||'—')).join('')}</tr>`).join('')}</tbody>
+      </table>
+      <div class="at-folha-pe"><span>Seu consultor: ${esc(a.vendedor)}</span><span>Proposta sujeita a confirmação</span></div>
+    </div>`;
+}
 function htmlFicha(a){
   const A = state.at, c = a.clientes, proj = Array.isArray(a.projecoes) ? a.projecoes : [{},{}], cheia = A.cheia;
-  if(A.etapaDe !== a.id){ A.etapa = 'dados'; A.etapaDe = a.id; }
-  const et = A.etapa;
+  if(A.etapaDe !== a.id){ A.etapa = 'cliente'; A.opcao = 0; A.etapaDe = a.id; }
+  const et = A.etapa, opc = A.opcao;
   const visitas = A.lista.filter(x=>x.cliente_id===a.cliente_id).sort((x,y)=>x.criado_em<y.criado_em?-1:1);
   const nVisita = visitas.findIndex(x=>x.id===a.id)+1;
-  const htmlProj = i => { const p = proj[i]||{}; const cp = (rot,k) => atCampo(rot,`p${i}_${k}`,p[k]); return `
-    <div class="card"><div class="card-h"><h3>Projeção ${i+1}</h3></div><div class="card-b at-grade">
-      ${cp('Crédito','credito')}${cp('Entrada','entrada')}${cp('Parcelas','parcelas')}${cp('Prazo','prazo')}${cp('Renda','renda')}${cp('Documentação','documentacao')}${cp('Custo final','custo_final')}${cp('Outros','outros')}
-    </div></div>`; };
-  // recados internos nunca aparecem na tela cheia, que fica virada para o cliente
+  const dinheiro = 'inputmode="decimal"';
+  const htmlOpcao = i => { const p = proj[i]||{}; const cp = (rot,k,x) => atCampo(rot,`p${i}_${k}`,p[k],`data-sim ${x||''}`); return `
+    <div class="at-op-c ${opc===i?'on':''}">
+      <div class="at-bloco-g">
+        <div style="grid-column:1/-1">${cp('Crédito','credito',dinheiro)}</div>
+        ${cp('Entrada','entrada',dinheiro)}${cp('Parcela','parcelas',dinheiro)}
+        ${cp('Prazo (meses)','prazo','inputmode="numeric"')}${cp('Documentação','documentacao',dinheiro)}
+        ${cp('Custo final','custo_final',dinheiro)}${cp('Renda','renda',dinheiro)}
+        <div style="grid-column:1/-1">${cp('Outros','outros')}</div>
+      </div>
+      <input type="hidden" id="p${i}_recomendada" value="${p.recomendada?'1':''}">
+      <button type="button" class="at-rec" data-rec="${i}"></button>
+    </div>`; };
+  // recados internos nunca aparecem na folha mostrada ao cliente
   const avisos = [];
   if(!cheia){
     if(a.situacao==='reprovado') avisos.push(`<div class="alerta" style="margin-bottom:14px;"><div class="t">Aprovação não liberada${a.aprovacao_por?` por ${esc(a.aprovacao_por)}`:''}</div>${a.aprovacao_motivo?`<div class="s">${esc(a.aprovacao_motivo)}</div>`:''}</div>`);
@@ -4623,41 +4739,78 @@ function htmlFicha(a){
   }
   const passo = A.passo && !cheia ? htmlPasso(a) : '';
   const podeEnviar = ['em_atendimento','vai_voltar','reprovado'].includes(a.situacao);
-  let barra;
-  if(et==='dados') barra = `${cheia ? '' : '<button class="btn" data-at-sub="tabelas">Ver tabelas</button>'}<button class="btn" id="atSalvar">Salvar</button>${cheia ? '' : '<button class="btn" id="atFinalizar">Finalizar</button>'}<button class="btn gold" data-etapa="proj">Continuar para projeções</button>`;
-  else barra = `<button class="btn" data-etapa="dados">Voltar aos dados</button>${cheia ? '' : '<button class="btn" data-at-sub="tabelas">Ver tabelas</button>'}<button class="btn" id="atSalvar">Salvar</button>${cheia ? (podeEnviar ? '<button class="btn gold" id="atEnviarLoja">Enviar para aprovação</button>' : '') : '<button class="btn gold" id="atFinalizar">Finalizar atendimento</button>'}`;
+  const tabelas = '<button class="btn" data-at-sub="tabelas">Ver tabelas</button>';
+  const barra = {
+    cliente: `${tabelas}<button class="btn" id="atSalvar">Salvar</button><button class="btn" id="atFinalizar">Finalizar</button><button class="btn gold" data-etapa="sim">Continuar para proposta</button>`,
+    sim: `<button class="btn" data-etapa="cliente">Voltar</button>${tabelas}<button class="btn" id="atSalvar">Salvar</button><button class="btn" id="atFinalizar">Finalizar</button><button class="btn gold" data-etapa="folha">Ver a folha</button>`,
+    folha: `<button class="btn" data-etapa="sim">Voltar</button><button class="btn" id="atFinalizar">Finalizar</button><button class="btn" id="atImprimir">Imprimir</button>${podeEnviar ? '<button class="btn" id="atEnviarLoja">Enviar para aprovação</button>' : ''}<button class="btn gold" id="atMostrar">Mostrar ao cliente</button>`
+  }[et];
+  const passos = [['cliente','Cliente'],['sim','Proposta'],['folha','Folha']];
   return `
     <div class="at-guarda" data-k="f${a.id}">
-    ${cheia ? `<div class="at-cheia-topo"><div><div class="at-marca">FBS Prime</div><div class="at-cheia-nome serif">${esc(c.nome)}</div></div><button class="btn small" id="atSairCheia">Sair da tela cheia</button></div>` : '<button class="link" id="atVoltar" style="margin-bottom:10px;">← Meus clientes</button>'}
+    ${cheia ? '' : `<button class="link" id="atVoltar" style="margin-bottom:10px;">← Meus clientes</button>
     ${avisos.join('')}
     ${passo}
-    <div class="at-etapas">
-      <button class="at-etapa-b ${et==='dados'?'on':''}" data-etapa="dados"><span>1</span>Dados do cliente</button>
-      <i></i>
-      <button class="at-etapa-b ${et==='proj'?'on':''}" data-etapa="proj"><span>2</span>Projeções</button>
-    </div>
-    <div class="at-etapa-c ${et==='dados'?'on':''}">
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-h"><h3>Dados do cliente</h3>${cheia ? '' : `<span class="hint">${nVisita}ª visita · ${atQuando(a.criado_em)} · Canal: ${esc(atCanalNome(c.canal))}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</span>`}</div>
-        <div class="card-b at-grade">
-          ${atCampo('Nome','fNome',c.nome)}
+    <div class="at-etapas">${passos.map(([k,r],i)=>`<button class="at-etapa-b ${et===k?'on':''}" data-etapa="${k}"><span>${i+1}</span>${r}</button>`).join('<i></i>')}</div>`}
+    <div class="at-etapa-c at-coluna ${et==='cliente'?'on':''}">
+      <div class="at-bloco">
+        <h3>Quem é</h3>
+        <div class="at-bloco-g">
+          <div style="grid-column:1/-1">${atCampo('Nome','fNome',c.nome)}</div>
           <div><label class="at-r">Telefone</label><div class="at-fixo">${atTel(c.telefone)}</div></div>
           ${atCampo('Telefone 2','fTel2',c.telefone2,'inputmode="tel"')}
-          ${atCampo('Bem de interesse','fBem',a.bem)}
-          ${atCampo('Valor do crédito','fCredito',atNum(a.credito),'inputmode="decimal"')}
-          ${atCampo('Valor da renda','fRenda',atNum(a.renda),'inputmode="decimal"')}
-          ${atCampo('Valor da entrada','fEntrada',atNum(a.entrada),'inputmode="decimal"')}
-          ${atCampo('Valor das parcelas','fParcela',atNum(a.parcela),'inputmode="decimal"')}
-          <div><label class="at-r" for="fRestricao">Restrição no nome</label>${atSimNao('fRestricao',a.restricao)}</div>${atCampo('Valor da restrição','fRestricaoV',atNum(a.restricao_valor),'inputmode="decimal"')}
-          <div><label class="at-r" for="fFgts">FGTS</label>${atSimNao('fFgts',a.fgts)}</div>${atCampo('Valor do FGTS','fFgtsV',atNum(a.fgts_valor),'inputmode="decimal"')}
-          <div><label class="at-r" for="fAluguel">Aluguel</label>${atSimNao('fAluguel',a.aluguel)}</div>${atCampo('Valor do aluguel','fAluguelV',atNum(a.aluguel_valor),'inputmode="decimal"')}
         </div>
       </div>
-      ${visitas.length>1 && !cheia ? `<div class="card"><div class="card-h"><h3>Histórico de visitas</h3></div><div class="card-b">${visitas.map((v,i)=>`<div class="at-linha-h"><button class="link" data-at-ficha="${v.id}">${i+1}ª visita · ${atQuando(v.criado_em)}</button>${atPill(v.situacao)}</div>`).join('')}</div></div>` : ''}
+      <div class="at-bloco">
+        <h3>O que busca</h3>
+        <div class="at-bloco-g">
+          ${atCampo('Bem de interesse','fBem',a.bem)}
+          ${atCampo('Valor do crédito','fCredito',atNum(a.credito),dinheiro)}
+          ${atCampo('Valor da entrada','fEntrada',atNum(a.entrada),dinheiro)}
+          ${atCampo('Valor das parcelas','fParcela',atNum(a.parcela),dinheiro)}
+        </div>
+      </div>
+      <div class="at-bloco">
+        <h3>Situação financeira</h3>
+        <div class="at-bloco-g" style="margin-bottom:6px;">${atCampo('Renda','fRenda',atNum(a.renda),dinheiro)}</div>
+        ${[['fRestricao','Restrição no nome',a.restricao,a.restricao_valor],['fFgts','Tem FGTS',a.fgts,a.fgts_valor],['fAluguel','Paga aluguel',a.aluguel,a.aluguel_valor]].map(([id,r,b,v])=>`${atSimNao(id,r,b)}<div id="${id}V_w" class="at-sn-valor">${atCampo('Valor',id+'V',atNum(v),dinheiro)}</div>`).join('')}
+      </div>
+      ${cheia ? '' : `<div class="at-rodape-info">${nVisita}ª visita · ${atQuando(a.criado_em)} · Canal: ${esc(atCanalNome(c.canal))}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</div>`}
+      ${visitas.length>1 && !cheia ? `<div class="at-bloco"><h3>Histórico de visitas</h3>${visitas.map((v,i)=>`<div class="at-linha-h"><button class="link" data-at-ficha="${v.id}">${i+1}ª visita · ${atQuando(v.criado_em)}</button>${atPill(v.situacao)}</div>`).join('')}</div>` : ''}
     </div>
-    <div class="at-etapa-c ${et==='proj'?'on':''}"><div class="at-duas at-proj">${htmlProj(0)}${htmlProj(1)}</div></div>
-    <div class="at-barra">${barra}</div>
+    <div class="at-etapa-c ${et==='sim'?'on':''}">
+      <div class="at-sim">
+        <div class="at-bloco">
+          <div class="at-abas">${[0,1].map(i=>`<button type="button" class="${opc===i?'on':''}" data-opcao="${i}">Opção ${i+1}</button>`).join('')}</div>
+          ${htmlOpcao(0)}${htmlOpcao(1)}
+        </div>
+        <div class="at-bloco at-previa"><div class="at-previa-r">Como vai ficar na folha</div><div id="atPrevia"></div></div>
+      </div>
+    </div>
+    <div class="at-etapa-c ${et==='folha'?'on':''}">${et==='folha' ? htmlFolha(a) : ''}</div>
+    ${cheia
+      ? `<div class="at-cheia-acoes"><button class="btn" id="atSairCheia">Voltar para a ficha</button>${podeEnviar ? '<button class="btn gold" id="atEnviarLoja">Enviar para aprovação</button>' : ''}</div>`
+      : `<div class="at-barra">${barra}</div>`}
     </div>`;
+}
+// botoes Sim/Nao, opcao recomendada e previa acompanham o que esta nos campos
+function atSyncFicha(){
+  const g = id => document.getElementById(id);
+  document.querySelectorAll('[data-sn]').forEach(el=>{
+    const id = el.getAttribute('data-sn'), v = g(id).value;
+    el.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.value===v));
+    const w = g(id+'V_w'); if(w) w.style.display = v==='sim' ? '' : 'none';
+  });
+  document.querySelectorAll('[data-rec]').forEach(b=>{
+    const on = g(`p${b.getAttribute('data-rec')}_recomendada`).value==='1';
+    b.classList.toggle('on', on);
+    b.textContent = on ? 'Recomendada na folha' : 'Marcar como recomendada';
+  });
+  const pv = g('atPrevia');
+  if(pv){
+    const i = state.at.opcao, val = k => atVal(k, (g(`p${i}_${k}`)||{}).value);
+    pv.innerHTML = `<div class="at-previa-v">${esc(val('parcelas')) ? esc(val('parcelas'))+' por mês' : 'Parcela'}</div>` + [['credito','Crédito'],['entrada','Entrada'],['prazo','Prazo'],['documentacao','Documentação'],['custo_final','Custo final']].map(([k,r])=>`<div class="at-previa-l"><span>${r}</span><span>${esc(val(k))||'—'}</span></div>`).join('');
+  }
 }
 function htmlPasso(a){
   const P = state.at.passo;
@@ -4691,12 +4844,20 @@ const atIso = id => { const v = (document.getElementById(id)||{}).value; return 
 function bindFicha(app){
   const id = state.at.fichaId, g = x => document.getElementById(x);
   if(g('atVoltar')) g('atVoltar').onclick = async ()=>{ if(await atSalvar(true)){ state.at.fichaId = null; state.at.passo = null; render(); } };
-  g('atSalvar').onclick = ()=>atSalvar(false);
-  if(g('atCheia')) g('atCheia').onclick = ()=>{ atEntrarCheia(); render(); window.scrollTo(0,0); };
+  if(g('atSalvar')) g('atSalvar').onclick = ()=>atSalvar(false);
+  if(g('atMostrar')) g('atMostrar').onclick = ()=>{ atEntrarCheia(); render(); window.scrollTo(0,0); };
+  if(g('atImprimir')) g('atImprimir').onclick = ()=>window.print();
+  app.querySelectorAll('[data-opcao]').forEach(b=>{ b.onclick = ()=>{ state.at.opcao = Number(b.getAttribute('data-opcao')); render(); }; });
+  app.querySelectorAll('[data-sn] button').forEach(b=>{ b.onclick = ()=>{ g(b.parentNode.getAttribute('data-sn')).value = b.value; atSyncFicha(); }; });
+  app.querySelectorAll('[data-rec]').forEach(b=>{ b.onclick = ()=>{
+    const i = Number(b.getAttribute('data-rec')), el = g(`p${i}_recomendada`), novo = el.value==='1' ? '' : '1';
+    el.value = novo; g(`p${1-i}_recomendada`).value = ''; atSyncFicha();
+  }; });
+  app.querySelectorAll('[data-sim]').forEach(e=>{ e.oninput = atSyncFicha; });
   if(g('atSairCheia')) g('atSairCheia').onclick = ()=>{ atSairCheia(); render(); window.scrollTo(0,0); };
   if(g('atEnviarLoja')) g('atEnviarLoja').onclick = ()=>atEnviarLoja(id);
   if(g('atGerarAviso')) g('atGerarAviso').onclick = ()=>{ state.at.espera[id] = Date.now(); render(); };
-  app.querySelectorAll('[data-etapa]').forEach(b=>{ b.onclick = ()=>{ atSalvar(true); state.at.etapa = b.getAttribute('data-etapa'); render(); window.scrollTo(0,0); }; });
+  app.querySelectorAll('[data-etapa]').forEach(b=>{ b.onclick = async ()=>{ if(!await atSalvar(true)) return; state.at.etapa = b.getAttribute('data-etapa'); render(); window.scrollTo(0,0); }; });
   if(g('atFinalizar')) g('atFinalizar').onclick = async ()=>{
     const d = atColetar();
     if(!d.bem || !d.credito){ alert('Preenche o bem de interesse e o valor do crédito antes de finalizar.'); return; }
@@ -4753,6 +4914,7 @@ function atPintarPops(){
   if(!box){
     box = document.createElement('div');
     box.id = 'atPops';
+    box.className = 'at-tema';
     box.setAttribute('aria-live', 'polite');
     box.onclick = e=>{ const b = e.target.closest('[data-pop]'); if(b) atPopAcao(b.getAttribute('data-pop'), Number(b.getAttribute('data-id'))); };
     document.body.appendChild(box);
@@ -4845,7 +5007,7 @@ function paginaAtendimentosVendedor(){
   if(aberta){
     top.titulo = esc(aberta.clientes.nome);
     top.sub = `Ficha de atendimento · ${esc(aberta.vendedor)}`;
-    top.acoes = `<span style="display:flex;align-items:center;gap:10px;">${atPill(aberta.situacao)}<button class="btn small" id="atCheia">Abrir em tela cheia</button></span>`;
+    top.acoes = atPill(aberta.situacao);
     return {top, html: htmlFicha(aberta), bind: app=>{ bindFicha(app); app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = async ()=>{ await atSalvar(true); A.fichaId = null; A.passo = null; A.sub = b.getAttribute('data-at-sub'); if(!A.tabelas) loadTabelas(); render(); }; }); }};
   }
   top.acoes = `<div class="seg">${[['clientes','Meus clientes'],['novo','Novo atendimento'],['tabelas','Tabelas']].map(s=>`<button class="${A.sub===s[0]?'on':''}" data-at-sub="${s[0]}">${s[1]}</button>`).join('')}</div>`;
@@ -4857,8 +5019,7 @@ function paginaAtendimentosVendedor(){
     app.querySelectorAll('[data-at-sub]').forEach(b=>{ b.onclick = ()=>{ atLerNovoSeguro(); A.sub = b.getAttribute('data-at-sub'); if(A.sub==='tabelas' && !A.tabelas) loadTabelas(); render(); }; });
     if(A.sub==='novo'){
       document.getElementById('atBuscar').onclick = atBuscar;
-      document.getElementById('atAbrir').onclick = ()=>atAbrir(false);
-      document.getElementById('atAbrirCheia').onclick = ()=>atAbrir(true);
+      document.getElementById('atAbrir').onclick = atAbrir;
       app.querySelectorAll('[data-at-modo]').forEach(b=>{ b.onclick = ()=>{ atLerNovo(); A.novo.modo = b.getAttribute('data-at-modo'); render(); }; });
       app.querySelectorAll('[data-at-canal]').forEach(b=>{ b.onclick = ()=>{ atLerNovo(); A.novo.canal = b.getAttribute('data-at-canal'); render(); }; });
     }
@@ -4878,29 +5039,27 @@ function atGrupos(){
   return Object.values(g).map(l=>l.sort((x,y)=>x.criado_em<y.criado_em?1:-1)).sort((x,y)=>x[0].atualizado_em<y[0].atualizado_em?1:-1);
 }
 function htmlListaClientes(){
-  const q = (state.at.busca||'').toLowerCase().trim(), dig = q.replace(/\D/g,'');
+  const q = (state.at.busca||'').toLowerCase().trim(), dig = q.replace(/[^0-9]/g,''), hoje = atHojeKey();
   const gs = atGrupos().filter(l=>{ const c = l[0].clientes; return !q || c.nome.toLowerCase().includes(q) || (dig && c.telefone.includes(dig)); });
   if(!gs.length) return `<div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">${state.at.lista.length ? 'Nenhum cliente encontrado.' : 'Nenhum atendimento ainda. Comece em Novo atendimento.'}</div>`;
-  return gs.map(l=>{ const a = l[0], c = a.clientes; return `
+  const fase = a => ['fechou','nao_volta'].includes(a.situacao) ? 'fim' : (a.retorno_em && dayKey(new Date(a.retorno_em))<=hoje ? 'hoje' : 'and');
+  return [['hoje','Retornar hoje'],['and','Em andamento'],['fim','Encerrados']].map(([f,r])=>{
+    const itens = gs.filter(l=>fase(l[0])===f);
+    if(!itens.length) return '';
+    return `<div class="at-sec">${r}<span>${itens.length}</span></div>` + itens.map(l=>{ const a = l[0], c = a.clientes; return `
     <button class="at-cli" data-at-ficha="${a.id}">
       <span style="flex:1;min-width:0;"><b>${esc(c.nome)}</b><small>${atTel(c.telefone)} · ${l.length} ${l.length===1?'visita':'visitas'} · última em ${atQuando(a.criado_em)}${a.ajudante?` · ajuda de ${esc(a.ajudante)}`:''}</small></span>
-      ${a.retorno_em && !['fechou','nao_volta'].includes(a.situacao) ? `<span class="mute" style="font-size:12px;">retorno ${atQuando(a.retorno_em)}</span>` : ''}
-      ${a.credito ? `<span style="font-size:13px;color:var(--a-gold);">${brlCurto(Number(a.credito))}</span>` : ''}
+      ${a.retorno_em && f!=='fim' ? `<span class="mute" style="font-size:12px;">retorno ${atQuando(a.retorno_em)}</span>` : ''}
+      ${a.credito ? `<span style="font-size:13px;">${brlCurto(Number(a.credito))}</span>` : ''}
       ${atPill(a.situacao)}
     </button>`; }).join('');
+  }).join('');
 }
 function bindLista(app){
   app.querySelectorAll('#atLista [data-at-ficha]').forEach(b=>{ b.onclick = ()=>{ state.at.fichaId = Number(b.getAttribute('data-at-ficha')); state.at.passo = null; render(); window.scrollTo(0,0); }; });
 }
 function htmlClientes(){
-  const L = state.at.lista, ret = atRetornosHoje().length;
-  const apr = L.filter(a=>['aprovacao_loja','aprovacao_agendada'].includes(a.situacao)).length;
   return `
-    <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));">
-      <div class="kpi destaque"><div class="l">Retornar hoje</div><div class="v">${ret}</div></div>
-      <div class="kpi"><div class="l">Em aprovação</div><div class="v">${apr}</div></div>
-      <div class="kpi"><div class="l">Clientes</div><div class="v">${atGrupos().length}</div></div>
-    </div>
     <div class="card">
       <div class="card-b" style="padding-top:16px;"><input id="atBusca" value="${esc(state.at.busca||'')}" placeholder="Buscar por nome ou telefone" style="width:100%;"></div>
       <div id="atLista">${htmlListaClientes()}</div>
@@ -5013,6 +5172,11 @@ render = function(pulse){
   });
   if(ativo){ const e = document.getElementById(ativo); if(e && e.closest('.at-guarda')) e.focus(); }
   document.body.classList.toggle('at-cheia', !!(state.view==='app' && state.centralTab==='atendimentos' && A.cheia && A.fichaId));
+  const claro = (state.view==='app' && state.centralTab==='atendimentos') || (state.view==='admin' && state.adminTab==='atendimentos');
+  document.body.classList.toggle('at-claro', claro);
+  document.querySelectorAll('.adm-main,.drawer').forEach(e=>e.classList.toggle('at-tema', claro));
+  document.body.classList.toggle('at-tem-folha', !!document.querySelector('.at-folha'));
+  atSyncFicha();
   if(state.view==='app') atSincEspera();
   atPintarPops();
 };
