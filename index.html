@@ -1018,6 +1018,72 @@
     .at-duas,.at-ops,.at-ops.tres{grid-template-columns:minmax(0,1fr);}
   }
 
+  /* ---- Desempenho ---- */
+  .nota{font-size:13px;color:var(--a-dim);margin-top:12px;line-height:1.55;}
+  .nota b{color:var(--text);font-weight:600;}
+  .ds-diag{background:linear-gradient(160deg,#1A3047,#112334 70%);border-color:rgba(201,168,76,.45);}
+  .ds-eb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--a-gold);font-weight:700;}
+  .ds-tt{font-family:Fraunces,Georgia,serif;font-size:26px;font-weight:600;margin:4px 0 14px;line-height:1.2;}
+  .ds-aval{font-size:13px;color:var(--a-dim);background:rgba(255,255,255,.04);border-radius:10px;padding:9px 12px;margin-bottom:10px;}
+  .ds-aval b{color:var(--text);}
+  .ds-fr{padding:10px 12px;border-radius:12px;margin-bottom:8px;font-size:14px;line-height:1.5;}
+  .ds-fr b{font-weight:600;}
+  .ds-fr .rt{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:2px;}
+  .ds-fr.bem{background:rgba(47,158,100,.12);} .ds-fr.bem .rt{color:#5FD39A;}
+  .ds-fr.at{background:rgba(139,58,58,.16);} .ds-fr.at .rt{color:#F0A3A3;}
+  .ds-fr.pd{background:var(--a-gold-soft);} .ds-fr.pd .rt{color:var(--a-gold);}
+  .ds-comp{border:1px dashed rgba(201,168,76,.5);border-radius:12px;padding:12px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .ds-mes-notas{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;}
+  .ds-mes-notas .ds-fr{margin:0;font-size:13px;}
+  .ds-comp .hint{font-size:12px;color:var(--a-dim);}
+  .ds-comp-t{font-weight:600;margin-top:2px;}
+  .ds-comp-a{display:flex;gap:8px;}
+  .ds-fl{display:grid;grid-template-columns:130px minmax(0,1fr) 140px;gap:12px;align-items:center;margin-bottom:10px;font-size:13px;}
+  .ds-bar{height:26px;border-radius:7px;background:var(--a-card-2);position:relative;overflow:hidden;}
+  .ds-bar i{position:absolute;left:0;top:0;bottom:0;background:#2C5F86;border-radius:7px;}
+  .ds-bar span{position:absolute;left:10px;top:4px;font-weight:600;}
+  .ds-fl.gar .ds-bar i{background:#8B3A3A;}
+  .ds-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(139,58,58,.25);color:#F0A3A3;margin-left:6px;}
+  .ds-tx{font-size:12px;color:var(--a-dim);text-align:right;}
+  .ds-tx b{color:var(--text);font-size:14px;}
+  .ds-proj{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+  .ds-col{background:var(--a-card-2);border-radius:12px;padding:12px 14px;}
+  .ds-col-h{font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+  .ds-col-h span{font-weight:400;font-size:12px;color:var(--a-dim);}
+  .ds-pj{margin-top:9px;}
+  .ds-pj-l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;}
+  .ds-pj-s{font-size:11px;color:var(--a-dim);margin-top:3px;}
+  .ds-horas{display:flex;align-items:flex-end;gap:6px;padding-top:6px;}
+  .ds-hc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;}
+  .ds-ht{font-size:11px;font-weight:600;color:var(--a-dim);}
+  .ds-ht.top{color:var(--a-gold);}
+  .ds-hv{width:100%;border-radius:5px 5px 0 0;background:#24425E;}
+  .ds-hv.top{background:var(--a-gold);}
+  .ds-hn{font-size:11px;color:var(--a-dim);}
+  .ds-hh{font-size:11px;color:var(--a-mute);}
+  .ds-leg{display:flex;gap:14px;font-size:12px;color:var(--a-dim);margin-top:10px;flex-wrap:wrap;}
+  .ds-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+  .ds-evo{display:flex;align-items:flex-end;gap:8px;}
+  .ds-evo div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--a-mute);min-width:0;}
+  .ds-evo b{width:100%;background:#24425E;border-radius:5px 5px 0 0;display:block;}
+  .ds-evo .at b{background:var(--a-gold);}
+  .ds-cart{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+  .ds-cart .kpi{padding:12px 14px;}
+  .ds-cart .kpi .v{font-size:26px;}
+  .ds-ico{position:relative;width:38px;height:38px;border-radius:11px;border:1px solid var(--a-line);background:var(--a-card);color:var(--a-gold);display:grid;place-items:center;cursor:pointer;}
+  .ds-ico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;}
+  .ds-ico.pulsa:after{content:"";position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:#F0A3A3;animation:ds-pulsa 1.6s infinite;}
+  @keyframes ds-pulsa{0%{box-shadow:0 0 0 0 rgba(240,163,163,.7)}70%{box-shadow:0 0 0 8px rgba(240,163,163,0)}100%{box-shadow:0 0 0 0 rgba(240,163,163,0)}}
+  .ds-pop-bg{position:fixed;inset:0;z-index:66;background:rgba(3,8,14,.45);display:flex;justify-content:center;align-items:flex-start;padding:70px 16px 16px;overflow-y:auto;}
+  .ds-pop{position:relative;width:min(520px,100%);background:var(--a-card);border:1px solid rgba(201,168,76,.45);border-radius:16px;padding:20px 20px 16px;box-shadow:0 14px 40px rgba(0,0,0,.5);}
+  .ds-pop-x{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--a-dim);font-size:22px;cursor:pointer;line-height:1;}
+  @media (max-width:860px){
+    .ds-fl{grid-template-columns:100px minmax(0,1fr);}
+    .ds-tx{grid-column:2;text-align:left;}
+    .ds-proj,.ds-cart{grid-template-columns:minmax(0,1fr);}
+    .ds-hn{display:none;}
+  }
+
   /* ---- Minha meta ---- */
   .mm-planos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;}
   .mm-progresso{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start;}
@@ -1799,6 +1865,8 @@ function selectVendor(name){
   loadVendorData(name);
   loadMetas(name);
   loadRelatoriosVendedor();
+  if(!state.desemp) loadDesempenho();
+  if(!state.mp) loadMetasPessoais();
 }
 
 // Busca as metas de todos os vendedores pro painel admin (usado so na aba Metas do admin)
@@ -3178,7 +3246,7 @@ function irParaCentral(id){
   if(state.centralTab==='atendimentos' && state.at.fichaId && id!=='atendimentos') atSalvar(true);
   state.centralTab = id;
   if(id==='relatorios' && !state.relatorios) loadRelatoriosVendedor();
-  if(id==='desempenho' && !state.desemp) loadDesempenho();
+  if(id==='desempenho'){ if(!state.desemp) loadDesempenho(); if(!state.mp) loadMetasPessoais(); }
   if(id==='ranking' && !state.ranking) loadRanking();
   if(id==='campanhas' && !state.camp) loadCampanhas();
   if(id==='minhameta'){ if(!state.mp) loadMetasPessoais(); if(!state.desemp) loadDesempenho(); }
@@ -3520,6 +3588,10 @@ async function loadDesempenho(){
       semanas: (metricas||[]).map(m=>({...m, ...(lerSemana(m.semana, ano)||{})})).filter(m=>m.ini),
       vendas: (vendas||[]).map(v=>({...v, valor:Number(v.valor)}))
     };
+    if(state.view==='app' && state.vendor){
+      try{ Object.assign(state.desemp, await loadPadroesVendedor(state.vendor)); }
+      catch(e){ console.error('Falha ao carregar padrões', e); state.desemp.lig = []; state.desemp.comp = []; }
+    }
   }catch(e){
     console.error('Falha ao carregar desempenho', e);
     state.desemp = {erro:true};
@@ -3595,152 +3667,454 @@ function leituraAutomatica(v, mes, semana, time, diasUteisRestantes){
 }
 
 function diasUteisEntre(iniK, fimK){
-  let n = 0; for(let k=iniK; k<=fimK; k=somaDias(k,1)){ const d = dDe(k).getDay(); if(d!==0 && d!==6) n++; }
+  let n = 0; for(let k=iniK; k<=fimK; k=somaDias(k,1)){ const d = dDe(k).getDay(); if(d!==0 && d!==6 && !FERIADOS.has(k)) n++; }
   return n;
 }
 
-function paginaDesempenho(){
-  const top = {titulo:'Meu desempenho', sub:'Metas fixas da FBS: 150 ligações, 5 agendamentos, 2 comparecimentos e 1 venda por semana'};
+/*
+  Desempenho com leitura profunda: diagnostico da semana oficial mais recente (Airtable),
+  funil x time, projecao do mes (padrao FBS e meta pessoal), horarios, ritmo, dia da semana,
+  evolucao e carteira. Padroes de horario e ritmo vem das ligacoes do proprio vendedor
+  (ultimas 8 semanas). Nenhuma conclusao sai com pouca amostra.
+*/
+const FERIADOS = new Set(['2026-11-02','2026-11-20','2026-12-25','2027-01-01','2027-02-08','2027-02-09','2027-03-26','2027-04-21','2027-05-01','2027-05-27','2027-09-07','2027-10-12','2027-11-02','2027-11-15','2027-11-20','2027-12-25']);
+const minHM = m => `${Math.floor(m/60)}h${String(Math.round(m%60)).padStart(2,'0')}`;
+const hmMin = s => { const [h,m] = String(s).split(':').map(Number); return h*60+(m||0); };
+const pc = (a,b) => b ? Math.round(a/b*100) : 0;
+const DIAS_NOME = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const DIAS_CURTO = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+// [9,11] -> "das 9h às 12h"; [14,14] -> "das 14h às 15h" vira "entre 14h e 15h"
+const faixaNome = b => b[0]===b[1] ? `entre ${b[0]}h e ${b[0]+1}h` : `das ${b[0]}h às ${b[1]+1}h`;
+
+async function loadPadroesVendedor(v){
+  const desde = new Date(dDe(somaDias(todayKey(), -180)).setHours(0,0,0,0)).toISOString();
+  let rows = [];
+  for(let off=0; off<20000; off+=1000){
+    const r = await sb(`ligacoes?select=ts,tipo&vendedor=${eq(v)}&ts=gte.${desde}&order=ts&limit=1000&offset=${off}`, undefined, 1) || [];
+    rows = rows.concat(r);
+    if(r.length < 1000) break;
+  }
+  let comp = [];
+  try{ comp = await sb('compromissos?select=*&vendedor='+eq(v)+'&order=semana.desc&limit=12', undefined, 1) || []; }
+  catch(e){ console.error('Falha ao carregar compromissos', e); }
+  return {lig: rows.map(x=>({t:new Date(x.ts), a:x.tipo==='atendeu'})), comp};
+}
+
+function analisarDesempenho(v){
   const D = state.desemp;
-  if(!D) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Carregando seu desempenho...</div></div>`};
+  if(!D || D.erro || !D.lig) return null;
+  const ofs = D.semanas.filter(s=>s.vendedor===v).sort((a,b)=>a.ini<b.ini?-1:1);
+  if(!ofs.length) return null;
+  const W = ofs[ofs.length-1], WA = ofs.length>1 ? ofs[ofs.length-2] : null;
+  // dia util = dia de semana em que o time ligou (pega feriado sem precisar de lista)
+  const diasUteisDe = (ini, fim) => {
+    const s = new Set(D.dias.filter(x=>x.dia>=ini && x.dia<=fim && x.total>0).map(x=>x.dia));
+    return [...s].filter(k=>{ const d = dDe(k).getDay(); return d!==0 && d!==6; }).length || diasUteisEntre(ini, fim) || 1;
+  };
+  const du = diasUteisDe(W.ini, W.fim);
+  const r = desempenhoPeriodo(v, W.ini, W.fim);
+  const rA = WA ? desempenhoPeriodo(v, WA.ini, WA.fim) : null, duA = WA ? diasUteisDe(WA.ini, WA.fim) : null;
+  const tm = VENDORES.map(x=>desempenhoPeriodo(x, W.ini, W.fim)).filter(x=>x.semanasOficiais.length);
+  const soma = k => tm.reduce((s,x)=>s+x[k],0);
+  const T = {lig:soma('ligacoes'), at:soma('atendidas'), ag:soma('agendamentos'), comp:soma('comparecimentos')};
+  const taxaAt = r.ligacoes ? r.atendidas/r.ligacoes : null, taxaAtT = T.lig ? T.at/T.lig : null;
+  const taxaComp = r.agendamentos ? r.comparecimentos/r.agendamentos : null, taxaCompT = T.ag ? T.comp/T.ag : null;
+  const metaLig = Math.round(METAS_FIXAS.semana.ligacoes*du/5), metaAg = Math.max(1, Math.round(METAS_FIXAS.semana.agendamentos*du/5));
+
+  // padroes: 8 semanas ate o fim da semana analisada
+  const fimP = dDe(somaDias(W.fim,1)); fimP.setHours(0,0,0,0);
+  const P = D.lig.filter(l=>l.t<fimP);   // todo o historico ate o fim da semana analisada
+  const horas = {};
+  P.forEach(l=>{ const h = l.t.getHours(); const o = horas[h] = horas[h] || {n:0,a:0}; o.n++; if(l.a) o.a++; });
+  const taxaMedia = P.length ? P.filter(l=>l.a).length/P.length : 0;
+  const hs = Object.keys(horas).map(Number).filter(h=>horas[h].n>=15).sort((a,b)=>a-b);
+  const melhores = hs.filter(h=>horas[h].n>=30 && horas[h].a/horas[h].n >= taxaMedia*1.15);
+  const bandas = [];
+  melhores.forEach(h=>{ const b = bandas[bandas.length-1]; if(b && b[1]===h-1) b[1] = h; else bandas.push([h,h]); });
+  const faixa = (h0,h1) => { let n=0, a=0; for(let h=h0; h<=h1; h++) if(horas[h]){ n += horas[h].n; a += horas[h].a; } return {n, a, t:n?a/n:0}; };
+  const banda = bandas.sort((x,y)=>faixa(y[0],y[1]).n-faixa(x[0],x[1]).n)[0] || null;
+  const topVol = hs.slice().sort((a,b)=>horas[b].n-horas[a].n).slice(0,2).sort((a,b)=>a-b);
+
+  const porDia = {};
+  P.forEach(l=>{ (porDia[dKey(l.t)] = porDia[dKey(l.t)] || []).push(l.t); });
+  const passos = cronoBlocos.filter(b=>b.tipo==='passo');
+  const inicioCrono = passos.length ? Math.min(...passos.map(b=>hmMin(b.inicio))) : 570;
+  const pausasPrevistas = cronoBlocos.filter(b=>b.tipo!=='passo').map(b=>[hmMin(b.inicio), hmMin(b.fim)]);
+  const resumoDia = k => {
+    const ts = porDia[k].slice().sort((a,b)=>a-b), m = d=>d.getHours()*60+d.getMinutes();
+    let pausas = 0;
+    for(let i=1; i<ts.length; i++){
+      const a = m(ts[i-1]), b = m(ts[i]);
+      if(b-a < 30) continue;
+      const previsto = pausasPrevistas.reduce((s,[x,y])=>s+Math.max(0, Math.min(b,y)-Math.max(a,x)), 0);
+      if(b-a-previsto >= 30) pausas++;   // almoco e cafe do cronograma nao contam
+    }
+    return {k, n:ts.length, prim:m(ts[0]), ult:m(ts[ts.length-1]), pausas};
+  };
+  const diasW = Object.keys(porDia).filter(k=>k>=W.ini && k<=W.fim).sort().map(resumoDia);
+  const todosDias = Object.keys(porDia).map(resumoDia);
+  const mediaPrim = todosDias.length ? Math.round(todosDias.reduce((s,d)=>s+d.prim,0)/todosDias.length) : null;
+  const dow = {};
+  P.forEach(l=>{ const d = l.t.getDay(); if(d===0 || d===6) return; const o = dow[d] = dow[d] || {n:0,a:0}; o.n++; if(l.a) o.a++; });
+  const evol = ofs.slice(-12).map(s=>{ const x = desempenhoPeriodo(v, s.ini, s.fim), d = diasUteisDe(s.ini, s.fim); return {ini:s.ini, fim:s.fim, lig:x.ligacoes, d, porDia:x.ligacoes/d}; });
+
+  // gargalo: a etapa mais longe do esperado
+  const cand = [];
+  if(r.ligacoes < metaLig*.85) cand.push({k:'volume', s:1-r.ligacoes/metaLig});
+  if(r.ligacoes>=40 && taxaAtT!=null && taxaAt < taxaAtT-.05) cand.push({k:'atendimento', s:(taxaAtT-taxaAt)/taxaAtT});
+  if(r.agendamentos < metaAg*.8) cand.push({k:'agendamento', s:1-r.agendamentos/metaAg});
+  if(r.agendamentos>=3 && taxaCompT!=null && taxaComp < taxaCompT-.1) cand.push({k:'comparecimento', s:(taxaCompT-taxaComp)/taxaCompT});
+  if(r.comparecimentos>=2 && r.vendas===0) cand.push({k:'fechamento', s:.3+.05*r.comparecimentos});
+  const gargalo = cand.sort((a,b)=>b.s-a.s)[0] || null;
+  const comecaTarde = mediaPrim!=null && todosDias.length>=8 && mediaPrim > inicioCrono+15;
+  return {v, W, WA, du, duA, r, rA, T, taxaAt, taxaAtT, taxaComp, taxaCompT, metaLig, metaAg, horas, hs, taxaMedia, melhores, banda, faixa, topVol,
+          diasW, todosDias, mediaPrim, inicioCrono, dow, evol, gargalo, comecaTarde, nP:P.length, desdeP: P.length ? dKey(P[0].t) : null, meses: mesesHistorico(v), semanaCompromisso: somaDias(W.fim,1)};
+}
+
+// Cada mes: ligacoes do site + semanas oficiais do Airtable que comecam no mes (mesma regra dos relatorios)
+function mesesHistorico(v){
+  const D = state.desemp;
+  const linha = (vend, m) => {
+    const ini = m+'-01', fim = fimMes(ini);
+    const dias = D.dias.filter(x=>x.vendedor===vend && x.dia>=ini && x.dia<=fim);
+    const sem = D.semanas.filter(s=>s.vendedor===vend && s.ini.slice(0,7)===m);
+    return {
+      lig: dias.reduce((a,x)=>a+x.total,0), at: dias.reduce((a,x)=>a+x.atendidas,0), dt: dias.filter(x=>x.total>0).length,
+      ag: sem.reduce((a,s)=>a+(s.agendamentos||0),0), comp: sem.reduce((a,s)=>a+(s.comparecimentos||0),0),
+      vendas: sem.reduce((a,s)=>a+(s.vendas||0),0), receita: sem.reduce((a,s)=>a+Number(s.receita||0),0), ns: sem.length
+    };
+  };
+  const meses = [...new Set(D.semanas.filter(s=>s.vendedor===v).map(s=>s.ini.slice(0,7)))].sort().slice(-6);
+  return meses.map(m=>{
+    const eu = linha(v, m);
+    const tm = VENDORES.map(x=>linha(x, m)).filter(x=>x.ns && x.lig);
+    const t = tm.reduce((a,x)=>({lig:a.lig+x.lig, at:a.at+x.at, ag:a.ag+x.ag, comp:a.comp+x.comp}), {lig:0,at:0,ag:0,comp:0});
+    return {m, ...eu, parcial: m===todayKey().slice(0,7), tAt: t.lig ? t.at/t.lig : null, tComp: t.ag ? t.comp/t.ag : null, tLigAg: t.ag ? t.lig/t.ag : null};
+  }).filter(x=>x.lig || x.ns);
+}
+// em quantos meses o mesmo problema apareceu
+function recorrencia(A, k){
+  // comparecimento e fechamento vem do Airtable e nao dependem das ligacoes do site
+  const ms = A.meses.filter(x=>['comparecimento','fechamento'].includes(k) ? x.ns>0 : x.lig>=50);
+  const cond = {
+    comparecimento: x=>x.ag>=3 && x.tComp!=null && x.comp/x.ag < x.tComp-.1,
+    volume: x=>x.dt && x.lig/x.dt < METAS_FIXAS.semana.ligacoes/5*.85,
+    atendimento: x=>x.tAt!=null && x.at/x.lig < x.tAt-.05,
+    agendamento: x=>x.tLigAg!=null && (!x.ag || x.lig/x.ag > x.tLigAg*1.25),
+    fechamento: x=>x.comp>=2 && !x.vendas
+  }[k];
+  if(!cond) return null;
+  return {k: ms.filter(cond).length, n: ms.length};
+}
+
+const AT_GARGALO = {
+  volume: 'Seu gargalo é o volume de ligações', atendimento: 'Seu gargalo é a taxa de atendimento',
+  agendamento: 'Seu gargalo é transformar conversa em agendamento', comparecimento: 'Seu gargalo é o comparecimento',
+  fechamento: 'Seu gargalo é o fechamento'
+};
+function compromissosSugeridos(A){
+  const inicio = A.comecaTarde ? `, e começar a ligar às ${minHM(A.inicioCrono)}` : '';
+  const faixaTxt = A.banda ? faixaNome(A.banda) : 'no começo da manhã';
+  const lista = {
+    comparecimento: {tipo:'comparecimento', texto:'Confirmar todas as visitas na véspera e de novo na manhã da visita'+inicio},
+    volume: {tipo:'volume', texto:`Fazer ${Math.ceil(METAS_FIXAS.semana.ligacoes/5)} ligações por dia útil`+inicio},
+    atendimento: {tipo:'atendimento', texto:`Concentrar mais ligações ${faixaTxt}, quando mais te atendem`},
+    agendamento: {tipo:'agendamento', texto:'Propor dia e hora de visita em toda ligação atendida'+inicio},
+    fechamento: {tipo:'fechamento', texto:'Ligar em até 48 horas para cada cliente que veio à loja e não fechou'},
+    ritmo: {tipo:'volume', texto:`Manter ${Math.ceil(METAS_FIXAS.semana.ligacoes/5)} ligações e 1 agendamento por dia útil`+inicio}
+  };
+  const ordem = [A.gargalo ? A.gargalo.k : 'ritmo', 'comparecimento','volume','agendamento','atendimento','fechamento'];
+  return [...new Set(ordem)].map(k=>lista[k]);
+}
+function diagnostico(A){
+  const {r, rA, du, duA, T} = A;
+  const titulo = A.gargalo ? AT_GARGALO[A.gargalo.k] : 'Semana no ritmo certo';
+  // o que foi bem
+  const bem = [];
+  if(r.vendas) bem.push(`<b>${r.vendas} ${r.vendas===1?'venda':'vendas'}${r.receita ? ' de R$ '+brlCurto(r.receita) : ''}</b>`);
+  if(r.agendamentos >= A.metaAg) bem.push(`meta de agendamentos batida: <b>${r.agendamentos} de ${A.metaAg}</b>`);
+  if(r.ligacoes >= A.metaLig) bem.push(`<b>${r.ligacoes} ligações</b>, acima da meta de ${A.metaLig}`);
+  if(r.agendamentos>=2 && A.taxaComp!=null && A.taxaCompT!=null && A.taxaComp >= A.taxaCompT) bem.push(`comparecimento de <b>${pc(r.comparecimentos,r.agendamentos)}%</b>, acima do time`);
+  let fBem = bem.length ? bem.slice(0,2).join(' e ').replace(/^./, c=>c.toUpperCase())+'.' : '';
+  if(r.ligacoes>=40 && A.taxaAtT!=null && A.taxaAt > A.taxaAtT+.03) fBem += ` Você é atendido em <b>${pc(r.atendidas,r.ligacoes)}%</b> das ligações, acima do time (${pc(T.at,T.lig)}%).`;
+  // gargalo
+  let fGar = '';
+  const g = A.gargalo && A.gargalo.k;
+  if(g==='volume') fGar = `Foram <b>${r.ligacoes} ligações em ${du} ${du===1?'dia útil':'dias úteis'}</b> (${(r.ligacoes/du).toFixed(1).replace('.',',')} por dia). A meta da semana era ${A.metaLig}.${rA && duA ? ` Na semana anterior foram ${(rA.ligacoes/duA).toFixed(1).replace('.',',')} por dia.` : ''}`;
+  if(g==='atendimento') fGar = `Atenderam <b>${pc(r.atendidas,r.ligacoes)}%</b> das suas ligações; no time foram ${pc(T.at,T.lig)}%. O horário em que você liga pesa nisso.`;
+  if(g==='agendamento') fGar = `<b>${r.agendamentos} ${r.agendamentos===1?'agendamento':'agendamentos'}</b> para uma meta de ${A.metaAg} na semana, com ${r.atendidas} ligações atendidas.`;
+  if(g==='comparecimento') fGar = `De ${r.agendamentos} agendados, <b>só ${r.comparecimentos} ${r.comparecimentos===1?'veio':'vieram'} (${pc(r.comparecimentos,r.agendamentos)}%)</b>. No time vêm ${pc(T.comp,T.ag)}%. Na média do time, seriam <b>${Math.round(r.agendamentos*T.comp/T.ag)} visitas</b>.`;
+  if(g==='fechamento') fGar = `<b>${r.comparecimentos} clientes vieram à loja</b> e nenhum fechou ainda. O retorno rápido para quem veio é onde está a venda.`;
+  const rec = g ? recorrencia(A, g) : null;
+  if(rec && rec.n>=2) fGar += rec.k>=2 ? ` <b>Isso se repete: aconteceu em ${rec.k} dos seus últimos ${rec.n} meses.</b>` : ` Nos seus últimos ${rec.n} meses isso quase não aconteceu: é um ponto desta semana, não um hábito.`;
+  // padrao
+  let fPad = '';
+  const bandaT = A.banda ? A.faixa(A.banda[0], A.banda[1]) : null;
+  if(A.comecaTarde && A.banda && A.banda[0] <= 10) fPad = `Você começa a ligar, em média, às <b>${minHM(A.mediaPrim)}</b>. A faixa <b>${faixaNome(A.banda)} é a que mais te atende (${pc(bandaT.a,bandaT.n)}%)</b>, e o cronograma começa às ${minHM(A.inicioCrono)}.`;
+  else if(A.banda && A.topVol.length){
+    const tv = A.topVol.reduce((s,h)=>({n:s.n+A.horas[h].n, a:s.a+A.horas[h].a}), {n:0,a:0});
+    if(!A.topVol.some(h=>h>=A.banda[0] && h<=A.banda[1]) && bandaT.t - tv.a/tv.n > .05)
+      fPad = `<b>${faixaNome(A.banda).replace(/^./,c=>c.toUpperCase())}</b> te atendem <b>${pc(bandaT.a,bandaT.n)}%</b> das vezes. Às ${A.topVol.map(h=>h+'h').join(' e ')}, onde você mais liga, atendem ${pc(tv.a,tv.n)}%.`;
+  }
+  if(!fPad){
+    const ds = Object.keys(A.dow).map(Number).filter(d=>A.dow[d].n>=40);
+    const best = ds.sort((a,b)=>A.dow[b].a/A.dow[b].n - A.dow[a].a/A.dow[a].n)[0];
+    if(best && A.dow[best].a/A.dow[best].n > A.taxaMedia+.08) fPad = `<b>${DIAS_NOME[best]}</b> é o dia em que mais te atendem (<b>${pc(A.dow[best].a,A.dow[best].n)}%</b>), contra ${pc(A.taxaMedia*100,100)}% na média dos seus dias.`;
+  }
+  return {titulo, fBem, fGar, fPad};
+}
+function compromissoAtual(A){ return (state.desemp.comp||[]).find(c=>c.semana===A.semanaCompromisso) || null; }
+function compromissoAvaliado(A){
+  // compromisso que valia para a semana analisada
+  const c = (state.desemp.comp||[]).find(c=>c.semana>=somaDias(A.W.ini,-1) && c.semana<=A.W.fim);
+  if(!c) return null;
+  const {r, du} = A;
+  const res = {
+    comparecimento: r.agendamentos ? `vieram ${r.comparecimentos} de ${r.agendamentos} agendados (${pc(r.comparecimentos,r.agendamentos)}%)` : 'sem agendamentos na semana',
+    volume: `${(r.ligacoes/du).toFixed(1).replace('.',',')} ligações por dia útil`,
+    atendimento: `atenderam ${pc(r.atendidas,r.ligacoes)}% das ligações`,
+    agendamento: `${r.agendamentos} agendamentos`,
+    fechamento: `${r.vendas} ${r.vendas===1?'venda':'vendas'}`
+  }[c.tipo] || '';
+  const prim = A.diasW.length && /começar/.test(c.texto) ? ` · 1ª ligação em média às ${minHM(A.diasW.reduce((s,d)=>s+d.prim,0)/A.diasW.length)}` : '';
+  return {c, res: res+prim};
+}
+async function aceitarCompromisso(A, sug){
+  try{
+    await sb('compromissos?on_conflict=vendedor,semana', {method:'POST', prefer:'resolution=merge-duplicates,return=minimal',
+      body:{vendedor:A.v, semana:A.semanaCompromisso, tipo:sug.tipo, texto:sug.texto, aceito_em:new Date().toISOString()}});
+    state.desemp.comp = [{vendedor:A.v, semana:A.semanaCompromisso, tipo:sug.tipo, texto:sug.texto}, ...(state.desemp.comp||[]).filter(c=>c.semana!==A.semanaCompromisso)];
+    render();
+    showCronoToast('Compromisso', 'Combinado. Na semana que vem você vê como foi.');
+  }catch(e){ console.error('Falha ao salvar compromisso', e); alert('Não foi possível salvar agora. Tenta de novo.'); }
+}
+
+function htmlDiagnostico(A, compacto){
+  const d = diagnostico(A), atual = compromissoAtual(A), aval = compromissoAvaliado(A);
+  const sugs = compromissosSugeridos(A), sug = sugs[(state.dsAlt||0) % sugs.length];
+  const fr = (cls, rot, t) => t ? `<div class="ds-fr ${cls}"><div class="rt">${rot}</div>${t}</div>` : '';
+  const periodo = `${dataCurta(A.W.ini)} a ${dataCurta(A.W.fim)}`;
+  return `
+    <div class="ds-eb">Diagnóstico da semana · ${periodo}</div>
+    <div class="ds-tt">${d.titulo}</div>
+    ${aval ? `<div class="ds-aval">Você combinou: <b>${esc(aval.c.texto)}</b>. Resultado: ${aval.res}.</div>` : ''}
+    ${fr('bem','O que foi bem', d.fBem)}${fr('at','Gargalo', d.fGar)}${fr('pd','Padrão que se repete', d.fPad)}
+    <div class="ds-comp">
+      ${atual
+        ? `<div><div class="hint">Seu compromisso a partir de ${dataCurta(A.semanaCompromisso)}</div><div class="ds-comp-t">✓ ${esc(atual.texto)}</div></div>`
+        : `<div><div class="hint">Compromisso sugerido a partir de ${dataCurta(A.semanaCompromisso)}</div><div class="ds-comp-t">${esc(sug.texto)}</div></div>
+           <div class="ds-comp-a"><button class="btn gold" data-ds-aceitar>Vou fazer</button>${compacto ? '' : '<button class="btn" data-ds-trocar>Trocar</button>'}</div>`}
+    </div>`;
+}
+function bindDiagnostico(A){
+  document.querySelectorAll('[data-ds-aceitar]').forEach(b=>{ b.onclick = ()=>{ const s = compromissosSugeridos(A); aceitarCompromisso(A, s[(state.dsAlt||0) % s.length]); }; });
+  document.querySelectorAll('[data-ds-trocar]').forEach(b=>{ b.onclick = ()=>{ state.dsAlt = (state.dsAlt||0)+1; render(); }; });
+}
+
+function htmlProjecao(v){
+  const hoje = todayKey(), iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje);
+  const compSemana = state.metas && state.metas.comparecimentos ? state.metas.comparecimentos.progresso : 0;
+  const temOficial = state.desemp.semanas.some(s=>s.vendedor===v && hoje>=s.ini && hoje<=s.fim);
+  const r = desempenhoPeriodo(v, iniMes, hoje, {comparecimentosSemanaAtual: temOficial ? 0 : compSemana});
+  const passados = diasUteisEntre(iniMes, somaDias(hoje,-1)), restantes = diasUteisEntre(hoje, fimM);
+  const ritmo = passados ? r.ligacoes/passados : 0, proj = Math.round(r.ligacoes + ritmo*restantes);
+  const linha = (rot, feito, alvo, porDia) => {
+    const falta = Math.max(0, alvo-feito);
+    return `<div class="ds-pj"><div class="ds-pj-l"><span>${rot}</span><span><b>${feito.toLocaleString('pt-BR')}</b> <span class="mute">de ${alvo.toLocaleString('pt-BR')}</span></span></div>
+      <div class="barra" style="min-width:0;height:7px;"><i style="width:${Math.min(100,pc(feito,alvo))}%;background:${feito>=alvo?'#5FD39A':'var(--a-gold)'};"></i></div>
+      <div class="ds-pj-s">${falta ? `faltam ${falta.toLocaleString('pt-BR')}${porDia && restantes ? ` · ${Math.ceil(falta/restantes)} por dia útil` : ''}` : 'meta batida'}</div></div>`;
+  };
+  const coluna = (titulo, sub, m, vendas) => `<div class="ds-col"><div class="ds-col-h">${titulo}<span>${sub}</span></div>
+    ${linha('Ligações', r.ligacoes, m.ligacoes, true)}${linha('Agendamentos', r.agendamentos, m.agendamentos, true)}${linha('Comparecimentos', r.comparecimentos, m.comparecimentos)}${linha('Vendas', r.vendas, vendas)}</div>`;
+  const M = METAS_FIXAS.mes;
+  const mp = state.mp && !state.mp.erro ? state.mp : null;
+  const salva = mp && mp.metas.find(m=>m.vendedor===v && m.mes===mesAtualKey());
+  const hist = salva ? taxasHistorico(v, mp.regra) : null;
+  const plano = salva ? planoMeta(salva.valor, hist.porVenda, hist.ticketUsado) : null;
+  return `
+    <div class="ds-proj">
+      ${coluna('Padrão FBS', 'igual para todos', M, M.vendas)}
+      ${!mp ? '<div class="ds-col"><div class="ds-col-h">Sua meta</div><div class="mute" style="font-size:13px;">Carregando...</div></div>'
+        : plano ? coluna('Sua meta', `R$ ${brlCurto(salva.valor)} · pelos seus números`, plano.mes, plano.vendasMin)
+        : `<div class="ds-col"><div class="ds-col-h">Sua meta</div><div class="mute" style="font-size:13px;line-height:1.5;margin-bottom:10px;">Você ainda não definiu sua meta deste mês. Com ela, o site calcula o seu caminho aqui.</div><button class="btn small" data-central="minhameta">Definir minha meta</button></div>`}
+    </div>
+    ${plano ? `<div class="nota" style="margin-top:8px;">"Sua meta" usa as suas taxas reais${hist.n ? ` de ${hist.n} semanas fechadas` : ''}: ${hist.la ? `${Math.round(hist.la)} ligações por agendamento` : 'agendamento pela regra FBS'}, ${hist.ac ? `${(hist.ac).toFixed(1).replace('.',',')} agendamentos por comparecimento` : 'comparecimento pela regra FBS'} e ${hist.cv ? `${(hist.cv).toFixed(1).replace('.',',')} comparecimentos por venda` : 'venda pela regra FBS'}, igual à Minha meta.</div>` : ''}
+    <div class="nota">${restantes ? `No ritmo de agora (${ritmo.toFixed(1).replace('.',',')} ligações por dia útil) você fecha ${MESES[Number(hoje.slice(5,7))-1].toLowerCase()} com <b>cerca de ${proj.toLocaleString('pt-BR')} ligações</b>. Faltam ${restantes} ${restantes===1?'dia útil':'dias úteis'}.` : 'Último dia útil do mês.'}</div>`;
+}
+
+function paginaDesempenho(){
+  const top = {titulo:'Meu desempenho', sub:'Leitura dos seus números: o que foi bem, o que está travando e o que fazer'};
+  const D = state.desemp;
+  if(!D || (!D.erro && !D.lig)) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Lendo seus números...</div></div>`};
   if(D.erro) return {top, html:`<div class="alerta"><div class="t">Não consegui carregar seus números agora</div><button class="btn small" id="desRetry" style="margin-top:10px;">Tentar de novo</button></div>`,
     bind:()=>{ document.getElementById('desRetry').onclick = ()=>{ state.desemp = null; render(); loadDesempenho(); }; }};
-
-  const v = state.vendor, hoje = todayKey();
-  const iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje);
-  const iniSem = inicioSemana(hoje);
-  const compSemana = state.metas && state.metas.comparecimentos ? state.metas.comparecimentos.progresso : 0;
-  const temOficialSemana = D.semanas.some(s=>s.vendedor===v && hoje>=s.ini && hoje<=s.fim);
-  const mes = desempenhoPeriodo(v, iniMes, hoje, {comparecimentosSemanaAtual: temOficialSemana ? 0 : compSemana});
-  const M = METAS_FIXAS.mes;
-  const diasUteisRestantes = diasUteisEntre(somaDias(hoje,1), fimM);
-
-  // media do time no mes (vendedores ativos)
-  const doTime = VENDORES.map(x=>desempenhoPeriodo(x, iniMes, hoje));
-  const time = {
-    ligacoes: doTime.reduce((s,x)=>s+x.ligacoes,0), agendamentos: doTime.reduce((s,x)=>s+x.agendamentos,0),
-    comparecimentos: doTime.reduce((s,x)=>s+x.comparecimentos,0),
-    cardsParados: (()=>{ const c = doTime.map(x=>x.cardsParados).filter(x=>x!=null); return c.length ? c.reduce((a,b)=>a+b,0)/c.length : null; })()
-  };
-  const zerados = VENDORES.filter((x,i)=>doTime[i].vendas===0).length;
-
-  // semanas: as 8 ultimas oficiais do vendedor + a semana em andamento
-  const oficiais = D.semanas.filter(s=>s.vendedor===v).sort((a,b)=>a.ini<b.ini?1:-1).slice(0,8).reverse();
-  const linhas = oficiais.map(s=>({ini:s.ini, fim:s.fim, oficial:true, r:{
-    ligacoes: D.dias.filter(x=>x.vendedor===v && x.dia>=s.ini && x.dia<=s.fim).reduce((a,x)=>a+x.total,0),
-    agendamentos:s.agendamentos||0, comparecimentos:s.comparecimentos||0, vendas:s.vendas||0, receita:Number(s.receita||0), cardsParados:s.cards_parados
-  }}));
-  const ultimaOficial = linhas[linhas.length-1];
-  // semana em andamento: do dia seguinte a ultima semana oficial (ou da segunda-feira) ate domingo
-  if(!temOficialSemana){
-    const iniAnd = ultimaOficial && ultimaOficial.fim >= iniSem ? somaDias(ultimaOficial.fim, 1) : iniSem;
-    const fimAnd = somaDias(iniSem, 6);
-    if(iniAnd <= hoje){
-      const r = desempenhoPeriodo(v, iniAnd, fimAnd, {comparecimentosSemanaAtual: compSemana});
-      linhas.push({ini:iniAnd, fim:fimAnd, oficial:false, r});
-    }
-  }
-  const leitura = leituraAutomatica(v, mes, ultimaOficial, time, diasUteisRestantes);
-  const maxLig = Math.max(METAS_FIXAS.semana.ligacoes, ...linhas.map(l=>l.r.ligacoes));
-  const corMeta = (x, meta) => x>=meta ? '#5FD39A' : (x>=meta*.7 ? 'var(--a-gold)' : '#E59866');
-  const funil = [
-    {l:'Ligações', v:mes.ligacoes}, {l:'Atendidas', v:mes.atendidas}, {l:'Agendamentos', v:mes.agendamentos},
-    {l:'Comparecimentos', v:mes.comparecimentos}, {l:'Vendas', v:mes.vendas}
+  const v = state.vendor, A = analisarDesempenho(v);
+  if(!A) return {top, html:`<div class="card"><div class="card-b" style="padding:30px;text-align:center;color:var(--a-dim);">Ainda não há uma semana fechada no Airtable para ler. Assim que a primeira chegar, a leitura aparece aqui.</div></div>`};
+  top.sub = `Semana de ${dataCurta(A.W.ini)} a ${dataCurta(A.W.fim)} · ${A.du} ${A.du===1?'dia útil':'dias úteis'}`;
+  const {r, T} = A;
+  // funil
+  const et = [
+    {n:'Ligações', v:r.ligacoes, ref:`meta ${A.metaLig}${A.du<5?` (${A.du} dias)`:''}`, sub:`${pc(r.ligacoes,A.metaLig)}% da meta`},
+    {n:'Atendidas', v:r.atendidas, tx:pc(r.atendidas,r.ligacoes), ref:`time ${pc(T.at,T.lig)}%`, k:'atendimento'},
+    {n:'Agendamentos', v:r.agendamentos, ref:`meta ${A.metaAg}${r.agendamentos>=A.metaAg?' · bateu':''}`, k:'agendamento'},
+    {n:'Comparecimentos', v:r.comparecimentos, tx:r.agendamentos?pc(r.comparecimentos,r.agendamentos):null, ref:T.ag?`time ${pc(T.comp,T.ag)}%`:'', k:'comparecimento'},
+    {n:'Vendas', v:r.vendas, ref:r.vendas?`R$ ${brlCurto(r.receita)}`:'meta 1', k:'fechamento'}
   ];
-  top.sub = `${MESES[Number(hoje.slice(5,7))-1]} de ${hoje.slice(0,4)} · ${diasUteisRestantes} ${diasUteisRestantes===1?'dia útil restante':'dias úteis restantes'}`;
-
-  const blocoLeitura = (titulo, cor, fundo, itens) => itens.length ? `
-    <div style="border-left:3px solid ${cor};background:${fundo};border-radius:0 12px 12px 0;padding:13px 16px;">
-      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:${cor};font-weight:700;margin-bottom:6px;">${titulo}</div>
-      ${itens.map(t=>`<div style="font-size:13px;line-height:1.55;margin-top:4px;">${t}</div>`).join('')}
-    </div>` : '';
-
+  const g = A.gargalo && A.gargalo.k;
+  const notaFunil = {
+    comparecimento:'O dinheiro está escapando <b>entre o agendamento e a visita</b>. Confirmar na véspera e reconfirmar na manhã da visita é o ganho mais rápido.',
+    volume:'Com menos ligações, todo o resto do funil encolhe junto. Recuperar o volume é o primeiro passo.',
+    atendimento:'Menos gente está atendendo. Veja abaixo em quais horários seus clientes atendem mais.',
+    agendamento:'As conversas estão acontecendo, mas viram poucas visitas. Proponha dia e hora já na ligação.',
+    fechamento:'Os clientes estão vindo à loja. O ponto agora é fechar ou marcar o retorno rápido.'
+  }[g] || 'Nenhuma etapa travou de forma clara nesta semana.';
+  // horarios
+  const hsG = A.hs.filter(h=>h>=8 && h<=19), maxV = Math.max(1, ...hsG.map(h=>A.horas[h].n));
+  const bandaT = A.banda ? A.faixa(A.banda[0], A.banda[1]) : null;
+  let notaHoras = A.nP < 150 ? 'Ainda há poucas ligações registradas para afirmar um padrão de horário.' : '';
+  if(!notaHoras && bandaT){
+    const tv = A.topVol.reduce((s,h)=>({n:s.n+A.horas[h].n, a:s.a+A.horas[h].a}), {n:0,a:0});
+    notaHoras = `<b>${faixaNome(A.banda).replace(/^./,c=>c.toUpperCase())}</b> seus clientes atendem <b>${pc(bandaT.a,bandaT.n)}%</b> das vezes.`;
+    if(tv.n && !A.topVol.some(h=>h>=A.banda[0] && h<=A.banda[1])) notaHoras += ` Às <b>${A.topVol.map(h=>h+'h').join(' e ')}</b>, onde você mais liga (${tv.n} ligações), atendem <b>${pc(tv.a,tv.n)}%</b>. Mudar parte desse volume rende mais conversa com o mesmo esforço.`;
+  }else if(!notaHoras) notaHoras = 'Seus horários estão equilibrados: nenhuma faixa se destaca muito das outras.';
+  // ritmo
+  const atrasados = A.diasW.filter(d=>d.prim > A.inicioCrono+15);
+  let notaRitmo = A.mediaPrim!=null ? `Desde ${dataCurta(A.desdeP)} (${A.todosDias.length} dias), sua 1ª ligação foi, em média, às <b>${minHM(A.mediaPrim)}</b>; o cronograma começa às ${minHM(A.inicioCrono)}.` : '';
+  const tarde = A.diasW.filter(d=>d.prim >= 12*60);
+  if(tarde.length) notaRitmo += ` ${tarde.map(d=>`Na ${DIAS_NOME[dDe(d.k).getDay()].toLowerCase()} (${dataCurta(d.k)}) a 1ª ligação foi às <b>${minHM(d.prim)}</b>`).join('; ')}.`;
+  const comPausa = A.diasW.filter(d=>d.pausas>=3);
+  if(comPausa.length) notaRitmo += ` Em ${comPausa.length} ${comPausa.length===1?'dia':'dias'} houve 3 ou mais pausas longas fora do almoço e do café. Vale ver se foi atendimento na loja ou tempo parado.`;
+  // dia da semana
+  const dws = [1,2,3,4,5].filter(d=>A.dow[d]);
+  const melhorDia = dws.filter(d=>A.dow[d].n>=40).sort((a,b)=>A.dow[b].a/A.dow[b].n-A.dow[a].a/A.dow[a].n)[0];
+  const menosDia = dws.slice().sort((a,b)=>A.dow[a].n-A.dow[b].n)[0];
+  let notaDow = melhorDia ? `<b>${DIAS_NOME[melhorDia]} é o dia em que mais te atendem (${pc(A.dow[melhorDia].a,A.dow[melhorDia].n)}%)</b>` : '';
+  if(melhorDia && melhorDia===menosDia) notaDow += `, e é o dia em que você menos liga (${A.dow[melhorDia].n})${melhorDia===1?', também por causa da reunião de marketing':''}.`;
+  else if(melhorDia) notaDow += '.';
+  // evolucao
+  const ev = A.evol, ult = ev[ev.length-1], pen = ev[ev.length-2];
+  const maxE = Math.max(1, ...ev.map(e=>e.porDia));
+  let notaEvo = '';
+  if(ult && pen){
+    const varr = Math.round((ult.porDia/pen.porDia-1)*100);
+    notaEvo = `Por dia útil, você foi de <b>${pen.porDia.toFixed(1).replace('.',',')} para ${ult.porDia.toFixed(1).replace('.',',')} ligações (${varr>0?'+':''}${varr}%)</b>.`;
+    if(ult.d < 5) notaEvo += ` A semana teve ${ult.d} dias úteis, então o total (${pen.lig} → ${ult.lig}) exagera a diferença.`;
+    if(ev.length>=4 && ult.porDia === Math.min(...ev.map(e=>e.porDia))) notaEvo += ` É a sua menor média em ${ev.length} semanas.`;
+    if(ev.length>=4 && ult.porDia === Math.max(...ev.map(e=>e.porDia))) notaEvo += ` É a sua maior média em ${ev.length} semanas.`;
+  }
+  // carteira
+  const W = A.W, WA = A.WA;
+  const kc = (l, val, ant, bomBaixo) => `<div class="kpi"><div class="l">${l}</div><div class="v">${val==null?'—':val}</div><div class="d">${ant!=null && val!=null ? `eram ${ant}${val!==ant && bomBaixo!=null ? ` · ${val<ant===bomBaixo?'melhorou':'piorou'}` : ''}` : ''}</div></div>`;
+  const parados = W.cards_parados;
   const html = `
-    <div class="kpis">
-      ${[
-        {l:'Ligações no mês', v:mes.ligacoes, m:M.ligacoes},
-        {l:'Agendamentos', v:mes.agendamentos, m:M.agendamentos},
-        {l:'Comparecimentos', v:mes.comparecimentos, m:M.comparecimentos},
-        {l:'Vendas', v:mes.vendas, m:M.vendas, extra: mes.receita ? BRL.format(mes.receita) : ''}
-      ].map((k,i)=>`
-        <div class="kpi ${i===3 && k.v>=k.m ? 'destaque' : ''}"><div class="l">${k.l}</div>
-          <div class="v">${k.v.toLocaleString('pt-BR')}<span style="font-size:17px;color:var(--a-dim);"> / ${k.m}</span></div>
-          <div class="barra" style="margin-top:10px;min-width:0;"><i style="width:${Math.min(100,pct(k.v,k.m))}%;background:${corMeta(k.v,k.m)};"></i></div>
-          <div class="d">${k.v>=k.m ? 'meta do mês batida' : `faltam ${k.m-k.v}`}${k.extra ? ' · '+k.extra : ''}</div>
-        </div>`).join('')}
+    <div class="card ds-diag" style="margin-bottom:16px;"><div class="card-b" style="padding-top:18px;">${htmlDiagnostico(A)}</div></div>
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card"><div class="card-h"><h3>Funil da semana</h3><span class="hint">você x time</span></div><div class="card-b">
+        ${et.map(e=>`<div class="ds-fl ${e.k && e.k===g ? 'gar' : ''}"><div>${e.n}${e.k && e.k===g ? '<span class="ds-tag">gargalo</span>' : ''}</div>
+          <div class="ds-bar"><i style="width:${r.ligacoes ? Math.max(3, e.v/r.ligacoes*100) : 0}%"></i><span>${e.v}</span></div>
+          <div class="ds-tx">${e.tx!=null ? `<b>${e.tx}%</b> · ` : ''}${e.ref}${e.sub ? `<br>${e.sub}` : ''}</div></div>`).join('')}
+        <div class="nota">${notaFunil}</div></div></div>
+      <div class="card"><div class="card-h"><h3>Projeção de ${MESES[Number(todayKey().slice(5,7))-1].toLowerCase()}</h3><span class="hint">até hoje</span></div><div class="card-b">${htmlProjecao(v)}</div></div>
     </div>
-
-    <div class="grid-2" style="margin-bottom:18px;">
-      <div class="card">
-        <div class="card-h"><h3>Leitura do mês</h3><span class="hint">gerada a partir dos seus números</span></div>
-        <div class="card-b" style="display:flex;flex-direction:column;gap:12px;">
-          ${blocoLeitura('O que foi bem', '#5FD39A', 'rgba(47,158,100,.10)', leitura.bem)}
-          ${blocoLeitura('Ponto de atenção', '#F0A3A3', 'rgba(139,58,58,.14)', leitura.atencao)}
-          ${blocoLeitura('Leitura cruzada', 'var(--a-gold)', 'var(--a-gold-soft)', leitura.cruzada)}
-          ${!leitura.bem.length && !leitura.atencao.length && !leitura.cruzada.length ? '<div class="mute" style="font-size:13px;">Ainda não há números suficientes neste mês.</div>' : ''}
-        </div>
-      </div>
-      <div class="stack">
-        <div class="card">
-          <div class="card-h"><h3>Funil do mês</h3><span class="hint">ligação até a venda</span></div>
-          <div class="card-b">
-            ${funil.map((f,i)=>`
-              <div style="margin-top:${i?10:0}px;">
-                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
-                  <span>${f.l}</span>
-                  <span><b>${f.v.toLocaleString('pt-BR')}</b>${i ? `<span class="mute" style="font-size:11px;"> · ${funil[i-1].v ? pct(f.v, funil[i-1].v)+'%' : '—'}</span>` : ''}</span>
-                </div>
-                <div class="barra" style="min-width:0;height:10px;"><i style="width:${funil[0].v ? Math.max(f.v?2:0, f.v/funil[0].v*100) : 0}%;background:${['#6FA8DC','#5FD39A','var(--a-gold)','#E59866','#B39DDB'][i]};"></i></div>
-              </div>`).join('')}
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-h"><h3>Time no mês</h3></div>
-          <div class="card-b" style="font-size:13px;line-height:1.7;">
-            <div>${VENDORES.length - zerados} de ${VENDORES.length} vendedores já venderam</div>
-            <div class="mute">Meta do time: ninguém zerado no mês.</div>
-          </div>
-        </div>
-      </div>
+    ${htmlMeses(A)}
+    <div class="card" style="margin-bottom:16px;"><div class="card-h"><h3>Seus horários</h3><span class="hint">desde ${A.desdeP ? dataCurta(A.desdeP) : '—'} · ${A.nP.toLocaleString('pt-BR')} ligações · altura = suas ligações · % = quanto atenderam</span></div><div class="card-b">
+      <div class="ds-horas">${hsG.map(h=>{ const o = A.horas[h], top = A.melhores.includes(h); return `<div class="ds-hc"><div class="ds-ht ${top?'top':''}">${pc(o.a,o.n)}%</div><div class="ds-hv ${top?'top':''}" style="height:${Math.round(o.n/maxV*120)}px"></div><div class="ds-hn">${o.n}</div><div class="ds-hh">${h}h</div></div>`; }).join('')}</div>
+      <div class="ds-leg"><span><i style="background:var(--a-gold)"></i>suas melhores horas</span><span><i style="background:#24425E"></i>demais horas</span><span>sua média: ${pc(A.taxaMedia*100,100)}% atendem</span></div>
+      <div class="nota">${notaHoras}</div></div></div>
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card"><div class="card-h"><h3>Ritmo dos dias</h3><span class="hint">cronograma começa às ${minHM(A.inicioCrono)}</span></div><div class="card-b">
+        <table class="tbl"><thead><tr><th>Dia</th><th class="r">Ligações</th><th class="r">1ª ligação</th><th class="r">Última</th><th class="r">Pausas longas</th></tr></thead><tbody>
+        ${A.diasW.map(d=>`<tr><td>${DIAS_CURTO[dDe(d.k).getDay()]} ${dataCurta(d.k).slice(0,2)}</td><td class="r">${d.n}</td><td class="r" style="${d.prim > A.inicioCrono+15 ? 'color:#F0A3A3;' : ''}">${minHM(d.prim)}</td><td class="r">${minHM(d.ult)}</td><td class="r">${d.pausas}</td></tr>`).join('') || '<tr><td colspan="5" class="mute">Sem ligações nesta semana.</td></tr>'}
+        </tbody></table>
+        <div class="nota">${notaRitmo} <span class="mute">Pausa longa: 30 minutos ou mais sem ligar, fora do almoço e do café.</span></div></div></div>
+      <div class="card"><div class="card-h"><h3>Dia da semana</h3><span class="hint">desde ${A.desdeP ? dataCurta(A.desdeP) : '—'}</span></div><div class="card-b">
+        <table class="tbl"><thead><tr><th>Dia</th><th class="r">Ligações</th><th class="r">Atenderam</th></tr></thead><tbody>
+        ${dws.map(d=>`<tr><td>${DIAS_NOME[d]}</td><td class="r">${A.dow[d].n}</td><td class="r" style="${d===melhorDia?'color:#5FD39A;font-weight:600;':''}">${pc(A.dow[d].a,A.dow[d].n)}%</td></tr>`).join('')}
+        </tbody></table>
+        <div class="nota">${notaDow}</div></div></div>
     </div>
-
-    <div class="card" style="margin-bottom:18px;">
-      <div class="card-h"><h3>Ligações por semana</h3><span class="legend"><span><i style="background:var(--a-gold);"></i>ligações</span><span><i style="background:transparent;border-top:2px dashed #5FD39A;border-radius:0;height:0;vertical-align:3px;"></i>meta 150</span></span></div>
-      <div class="chart" style="height:200px;">
-        <div class="gl" style="bottom:${METAS_FIXAS.semana.ligacoes/maxLig*100}%;border-top:2px dashed rgba(95,211,154,.7);"><span style="color:#5FD39A;">150</span></div>
-        ${linhas.map(l=>`
-          <div class="m">
-            <div class="b" style="height:${l.r.ligacoes/maxLig*100}%;${l.oficial?'':'opacity:.55;'}"></div>
-            <div class="tip">${dataCurta(l.ini)} a ${dataCurta(l.fim)}${l.oficial?'':' (em andamento)'}<br><b>${l.r.ligacoes} ligações</b><br>${l.r.agendamentos} agend. · ${l.r.comparecimentos} comp. · ${l.r.vendas} vendas</div>
-          </div>`).join('')}
-      </div>
-      <div class="chart-x">${linhas.map(l=>`<span>${dataCurta(l.ini)}</span>`).join('')}</div>
-      <div style="height:10px;"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-h"><h3>Semana a semana</h3><span class="hint">semanas fechadas com os números oficiais do relatório</span></div>
-      <div class="scroll-x">
-        <table class="tbl">
-          <thead><tr><th>Semana</th><th class="r">Ligações</th><th class="r">Agend.</th><th class="r">Comp.</th><th class="r">Vendas</th><th class="r">Receita</th><th class="r">Cards parados</th><th>Metas</th></tr></thead>
-          <tbody>
-            ${[...linhas].reverse().map(l=>{
-              const S = METAS_FIXAS.semana;
-              const batidas = ['ligacoes','agendamentos','comparecimentos','vendas'].filter(k=>(l.r[k]||0)>=S[k]).length;
-              const cel = (k)=>`<td class="r" style="color:${corMeta(l.r[k]||0, S[k])};">${l.r[k]||0}</td>`;
-              return `<tr>
-                <td>${dataCurta(l.ini)} a ${dataCurta(l.fim)} ${l.oficial ? '' : '<span class="pill live" style="margin-left:6px;">em andamento</span>'}</td>
-                ${cel('ligacoes')}${cel('agendamentos')}${cel('comparecimentos')}${cel('vendas')}
-                <td class="r">${l.r.receita ? BRL.format(l.r.receita) : '<span class="mute">—</span>'}</td>
-                <td class="r">${l.r.cardsParados!=null ? l.r.cardsParados : '<span class="mute">—</span>'}</td>
-                <td>${l.oficial ? `<span class="pill ${batidas===4?'ok':(batidas>=2?'':'warn')}">${batidas} de 4</span>` : '<span class="mute">—</span>'}</td>
-              </tr>`;
-            }).join('') || `<tr><td colspan="8" class="mute" style="text-align:center;padding:24px;">Sem semanas registradas ainda.</td></tr>`}
-          </tbody>
-        </table>
-      </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-h"><h3>Evolução</h3><span class="hint">ligações por dia útil, semana a semana</span></div><div class="card-b">
+        <div class="ds-evo">${ev.map((e,i)=>`<div class="${i===ev.length-1?'at':''}"><span>${Math.round(e.porDia)}</span><b style="height:${Math.round(e.porDia/maxE*100)}px"></b>${dataCurta(e.ini)}</div>`).join('')}</div>
+        <div class="nota">${notaEvo}</div></div></div>
+      <div class="card"><div class="card-h"><h3>Carteira no CRM</h3><span class="hint">Airtable · semana ${dataCurta(W.ini)} a ${dataCurta(W.fim)}</span></div><div class="card-b">
+        <div class="ds-cart">${kc('Parados 3+ dias', parados, WA?WA.cards_parados:null, true)}${kc('Sem comentário', W.zero_comentario, WA?WA.zero_comentario:null, true)}${kc('Negócios ativos', W.negocios_ativos, WA?WA.negocios_ativos:null, null)}</div>
+        <div class="nota">${parados>=20 ? `Com <b>${parados} leads parados</b>, o retorno de lead antigo é onde está a próxima venda. Meta sugerida para a semana: <b>baixar ${Math.ceil(parados*.1)}</b>, de ${parados} para ${parados-Math.ceil(parados*.1)}.` : parados!=null ? 'Carteira em dia: poucos leads parados.' : ''}</div></div></div>
     </div>`;
-  return {top, html};
+  return {top, html, bind: ()=>bindDiagnostico(A)};
+}
+
+function htmlMeses(A){
+  const ms = A.meses;
+  if(ms.length < 2) return '';
+  const cor = (bom) => bom==null ? '' : (bom ? 'color:#5FD39A;' : 'color:#F0A3A3;');
+  const linhas = ms.map(x=>{
+    const ligAg = x.ag && x.lig ? x.lig/x.ag : null, compP = x.ag ? x.comp/x.ag : null, atP = x.lig ? x.at/x.lig : null;
+    return `<tr><td>${MESES[Number(x.m.slice(5,7))-1]}${x.parcial?' <span class="mute">(até hoje)</span>':''}</td>
+      <td class="r">${x.dt ? (x.lig/x.dt).toFixed(0) : '—'}</td>
+      <td class="r" style="${atP!=null && x.tAt!=null ? cor(atP >= x.tAt) : ''}">${atP!=null ? pc(x.at,x.lig)+'%' : '—'}</td>
+      <td class="r" style="${ligAg!=null && x.tLigAg!=null ? cor(ligAg <= x.tLigAg) : ''}">${ligAg!=null ? Math.round(ligAg) : '—'}</td>
+      <td class="r" style="${compP!=null && x.tComp!=null && x.ag>=3 ? cor(compP >= x.tComp) : ''}">${compP!=null ? `${pc(x.comp,x.ag)}% <span class="mute">(${x.comp}/${x.ag})</span>` : '—'}</td>
+      <td class="r">${x.vendas}${x.receita ? ` <span class="mute">· R$ ${brlCurto(x.receita)}</span>` : ''}</td></tr>`;
+  }).join('');
+  // padroes entre os meses
+  const notas = [];
+  ['comparecimento','volume','atendimento','agendamento','fechamento'].forEach(k=>{
+    const r = recorrencia(A, k);
+    if(r && r.n>=2 && r.k>=2) notas.push({
+      comparecimento:`Comparecimento abaixo do time em <b>${r.k} de ${r.n} meses</b>: confirmar a visita é um hábito a criar, não um ajuste de uma semana.`,
+      volume:`Média de ligações por dia abaixo de 26 em <b>${r.k} de ${r.n} meses</b>.`,
+      atendimento:`Taxa de atendimento abaixo do time em <b>${r.k} de ${r.n} meses</b>: o horário das ligações pesa nisso.`,
+      agendamento:`Precisou de bem mais ligações por agendamento que o time em <b>${r.k} de ${r.n} meses</b>.`,
+      fechamento:`Teve visitas e nenhuma venda em <b>${r.k} de ${r.n} meses</b>.`
+    }[k]);
+  });
+  const fortes = [];
+  const agBom = ms.filter(x=>x.ag && x.lig && x.tLigAg && x.lig/x.ag <= x.tLigAg).length;
+  if(agBom>=2) fortes.push(`Agendou com menos ligações que o time em <b>${agBom} de ${ms.filter(x=>x.ag && x.lig).length} meses</b>: transformar conversa em visita é um ponto forte seu.`);
+  const atBom = ms.filter(x=>x.lig>=50 && x.tAt!=null && x.at/x.lig >= x.tAt).length;
+  if(atBom>=2) fortes.push(`Atendido acima da média do time em <b>${atBom} de ${ms.filter(x=>x.lig>=50).length} meses</b>.`);
+  const melhor = ms.filter(x=>x.receita).sort((a,b)=>b.receita-a.receita)[0];
+  if(melhor) fortes.push(`Seu melhor mês em vendas foi <b>${MESES[Number(melhor.m.slice(5,7))-1].toLowerCase()}</b> (R$ ${brlCurto(melhor.receita)}).`);
+  return `<div class="card" style="margin-bottom:16px;"><div class="card-h"><h3>Mês a mês</h3><span class="hint">verde = melhor que o time no mês · vermelho = pior</span></div><div class="card-b">
+    <div class="scroll-x"><table class="tbl"><thead><tr><th>Mês</th><th class="r" title="ligações por dia trabalhado">Lig./dia</th><th class="r">Atendem</th><th class="r" title="ligações para cada agendamento">Lig./agend.</th><th class="r">Comparec.</th><th class="r">Vendas</th></tr></thead><tbody>${linhas}</tbody></table></div>
+    ${notas.length || fortes.length ? `<div class="ds-mes-notas">${fortes.map(t=>`<div class="ds-fr bem"><div class="rt">Padrão forte</div>${t}</div>`).join('')}${notas.map(t=>`<div class="ds-fr at"><div class="rt">Padrão que se repete</div>${t}</div>`).join('')}</div>` : '<div class="nota">Nenhum problema se repetiu de um mês para o outro.</div>'}
+  </div></div>`;
+}
+
+// ---- Aba Hoje: so um icone; o resumo abre por cima ----
+function dsIconeHoje(){
+  const A = analisarDesempenho(state.vendor);
+  if(!A) return '';
+  let visto = ''; try{ visto = localStorage.getItem('fbs_diag_'+slugNome(state.vendor)) || ''; }catch(e){}
+  const pulsa = visto !== A.W.ini || !compromissoAtual(A);
+  return `<button class="ds-ico ${pulsa?'pulsa':''}" id="dsIco" aria-label="Seu desempenho da semana" title="Seu desempenho da semana">${icone('desempenho')}</button>`;
+}
+function htmlDsPop(){
+  const A = analisarDesempenho(state.vendor);
+  if(!A) return '';
+  return `<div class="ds-pop-bg" id="dsPopBg"><div class="ds-pop" role="dialog" aria-label="Sua semana">
+    <button class="ds-pop-x" id="dsPopX" aria-label="Fechar">×</button>
+    ${htmlDiagnostico(A, true)}
+    <div style="margin-top:12px;text-align:right;"><button class="link" id="dsVerTudo">Ver desempenho completo</button></div>
+  </div></div>`;
+}
+function bindDsHoje(app){
+  const ico = document.getElementById('dsIco');
+  if(ico) ico.onclick = ()=>{
+    const A = analisarDesempenho(state.vendor);
+    try{ localStorage.setItem('fbs_diag_'+slugNome(state.vendor), A.W.ini); }catch(e){}
+    state.dsPop = true; render();
+  };
+  if(!state.dsPop) return;
+  const A = analisarDesempenho(state.vendor);
+  if(!A){ state.dsPop = false; return; }
+  app.insertAdjacentHTML('beforeend', htmlDsPop());
+  bindDiagnostico(A);
+  const fechar = ()=>{ state.dsPop = false; render(); };
+  document.getElementById('dsPopX').onclick = fechar;
+  document.getElementById('dsPopBg').onclick = e=>{ if(e.target.id==='dsPopBg') fechar(); };
+  document.getElementById('dsVerTudo').onclick = ()=>{ state.dsPop = false; irParaCentral('desempenho'); };
 }
 
 // ---------------- Ranking ----------------
@@ -5747,10 +6121,11 @@ function render(pulse){
     ${renderCallModal()}
   `;
   renderCentral(app, {
-    top:{eb:'Central do vendedor', titulo:`Olá, ${esc(nomeCurto(state.vendor))}`, sub: todayLabel()},
+    top:{eb:'Central do vendedor', titulo:`Olá, ${esc(nomeCurto(state.vendor))}`, sub: todayLabel(), acoes: dsIconeHoje()},
     html: corpoHoje,
     estreita: true
   });
+  bindDsHoje(app);
 
   const retryLoadBtn = document.getElementById('retryLoadBtn');
   if(retryLoadBtn) retryLoadBtn.onclick = ()=>loadVendorData(state.vendor);
