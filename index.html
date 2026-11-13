@@ -1035,8 +1035,103 @@
   .ds-comp{border:1px dashed rgba(201,168,76,.5);border-radius:12px;padding:12px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
   .ds-mes-notas{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;}
   .ds-mes-notas .ds-fr{margin:0;font-size:13px;}
+  .ds-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px;}
+  .ds-kpi{position:relative;}
+  .ds-kpi .v.bom{color:#5FD39A;} .ds-kpi .v.ruim{color:#F0A3A3;} .ds-kpi .v.medio{color:#E8C46A;}
+  .ds-kpi.gar{border-color:rgba(240,163,163,.55);background:linear-gradient(160deg,#2A1A22,var(--a-card) 70%);}
+  .ds-tagk{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(139,58,58,.25);color:#F0A3A3;}
+  .ds-faixa{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(160deg,#1A3047,#112334 70%);border:1px solid rgba(201,168,76,.45);border-radius:16px;padding:16px 20px;margin-bottom:14px;}
+  .ds-faixa-t{flex:1 1 420px;min-width:0;}
+  .ds-faixa-h{font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:600;line-height:1.2;}
+  .ds-faixa-s{font-size:13px;color:#C9D3DC;margin-top:4px;line-height:1.5;}
+  .ds-faixa-s b{color:var(--text);}
+  .ds-faixa-c{flex:0 1 360px;min-width:0;}
+  .ds-leitura{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:-4px 0 14px;}
+  .ds-leitura .ds-fr{margin:0;}
+  .ds-link{background:none;border:none;padding:0;margin-top:8px;color:var(--a-gold);font:600 12px Inter,sans-serif;cursor:pointer;}
+  .ds-g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px;}
+  .ds-g3 .card{display:flex;flex-direction:column;}
+  .ds-g3 .card-b{flex:1;display:flex;flex-direction:column;}
+  .ds-g3 .ds-link{margin-top:auto;padding-top:10px;align-self:flex-start;}
+  .ds-ln{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:7px 0;border-top:1px solid rgba(29,56,80,.6);}
+  .ds-ln:first-child{border-top:none;padding-top:0;}
+  .ds-ln > span:first-child{color:var(--a-dim);}
+  .ds-ln .ruim,.ds-ln b.ruim{color:#F0A3A3;} .ds-ln .bom{color:#5FD39A;}
+  .ds-tl-tit{font-size:12px;color:var(--a-dim);margin:10px 0 6px;display:flex;justify-content:space-between;gap:8px;}
+  .ds-tl-tit span{color:var(--a-mute);}
+  .ds-tl{display:grid;grid-template-columns:34px minmax(0,1fr) 46px;gap:8px;align-items:center;margin-bottom:6px;font-size:12px;}
+  .ds-tl-d{color:var(--a-dim);font-weight:600;}
+  .ds-tl-t{position:relative;height:10px;border-radius:9px;background:var(--a-card-2);}
+  .ds-tl-t i{position:absolute;top:-3px;bottom:-3px;width:0;border-left:1px dashed rgba(201,168,76,.7);}
+  .ds-tl-t b{position:absolute;top:0;bottom:0;border-radius:9px;background:#2C6A93;}
+  .ds-tl-t b.tarde{background:linear-gradient(90deg,#B85C5C,#2C6A93 60%);}
+  .ds-tl-h{text-align:right;font-weight:600;font-variant-numeric:tabular-nums;}
+  .ds-tl-h.ruim{color:#F0A3A3;}
+  .ds-tl-eixo{margin:-2px 0 4px;}
+  .ds-tl-eixo div{position:relative;height:14px;}
+  .ds-tl-eixo em{position:absolute;transform:translateX(-50%);font-style:normal;font-size:10px;color:var(--a-mute);}
+  .ds-mini{display:flex;align-items:flex-end;gap:5px;}
+  .ds-mini div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--a-mute);min-width:0;}
+  .ds-mini b{display:block;width:100%;border-radius:4px 4px 0 0;background:#24425E;}
+  .ds-mini b.top{background:var(--a-gold);}
+  .ds-projcard{margin-bottom:16px;}
+  .ds-projcard .ds-col{padding:16px 18px;}
+  .ds-projcard .ds-col-h{font-size:17px;}
+  .ds-col-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 22px;}
+  .ds-projcard .ds-pj-l b{font-size:20px;}
+  .ds-projcard .ds-pj-l{align-items:baseline;}
+  @media (max-width:1100px){ .ds-kpis{grid-template-columns:repeat(3,minmax(0,1fr));} .ds-g3{grid-template-columns:minmax(0,1fr);} }
+  @media (max-width:600px){ .ds-kpis{grid-template-columns:repeat(2,minmax(0,1fr));} .ds-col-g{grid-template-columns:minmax(0,1fr);} }
+  .ds-pjt{position:relative;overflow:hidden;width:100%;display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:linear-gradient(120deg,#1A3047,#112334 60%);border:1px solid rgba(201,168,76,.5);border-radius:16px;padding:18px 22px;margin-bottom:16px;color:var(--text);text-align:left;cursor:pointer;font:inherit;}
+  .ds-pjt:hover{border-color:var(--a-gold);}
+  .ds-pjt-brilho{position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(201,168,76,.13) 50%,transparent 65%);animation:ds-brilha 3s infinite;pointer-events:none;}
+  @keyframes ds-brilha{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+  .ds-pjt-t{min-width:200px;}
+  .ds-pjt-t b{display:block;font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:600;}
+  .ds-pjt-t small{display:block;font-size:12px;color:var(--a-dim);margin-top:2px;}
+  .ds-pjt-pista{position:relative;flex:1 1 260px;height:10px;border-radius:9px;background:rgba(10,21,32,.8);margin:14px 0;}
+  .ds-pjt-pista i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:var(--a-gold);width:var(--w);animation:ds-enche 1.6s ease-out;}
+  .ds-pjt-pista em{position:absolute;top:50%;left:calc(var(--w) - 13px);transform:translateY(-50%);animation:ds-anda 1.6s ease-out;line-height:0;}
+  .ds-pjt-pista em .av{box-shadow:0 0 0 2px var(--a-gold);}
+  .ds-pjt-pista s{position:absolute;right:-2px;top:-6px;bottom:-6px;border-right:3px solid #5FD39A;border-radius:2px;}
+  @keyframes ds-enche{from{width:0}}
+  @keyframes ds-anda{from{left:-13px}}
+  .ds-pjt-ab{font-weight:600;color:var(--a-gold);font-size:14px;}
+  .ds-pj-topo{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px;}
+  .ds-pj-topo .seg button:disabled{opacity:.45;cursor:not-allowed;}
+  .ds-dias{display:flex;align-items:center;gap:10px;}
+  .ds-dias b{font-family:Fraunces,Georgia,serif;font-size:40px;font-weight:600;color:var(--a-gold);line-height:1;}
+  .ds-dias span{font-size:12px;color:var(--a-dim);line-height:1.3;}
+  .ds-pj-sub{font-size:13px;font-weight:600;margin:16px 0 8px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .ds-pj-sub span{font-weight:400;color:var(--a-dim);font-size:12px;}
+  .ds-lane-l{display:flex;justify-content:space-between;font-size:13px;margin-top:8px;}
+  .ds-lane-l span:first-child{color:var(--a-dim);}
+  .ds-lane{position:relative;height:16px;border-radius:9px;background:var(--a-card-2);margin-top:4px;}
+  .ds-lane i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,#2C6A93,var(--a-gold));animation:ds-enche 1.2s ease-out;}
+  .ds-lane i.ok{background:#5FD39A;}
+  .ds-lane s{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed #E8C46A;}
+  .ds-pj-frase{font-size:14px;margin-top:12px;}
+  .ds-pj-frase .ruim{color:#F0A3A3;} .ds-pj-frase .bom{color:#5FD39A;}
+  .ds-selos{display:flex;gap:10px;flex-wrap:wrap;}
+  .ds-selo{flex:1 1 110px;text-align:center;border:1px dashed var(--a-line);border-radius:12px;padding:10px 8px;color:var(--a-mute);font-weight:600;font-size:14px;}
+  .ds-selo small{display:block;font-weight:400;font-size:11px;margin-top:2px;}
+  .ds-selo.on{border:1px solid rgba(201,168,76,.6);background:var(--a-gold-soft);color:var(--a-gold);animation:ds-selo .6s ease-out;}
+  @keyframes ds-selo{from{transform:scale(.85);opacity:.3}}
+  .ds-sim{background:var(--a-card-2);border-radius:12px;padding:14px 16px;}
+  .ds-sim-c{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .ds-sim input[type=range]{flex:1 1 220px;width:auto;padding:0;border:none;background:none;accent-color:var(--a-gold);}
+  .ds-sim-c b{font-size:18px;min-width:180px;}
+  .ds-sim-r{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:12px;}
+  .ds-sim-r div{background:var(--a-card);border:1px solid var(--a-line);border-radius:10px;padding:10px 12px;transition:border-color .2s,background .2s;}
+  .ds-sim-r div.ok{border-color:rgba(95,211,154,.55);background:rgba(47,158,100,.12);}
+  .ds-sim-r span{display:block;font-size:11px;color:var(--a-dim);}
+  .ds-sim-r b{display:block;font-size:22px;font-weight:600;margin:2px 0;}
+  .ds-sim-r div.ok b{color:#5FD39A;}
+  .ds-sim-r small{font-size:11px;color:var(--a-dim);}
+  @media (max-width:860px){ .ds-sim-r{grid-template-columns:repeat(2,minmax(0,1fr));} }
   .ds-comp .hint{font-size:12px;color:var(--a-dim);}
   .ds-comp-t{font-weight:600;margin-top:2px;}
+  .ds-faixa-c .hint{font-size:12px;color:var(--a-dim);}
   .ds-comp-a{display:flex;gap:8px;}
   .ds-fl{display:grid;grid-template-columns:130px minmax(0,1fr) 140px;gap:12px;align-items:center;margin-bottom:10px;font-size:13px;}
   .ds-bar{height:26px;border-radius:7px;background:var(--a-card-2);position:relative;overflow:hidden;}
@@ -3756,7 +3851,7 @@ function analisarDesempenho(v){
   const mediaPrim = todosDias.length ? Math.round(todosDias.reduce((s,d)=>s+d.prim,0)/todosDias.length) : null;
   const dow = {};
   P.forEach(l=>{ const d = l.t.getDay(); if(d===0 || d===6) return; const o = dow[d] = dow[d] || {n:0,a:0}; o.n++; if(l.a) o.a++; });
-  const evol = ofs.slice(-12).map(s=>{ const x = desempenhoPeriodo(v, s.ini, s.fim), d = diasUteisDe(s.ini, s.fim); return {ini:s.ini, fim:s.fim, lig:x.ligacoes, d, porDia:x.ligacoes/d}; });
+  const evol = ofs.map(s=>{ const x = desempenhoPeriodo(v, s.ini, s.fim), d = diasUteisDe(s.ini, s.fim); return {ini:s.ini, fim:s.fim, lig:x.ligacoes, d, porDia:x.ligacoes/d}; }).filter(e=>e.lig>0).slice(-12);
 
   // gargalo: a etapa mais longe do esperado
   const cand = [];
@@ -3846,7 +3941,7 @@ function diagnostico(A){
   if(g==='comparecimento') fGar = `De ${r.agendamentos} agendados, <b>só ${r.comparecimentos} ${r.comparecimentos===1?'veio':'vieram'} (${pc(r.comparecimentos,r.agendamentos)}%)</b>. No time vêm ${pc(T.comp,T.ag)}%. Na média do time, seriam <b>${Math.round(r.agendamentos*T.comp/T.ag)} visitas</b>.`;
   if(g==='fechamento') fGar = `<b>${r.comparecimentos} clientes vieram à loja</b> e nenhum fechou ainda. O retorno rápido para quem veio é onde está a venda.`;
   const rec = g ? recorrencia(A, g) : null;
-  if(rec && rec.n>=2) fGar += rec.k>=2 ? ` <b>Isso se repete: aconteceu em ${rec.k} dos seus últimos ${rec.n} meses.</b>` : ` Nos seus últimos ${rec.n} meses isso quase não aconteceu: é um ponto desta semana, não um hábito.`;
+  if(rec && rec.n>=2) fGar += rec.k>=2 ? ` <b>Isso se repete: aconteceu em ${rec.k} dos seus últimos ${rec.n} meses.</b>` : ` Nos seus últimos ${rec.n} meses, ${rec.k ? 'só neste' : 'em nenhum'} você ficou muito abaixo do time nisso: é um ponto de agora, não um hábito.`;
   // padrao
   let fPad = '';
   const bandaT = A.banda ? A.faixa(A.banda[0], A.banda[1]) : null;
@@ -3911,6 +4006,81 @@ function bindDiagnostico(A){
   document.querySelectorAll('[data-ds-trocar]').forEach(b=>{ b.onclick = ()=>{ state.dsAlt = (state.dsAlt||0)+1; render(); }; });
 }
 
+// ---- Projecao interativa: corrida ate a meta, marcos e simulador ----
+function dadosProjecao(v){
+  const hoje = todayKey(), iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje);
+  const compSemana = state.metas && state.metas.comparecimentos ? state.metas.comparecimentos.progresso : 0;
+  const temOficial = state.desemp.semanas.some(s=>s.vendedor===v && hoje>=s.ini && hoje<=s.fim);
+  const r = desempenhoPeriodo(v, iniMes, hoje, {comparecimentosSemanaAtual: temOficial ? 0 : compSemana});
+  const passados = diasUteisEntre(iniMes, somaDias(hoje,-1)), restantes = diasUteisEntre(hoje, fimM);
+  const mp = state.mp && !state.mp.erro ? state.mp : null, regra = mp ? mp.regra : REGRA_META_PADRAO;
+  const hist = taxasHistorico(v, regra);
+  const salva = mp && mp.metas.find(m=>m.vendedor===v && m.mes===mesAtualKey());
+  const plano = salva ? planoMeta(salva.valor, hist.porVenda, hist.ticketUsado) : null;
+  const M = METAS_FIXAS.mes;
+  return {r, passados, restantes, total: Math.max(1, passados+restantes),
+    fbs: {ligacoes:M.ligacoes, agendamentos:M.agendamentos, comparecimentos:M.comparecimentos, vendas:M.vendas, valor:null},
+    minha: plano ? {...plano.mes, vendas:plano.vendasMin, valor:salva.valor} : null,
+    taxas: {la: hist.la || regra.ligacoes/regra.agendamentos, ac: hist.ac || regra.agendamentos/regra.comparecimentos, cv: hist.cv || regra.comparecimentos, ticket: hist.ticketUsado}};
+}
+const alvoProjecao = P => state.dsProjModo==='m' && P.minha ? P.minha : P.fbs;
+function htmlProjecaoFechada(v){
+  const P = dadosProjecao(v), alvo = alvoProjecao(P), mesNome = MESES[Number(todayKey().slice(5,7))-1].toLowerCase();
+  const w = Math.max(3, Math.min(100, pc(P.r.ligacoes, alvo.ligacoes)));
+  return `<button class="ds-pjt" data-ds-proj aria-label="Abrir a projeção de ${mesNome}">
+    <span class="ds-pjt-brilho"></span>
+    <span class="ds-pjt-t"><b>Projeção de ${mesNome}</b><small>${P.restantes} ${P.restantes===1?'dia útil':'dias úteis'} para a reta final · ${P.r.ligacoes.toLocaleString('pt-BR')} de ${alvo.ligacoes.toLocaleString('pt-BR')} ligações</small></span>
+    <span class="ds-pjt-pista" style="--w:${w}%"><i></i><em>${avatar(v, 26)}</em><s></s></span>
+    <span class="ds-pjt-ab">Abrir ›</span>
+  </button>`;
+}
+function htmlProjecaoAberta(v){
+  const P = dadosProjecao(v), alvo = alvoProjecao(P), modo = alvo===P.minha ? 'm' : 'f';
+  const dev = k => alvo[k]*P.passados/P.total;
+  const lane = (rot, k) => { const f = P.r[k], a = alvo[k], d = dev(k); return `
+    <div class="ds-lane-l"><span>${rot}</span><span><b>${f.toLocaleString('pt-BR')}</b> de ${a.toLocaleString('pt-BR')}</span></div>
+    <div class="ds-lane"><i class="${f>=a?'ok':''}" style="width:${Math.min(100, f/a*100)}%"></i><s style="left:${Math.min(100, d/a*100)}%" title="onde você deveria estar hoje"></s></div>`; };
+  const devLig = Math.round(dev('ligacoes')), dif = devLig - P.r.ligacoes;
+  const marcos = [25,50,75,100].map(m=>({m, on: P.r.ligacoes >= alvo.ligacoes*m/100}));
+  const falta = Math.max(0, alvo.ligacoes - P.r.ligacoes);
+  const sugerido = Math.min(80, Math.max(10, P.restantes ? Math.ceil(falta/P.restantes) : 30));
+  return `
+    <div class="ds-pj-topo">
+      <div class="seg">${[['f','Padrão FBS'],['m','Sua meta']].map(([k,n])=>`<button class="${modo===k?'on':''}" data-ds-pmodo="${k}" ${k==='m' && !P.minha ? 'disabled title="Defina sua meta em Minha meta"' : ''}>${n}</button>`).join('')}</div>
+      <div class="ds-dias"><b>${P.restantes}</b><span>${P.restantes===1?'dia útil':'dias úteis'}<br>para acabar o mês</span></div>
+    </div>
+    <div class="ds-pj-sub">A corrida até a meta <span>a linha tracejada é onde você deveria estar hoje</span></div>
+    ${lane('Ligações','ligacoes')}${lane('Agendamentos','agendamentos')}${lane('Comparecimentos','comparecimentos')}${lane('Vendas','vendas')}
+    <div class="ds-pj-frase">${P.restantes ? (dif>0 ? `Você está <b class="ruim">${dif.toLocaleString('pt-BR')} ligações atrás</b> de onde deveria estar hoje (${devLig.toLocaleString('pt-BR')}).` : `Você está <b class="bom">${(-dif).toLocaleString('pt-BR')} ligações à frente</b> do ritmo. Continue assim!`) : 'Último dia útil do mês: é a reta final.'}</div>
+    <div class="ds-pj-sub">Marcos do mês <span>ligações</span></div>
+    <div class="ds-selos">${marcos.map(x=>`<span class="ds-selo ${x.on?'on':''}">${x.on?'★ ':''}${x.m===100?'Meta batida':x.m+'%'}<small>${Math.ceil(alvo.ligacoes*x.m/100).toLocaleString('pt-BR')}</small></span>`).join('')}</div>
+    <div class="ds-pj-sub">E se você fizer… <span>conta com as suas taxas reais</span></div>
+    <div class="ds-sim">
+      <div class="ds-sim-c"><input type="range" id="dsSim" min="10" max="80" step="1" value="${sugerido}" aria-label="Ligações por dia útil"><b id="dsSimX"></b></div>
+      <div class="ds-sim-r" id="dsSimR"></div>
+      <div class="ds-pj-s" style="margin-top:6px;">${Math.round(P.taxas.la)} ligações por agendamento · ${P.taxas.ac.toFixed(1).replace('.',',')} agendamentos por comparecimento · ${P.taxas.cv.toFixed(1).replace('.',',')} comparecimentos por venda${P.restantes ? ` · comece com ${sugerido} por dia para bater a meta de ligações` : ''}</div>
+    </div>`;
+}
+function bindProjecao(app, v){
+  app.querySelectorAll('[data-ds-proj]').forEach(b=>{ b.onclick = ()=>{ state.dsProjAberta = !state.dsProjAberta; render(); }; });
+  app.querySelectorAll('[data-ds-pmodo]').forEach(b=>{ b.onclick = ()=>{ state.dsProjModo = b.getAttribute('data-ds-pmodo'); render(); }; });
+  const sl = document.getElementById('dsSim');
+  if(!sl) return;
+  const P = dadosProjecao(v), alvo = alvoProjecao(P), T = P.taxas;
+  const n = x => Math.floor(x+1e-9).toLocaleString('pt-BR'), nv = x => (Math.floor(x*10+1e-9)/10).toLocaleString('pt-BR');
+  const calc = ()=>{
+    const x = Number(sl.value), add = x*P.restantes;
+    const lig = P.r.ligacoes+add, ag = P.r.agendamentos+add/T.la, comp = P.r.comparecimentos+add/T.la/T.ac, ven = P.r.vendas+add/T.la/T.ac/T.cv;
+    document.getElementById('dsSimX').textContent = `${x} ligações por dia`;
+    const box = (l, val, meta, fmt, bateu) => { const ok = bateu ?? val>=meta; return `<div class="${ok?'ok':''}"><span>${l}</span><b>${fmt(val)}</b><small>meta ${fmt(meta)}${ok?' ✓':''}</small></div>`; };
+    document.getElementById('dsSimR').innerHTML = box('Ligações', lig, alvo.ligacoes, n) + box('Agendamentos', ag, alvo.agendamentos, n)
+      + box('Comparecimentos', comp, alvo.comparecimentos, n) + box('Vendas', ven, alvo.vendas, nv, alvo.valor ? ven*T.ticket>=alvo.valor : undefined)
+      + `<div class="${alvo.valor && ven*T.ticket>=alvo.valor ? 'ok' : ''}"><span>Em vendas</span><b>R$ ${brlCurto(ven*T.ticket)}</b><small>${alvo.valor ? `meta R$ ${brlCurto(alvo.valor)}` : 'no seu ticket médio'}</small></div>`;
+  };
+  sl.oninput = calc;
+  calc();
+}
+
 function htmlProjecao(v){
   const hoje = todayKey(), iniMes = hoje.slice(0,8)+'01', fimM = fimMes(hoje);
   const compSemana = state.metas && state.metas.comparecimentos ? state.metas.comparecimentos.progresso : 0;
@@ -3925,7 +4095,7 @@ function htmlProjecao(v){
       <div class="ds-pj-s">${falta ? `faltam ${falta.toLocaleString('pt-BR')}${porDia && restantes ? ` · ${Math.ceil(falta/restantes)} por dia útil` : ''}` : 'meta batida'}</div></div>`;
   };
   const coluna = (titulo, sub, m, vendas) => `<div class="ds-col"><div class="ds-col-h">${titulo}<span>${sub}</span></div>
-    ${linha('Ligações', r.ligacoes, m.ligacoes, true)}${linha('Agendamentos', r.agendamentos, m.agendamentos, true)}${linha('Comparecimentos', r.comparecimentos, m.comparecimentos)}${linha('Vendas', r.vendas, vendas)}</div>`;
+    <div class="ds-col-g">${linha('Ligações', r.ligacoes, m.ligacoes, true)}${linha('Agendamentos', r.agendamentos, m.agendamentos, true)}${linha('Comparecimentos', r.comparecimentos, m.comparecimentos)}${linha('Vendas', r.vendas, vendas)}</div></div>`;
   const M = METAS_FIXAS.mes;
   const mp = state.mp && !state.mp.erro ? state.mp : null;
   const salva = mp && mp.metas.find(m=>m.vendedor===v && m.mes===mesAtualKey());
@@ -4006,25 +4176,79 @@ function paginaDesempenho(){
   const W = A.W, WA = A.WA;
   const kc = (l, val, ant, bomBaixo) => `<div class="kpi"><div class="l">${l}</div><div class="v">${val==null?'—':val}</div><div class="d">${ant!=null && val!=null ? `eram ${ant}${val!==ant && bomBaixo!=null ? ` · ${val<ant===bomBaixo?'melhorou':'piorou'}` : ''}` : ''}</div></div>`;
   const parados = W.cards_parados;
+  const D2 = A.diasW, pausasSem = D2.reduce((s,d)=>s+d.pausas,0);
+  const tlPos = m => Math.max(0, Math.min(100, (m-8*60)/(12*60)*100));   // linha do dia: 8h as 20h
+  const abre = state.dsAbre || {};
+  const cor = bom => bom==null ? '' : (bom ? 'bom' : 'ruim');
+  const tiles = [
+    {k:'volume', l:'Ligações', v:r.ligacoes, c:r.ligacoes>=A.metaLig ? 'bom' : 'medio', d:`meta ${A.metaLig}${A.du<5?` (${A.du} dias)`:''} · ${pc(r.ligacoes,A.metaLig)}%`, barra:Math.min(100,pc(r.ligacoes,A.metaLig))},
+    {k:'atendimento', l:'Atendem', v:r.ligacoes ? pc(r.atendidas,r.ligacoes)+'%' : '—', c:A.taxaAtT!=null && r.ligacoes ? cor(A.taxaAt>=A.taxaAtT) : '', d:T.lig ? `time ${pc(T.at,T.lig)}%` : ''},
+    {k:'agendamento', l:'Agendamentos', v:r.agendamentos, c:cor(r.agendamentos>=A.metaAg), d:`meta ${A.metaAg}${r.agendamentos>=A.metaAg?' · bateu':''}`},
+    {k:'comparecimento', l:'Comparecimento', v:r.agendamentos ? pc(r.comparecimentos,r.agendamentos)+'%' : '—', c:r.agendamentos && A.taxaCompT!=null ? cor(A.taxaComp>=A.taxaCompT) : '', d:`${r.comparecimentos} de ${r.agendamentos}${T.ag ? ` · time ${pc(T.comp,T.ag)}%` : ''}`},
+    {k:'fechamento', l:'Vendas', v:r.vendas, c:cor(r.vendas>=1), d:r.vendas ? `R$ ${brlCurto(r.receita)}` : 'meta 1'}
+  ];
+  const dg = diagnostico(A), atual = compromissoAtual(A), aval = compromissoAvaliado(A);
+  const sugs = compromissosSugeridos(A), sug = sugs[(state.dsAlt||0) % sugs.length];
+  const link = (k, txt) => `<button class="ds-link" data-ds-abre="${k}">${abre[k] ? 'fechar detalhes' : txt} ›</button>`;
+  // mes a mes compacto
+  const ms = A.meses.slice(-3);
+  const notaMes = (()=>{
+    for(const k of ['comparecimento','volume','atendimento','agendamento','fechamento']){ const rr = recorrencia(A, k); if(rr && rr.n>=2 && rr.k>=2) return {t:'at', r:'Padrão que se repete', x:`${({comparecimento:'Comparecimento abaixo do time',volume:'Ligações por dia abaixo do esperado',atendimento:'Atendimento abaixo do time',agendamento:'Mais ligações por agendamento que o time',fechamento:'Visitas sem venda'})[k]} em ${rr.k} de ${rr.n} meses.`}; }
+    const agBom = A.meses.filter(x=>x.ag && x.lig && x.tLigAg && x.lig/x.ag <= x.tLigAg).length, base = A.meses.filter(x=>x.ag && x.lig).length;
+    if(agBom>=2) return {t:'bem', r:'Padrão forte', x:`Agenda com menos ligações que o time em ${agBom} de ${base} meses.`};
+    return null;
+  })();
   const html = `
-    <div class="card ds-diag" style="margin-bottom:16px;"><div class="card-b" style="padding-top:18px;">${htmlDiagnostico(A)}</div></div>
-    <div class="grid-2" style="margin-bottom:16px;">
-      <div class="card"><div class="card-h"><h3>Funil da semana</h3><span class="hint">você x time</span></div><div class="card-b">
-        ${et.map(e=>`<div class="ds-fl ${e.k && e.k===g ? 'gar' : ''}"><div>${e.n}${e.k && e.k===g ? '<span class="ds-tag">gargalo</span>' : ''}</div>
-          <div class="ds-bar"><i style="width:${r.ligacoes ? Math.max(3, e.v/r.ligacoes*100) : 0}%"></i><span>${e.v}</span></div>
-          <div class="ds-tx">${e.tx!=null ? `<b>${e.tx}%</b> · ` : ''}${e.ref}${e.sub ? `<br>${e.sub}` : ''}</div></div>`).join('')}
-        <div class="nota">${notaFunil}</div></div></div>
-      <div class="card"><div class="card-h"><h3>Projeção de ${MESES[Number(todayKey().slice(5,7))-1].toLowerCase()}</h3><span class="hint">até hoje</span></div><div class="card-b">${htmlProjecao(v)}</div></div>
+    <div class="ds-kpis">${tiles.map(t=>`<div class="kpi ds-kpi ${A.gargalo && A.gargalo.k===t.k ? 'gar' : ''}">${A.gargalo && A.gargalo.k===t.k ? '<span class="ds-tagk">gargalo</span>' : ''}
+      <div class="l">${t.l}</div><div class="v ${t.c}">${t.v}</div><div class="d">${t.d}</div>${t.barra!=null ? `<div class="barra" style="min-width:0;height:6px;margin-top:8px;"><i style="width:${t.barra}%;background:var(--a-gold);"></i></div>` : ''}</div>`).join('')}</div>
+
+    <div class="ds-faixa">
+      <div class="ds-faixa-t">
+        <div class="ds-faixa-h">${dg.titulo}</div>
+        <div class="ds-faixa-s">${dg.fGar || 'Nenhuma etapa travou de forma clara nesta semana.'}</div>
+        ${aval ? `<div class="ds-faixa-s" style="margin-top:4px;">Você combinou: <b>${esc(aval.c.texto)}</b>. Resultado: ${aval.res}.</div>` : ''}
+        <button class="ds-link" data-ds-leitura>${state.dsLeitura ? 'fechar leitura' : 'ver leitura completa'} ›</button>
+      </div>
+      <div class="ds-faixa-c">
+        ${atual ? `<div class="hint">Seu compromisso a partir de ${dataCurta(A.semanaCompromisso)}</div><div class="ds-comp-t">✓ ${esc(atual.texto)}</div>`
+          : `<div class="hint">Compromisso a partir de ${dataCurta(A.semanaCompromisso)}</div><div class="ds-comp-t">${esc(sug.texto)}</div>
+             <div class="ds-comp-a" style="margin-top:8px;"><button class="btn gold small" data-ds-aceitar>Vou fazer</button><button class="btn small" data-ds-trocar>Trocar</button></div>`}
+      </div>
     </div>
-    ${htmlMeses(A)}
+    ${state.dsLeitura ? `<div class="ds-leitura">${dg.fBem ? `<div class="ds-fr bem"><div class="rt">O que foi bem</div>${dg.fBem}</div>` : ''}${dg.fPad ? `<div class="ds-fr pd"><div class="rt">Padrão que se repete</div>${dg.fPad}</div>` : ''}</div>` : ''}
+
+    <div class="ds-g3">
+      <div class="card"><div class="card-h"><h3>Ritmo dos dias</h3><span class="hint">cronograma às ${minHM(A.inicioCrono)}</span></div><div class="card-b">
+        <div class="ds-ln"><span>1ª ligação, em média</span><b class="${A.comecaTarde ? 'ruim' : ''}">${A.mediaPrim!=null ? minHM(A.mediaPrim) : '—'}</b></div>
+        <div class="ds-tl-tit">Quando você ligou nesta semana <span>da 1ª à última ligação</span></div>
+        ${D2.map(d=>{ const tarde = d.prim > A.inicioCrono+15; return `<div class="ds-tl"><span class="ds-tl-d">${DIAS_CURTO[dDe(d.k).getDay()]}</span><div class="ds-tl-t"><i style="left:${tlPos(A.inicioCrono)}%"></i><b class="${tarde?'tarde':''}" style="left:${tlPos(d.prim)}%;width:${Math.max(2,tlPos(d.ult)-tlPos(d.prim))}%"></b></div><span class="ds-tl-h ${tarde?'ruim':''}">${minHM(d.prim)}</span></div>`; }).join('') || '<div class="mute" style="font-size:13px;">Sem ligações nesta semana.</div>'}
+        ${D2.length ? `<div class="ds-tl ds-tl-eixo"><span></span><div>${[9,12,15,18].map(h=>`<em style="left:${tlPos(h*60)}%">${h}h</em>`).join('')}</div><span></span></div>` : ''}
+        <div class="ds-ln"><span>Pausas longas na semana</span><b>${pausasSem}</b></div>
+        <div class="ds-ln"><span>Dia em que mais te atendem</span><b>${melhorDia ? `${DIAS_NOME[melhorDia]} · ${pc(A.dow[melhorDia].a,A.dow[melhorDia].n)}%` : '—'}</b></div>
+        ${link('padroes','ver ritmo e dias da semana')}</div></div>
+      <div class="card"><div class="card-h"><h3>Seus horários</h3><span class="hint">desde ${A.desdeP ? dataCurta(A.desdeP) : '—'}</span></div><div class="card-b">
+        <div class="ds-mini">${hsG.map(h=>{ const o = A.horas[h], top = A.melhores.includes(h); return `<div><b class="${top?'top':''}" style="height:${Math.round(o.n/maxV*80)}px"></b>${h}h</div>`; }).join('')}</div>
+        <div class="nota" style="margin-top:8px;">${notaHoras}</div>
+        ${link('padroes','ver gráfico completo')}</div></div>
+      <div class="card"><div class="card-h"><h3>Mês a mês</h3><span class="hint">você x time</span></div><div class="card-b">
+        ${ms.map(x=>{ const atP = x.lig ? x.at/x.lig : null, cP = x.ag ? x.comp/x.ag : null; return `<div class="ds-ln"><span>${MESES[Number(x.m.slice(5,7))-1].slice(0,3)}</span><span>${atP!=null ? `<span class="${x.tAt!=null ? cor(atP>=x.tAt) : ''}">${pc(x.at,x.lig)}% atendem</span> · ` : ''}${cP!=null ? `<span class="${x.tComp!=null && x.ag>=3 ? cor(cP>=x.tComp) : ''}">comp. ${pc(x.comp,x.ag)}%</span> · ` : ''}${x.vendas} ${x.vendas===1?'venda':'vendas'}</span></div>`; }).join('') || '<div class="mute">Ainda sem meses fechados.</div>'}
+        ${notaMes ? `<div class="ds-fr ${notaMes.t}" style="margin:10px 0 0;font-size:13px;"><div class="rt">${notaMes.r}</div>${notaMes.x}</div>` : ''}
+        ${link('hist','ver histórico completo')}</div></div>
+    </div>
+
+    ${state.dsProjAberta
+      ? `<div class="card ds-projcard ds-aberta"><div class="card-h"><h3>Projeção de ${MESES[Number(todayKey().slice(5,7))-1].toLowerCase()}</h3><button class="ds-link" data-ds-proj style="margin:0;">fechar ›</button></div><div class="card-b">${htmlProjecaoAberta(v)}<div class="ds-pj-sub" style="margin-top:22px;">Etapa por etapa <span>padrão FBS x sua meta</span></div>${htmlProjecao(v)}</div></div>`
+      : htmlProjecaoFechada(v)}
+
+    ${abre.padroes ? `<div id="dsPadroes">
     <div class="card" style="margin-bottom:16px;"><div class="card-h"><h3>Seus horários</h3><span class="hint">desde ${A.desdeP ? dataCurta(A.desdeP) : '—'} · ${A.nP.toLocaleString('pt-BR')} ligações · altura = suas ligações · % = quanto atenderam</span></div><div class="card-b">
       <div class="ds-horas">${hsG.map(h=>{ const o = A.horas[h], top = A.melhores.includes(h); return `<div class="ds-hc"><div class="ds-ht ${top?'top':''}">${pc(o.a,o.n)}%</div><div class="ds-hv ${top?'top':''}" style="height:${Math.round(o.n/maxV*120)}px"></div><div class="ds-hn">${o.n}</div><div class="ds-hh">${h}h</div></div>`; }).join('')}</div>
       <div class="ds-leg"><span><i style="background:var(--a-gold)"></i>suas melhores horas</span><span><i style="background:#24425E"></i>demais horas</span><span>sua média: ${pc(A.taxaMedia*100,100)}% atendem</span></div>
-      <div class="nota">${notaHoras}</div></div></div>
+    </div></div>
     <div class="grid-2" style="margin-bottom:16px;">
       <div class="card"><div class="card-h"><h3>Ritmo dos dias</h3><span class="hint">cronograma começa às ${minHM(A.inicioCrono)}</span></div><div class="card-b">
         <table class="tbl"><thead><tr><th>Dia</th><th class="r">Ligações</th><th class="r">1ª ligação</th><th class="r">Última</th><th class="r">Pausas longas</th></tr></thead><tbody>
-        ${A.diasW.map(d=>`<tr><td>${DIAS_CURTO[dDe(d.k).getDay()]} ${dataCurta(d.k).slice(0,2)}</td><td class="r">${d.n}</td><td class="r" style="${d.prim > A.inicioCrono+15 ? 'color:#F0A3A3;' : ''}">${minHM(d.prim)}</td><td class="r">${minHM(d.ult)}</td><td class="r">${d.pausas}</td></tr>`).join('') || '<tr><td colspan="5" class="mute">Sem ligações nesta semana.</td></tr>'}
+        ${D2.map(d=>`<tr><td>${DIAS_CURTO[dDe(d.k).getDay()]} ${dataCurta(d.k).slice(0,2)}</td><td class="r">${d.n}</td><td class="r" style="${d.prim > A.inicioCrono+15 ? 'color:#F0A3A3;' : ''}">${minHM(d.prim)}</td><td class="r">${minHM(d.ult)}</td><td class="r">${d.pausas}</td></tr>`).join('') || '<tr><td colspan="5" class="mute">Sem ligações nesta semana.</td></tr>'}
         </tbody></table>
         <div class="nota">${notaRitmo} <span class="mute">Pausa longa: 30 minutos ou mais sem ligar, fora do almoço e do café.</span></div></div></div>
       <div class="card"><div class="card-h"><h3>Dia da semana</h3><span class="hint">desde ${A.desdeP ? dataCurta(A.desdeP) : '—'}</span></div><div class="card-b">
@@ -4032,7 +4256,10 @@ function paginaDesempenho(){
         ${dws.map(d=>`<tr><td>${DIAS_NOME[d]}</td><td class="r">${A.dow[d].n}</td><td class="r" style="${d===melhorDia?'color:#5FD39A;font-weight:600;':''}">${pc(A.dow[d].a,A.dow[d].n)}%</td></tr>`).join('')}
         </tbody></table>
         <div class="nota">${notaDow}</div></div></div>
-    </div>
+    </div></div>` : ''}
+
+    ${abre.hist ? `<div id="dsHist">
+    ${htmlMeses(A)}
     <div class="grid-2">
       <div class="card"><div class="card-h"><h3>Evolução</h3><span class="hint">ligações por dia útil, semana a semana</span></div><div class="card-b">
         <div class="ds-evo">${ev.map((e,i)=>`<div class="${i===ev.length-1?'at':''}"><span>${Math.round(e.porDia)}</span><b style="height:${Math.round(e.porDia/maxE*100)}px"></b>${dataCurta(e.ini)}</div>`).join('')}</div>
@@ -4040,8 +4267,20 @@ function paginaDesempenho(){
       <div class="card"><div class="card-h"><h3>Carteira no CRM</h3><span class="hint">Airtable · semana ${dataCurta(W.ini)} a ${dataCurta(W.fim)}</span></div><div class="card-b">
         <div class="ds-cart">${kc('Parados 3+ dias', parados, WA?WA.cards_parados:null, true)}${kc('Sem comentário', W.zero_comentario, WA?WA.zero_comentario:null, true)}${kc('Negócios ativos', W.negocios_ativos, WA?WA.negocios_ativos:null, null)}</div>
         <div class="nota">${parados>=20 ? `Com <b>${parados} leads parados</b>, o retorno de lead antigo é onde está a próxima venda. Meta sugerida para a semana: <b>baixar ${Math.ceil(parados*.1)}</b>, de ${parados} para ${parados-Math.ceil(parados*.1)}.` : parados!=null ? 'Carteira em dia: poucos leads parados.' : ''}</div></div></div>
-    </div>`;
-  return {top, html, bind: ()=>bindDiagnostico(A)};
+    </div></div>` : ''}`;
+  const bind = app=>{
+    bindDiagnostico(A);
+    bindProjecao(app, v);
+    app.querySelectorAll('[data-ds-abre]').forEach(b=>{ b.onclick = ()=>{
+      const k = b.getAttribute('data-ds-abre');
+      state.dsAbre = {...(state.dsAbre||{}), [k]: !(state.dsAbre||{})[k]};
+      render();
+      const alvo = document.getElementById(k==='hist' ? 'dsHist' : 'dsPadroes');
+      if(alvo) alvo.scrollIntoView({behavior:'smooth', block:'start'});
+    }; });
+    app.querySelectorAll('[data-ds-leitura]').forEach(b=>{ b.onclick = ()=>{ state.dsLeitura = !state.dsLeitura; render(); }; });
+  };
+  return {top, html, bind};
 }
 
 function htmlMeses(A){
